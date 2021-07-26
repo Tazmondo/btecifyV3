@@ -5,13 +5,45 @@
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
     <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <title>Hello World!</title>
+
+
+    <link rel="stylesheet" href="style.css">
+
+    <title>btecify</title>
 </head>
 <body>
-<h1>Hello World!</h1>
-We are using Node.js <span id="node-version"></span>,
-Chromium <span id="chrome-version"></span>,
-and Electron <span id="electron-version"></span>.
+<header>
+    <h1>btecify <em>V3</em></h1>
+    <nav>
+        <div>
+            <button>Home</button>
+            <button>Playlists</button>
+        </div>
+    </nav>
+</header>
+<main>
+
+<h2>Your Playlists</h2>
+<div class="playlists-container">
+    <div class="playlist">
+        <h3>PLAYLIST NAME</h3>
+        <em>50 songs</em>
+    </div>
+</div>
+</main>
+
+<footer>
+    <div>
+        <p>SONGNAME</p>
+        <p>Artist</p>
+        <p>Album</p>
+    </div>
+    0:50<input type="range" value="50" max="100">1:40
+    <button>⏯ Pause</button>
+    <button>⏭ Skip</button>
+    <button>🔁 Loop</button>
+    <button>🔀 Shuffle</button>
+</footer>
 
 <script src="renderer.js"></script>
 </body>

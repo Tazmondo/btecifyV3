@@ -11,7 +11,8 @@ function createWindow () {
             preload: path.join(__dirname, 'preload.js')
         },
         icon: path.join(__dirname, 'assets/btecify.ico'),
-        alwaysOnTop: false
+        alwaysOnTop: false,
+        frame: false
     })
 
     win.loadFile('index.html')
