@@ -4,8 +4,12 @@
   "description": "3rd version of btecify using electron so that the user interface doesnt look like it was made 50 years ago on the first IBM computer",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
   },
   "author": "Taran McVay",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^13.1.7"
+  }
 }
