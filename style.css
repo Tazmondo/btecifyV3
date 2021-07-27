@@ -90,7 +90,7 @@ body {
     font-weight: 300;
     margin: 0;
     box-sizing: border-box;
-    line-height: 0.5em;
+    line-height: 1.2em;
 }
 
 h1 {
@@ -132,7 +132,7 @@ footer {
     align-items: center;
     position: fixed;
     bottom: 0;
-    width: 80%;
+    width: 100%;
 }
 
 footer img {
