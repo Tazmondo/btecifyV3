@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-
-
+    not sure if this is necessary since the app is self-contained and provide any opportunities for XSS
+    -->
     <link rel="stylesheet" href="style.css">
 
     <title>btecify</title>
@@ -31,14 +30,17 @@
     </div>
 </div>
 </main>
-
+<br>
 <footer>
+    <img src="https://i3.ytimg.com/vi/9wNXRkmgd9w/maxresdefault.jpg" alt="Song Thumbnail">
     <div>
-        <p>SONGNAME</p>
-        <p>Artist</p>
-        <p>Album</p>
+        <p><strong>The Falling Mysts</strong></p>
+        <p>Dimrain47</p>
+        <p>The Falling Mysts</p>
     </div>
-    0:50<input type="range" value="50" max="100">1:40
+    <div class="seeker">
+        <span id="current-time">0:50</span><input type="range" value="50" max="100"><span class="end-time">1:40</span>
+    </div>
     <button>⏯ Pause</button>
     <button>⏭ Skip</button>
     <button>🔁 Loop</button>
