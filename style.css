@@ -91,6 +91,8 @@ body {
     margin: 0;
     box-sizing: border-box;
     line-height: 1.2em;
+    user-select: none;
+    min-width: 270px;
 }
 
 h1 {
@@ -137,17 +139,84 @@ footer {
 
 footer img {
     width: 128px;
-    flex: 1;
+}
+
+footer svg {
+    fill: rgba(255, 255, 255, 0.8);
+}
+
+footer svg:hover {
+    fill: rgba(255, 255, 255, 1);
+}
+
+footer svg.active {
+    fill: rgba(0, 255, 0, 0.8);
+}
+
+footer svg.active:hover {
+    fill: rgba(0, 255, 0, 1)
+}
+
+.player {
+    flex: 1
+}
+
+.player-buttons {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.player-buttons > div {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+}
+
+.player-buttons svg {
+    display: inline-block;
+    fill: rgba(255, 255, 255, 0.8);
+    width: 24px;
+    padding: 0 10px;
+}
+
+svg.main-button {
+    margin-bottom: -6px;
+}
+
+.player-buttons svg:hover {
+    fill: rgba(255, 255, 255, 1);
+}
+
+.player-buttons svg.active {
+    fill: rgba(0, 255, 0, 0.8);
+}
+
+.player-buttons svg.inactive {
+    display: none;
+}
+
+.player-buttons #play, .player-buttons #pause {
+    height: 36px;
+    width: 36px;
+    fill: rgba(0, 255, 0, 0.8);
+}
+
+.player-buttons #play:hover, .player-buttons #pause:hover {
+    height: 36px;
+    width: 36px;
+    fill: rgba(0, 255, 0, 1);
 }
 
 .seeker {
-    min-width: 16em;
+    min-width: 400px;
     flex: 5;
     text-align: center;
 }
 
-footer button {
-    flex: 1;
+.footer-side-buttons {
+    display: flex;
 }
 
 input[type=range] {
@@ -159,6 +228,7 @@ input[type=range] {
 input[type=range]:focus {
     outline: none;
 }
+
 input[type=range]::-webkit-slider-runnable-track {
     background: rgba(255, 255, 255, 0.05);
     border: 0.2px solid rgba(255, 255, 255, 0.2);
@@ -169,13 +239,13 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 input[type=range]:focus::-webkit-slider-runnable-track {
-    background: rgba(255, 255, 255, 0.1);
+
 }
 
 input[type=range]::-webkit-slider-thumb {
     margin-top: -4px;
-    width: 1em;
-    height: 1em;
+    width: 16px;
+    height: 16px;
     background: #ffffff;
     border: 1px solid #000000;
     border-radius: 50%;
