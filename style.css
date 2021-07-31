@@ -206,50 +206,58 @@ svg.main-button {
 .player-buttons #play:hover, .player-buttons #pause:hover {
     height: 36px;
     width: 36px;
-    fill: rgba(0, 255, 0, 1);
+        fill: rgba(0, 255, 0, 1);
 }
 
 .seeker {
     min-width: 400px;
-    flex: 5;
+    flex: 1;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.seeker-background {
+    width: 75%;
+    background: rgba(0, 0, 0, 0.2);
+    margin: 5px 20px;
+    border-radius: 5px;
+    height: 7px;
+}
+
+.seeker-foreground {
+    width: 50%;
+    background: rgba(255,255,255,0.3);
+    border-radius: 5px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.seeker-background:hover > .seeker-foreground,
+.seeker-background:active > .seeker-foreground {
+    background-color: rgba(0, 255, 0, 0.8);
+
+}
+/*TODO: This still looks a little bit janky*/
+.seeker-thumb {
+    visibility: hidden;
+    border-radius: 50%;
+    height: 12px;
+    width: 12px;
+    margin-left: -12px;
+    position: relative;
+    left: 100%;
+    background-color: rgba(255,255,255,1);
+}
+
+.seeker-background:hover > .seeker-foreground > .seeker-thumb,
+.seeker-background:active > .seeker-foreground > .seeker-thumb {
+    visibility: visible;
 }
 
 .footer-side-buttons {
     display: flex;
-}
-
-input[type=range] {
-    width: calc(75% - 5em);
-    margin: 5px;
-    background-color: transparent;
-    -webkit-appearance: none;
-}
-input[type=range]:focus {
-    outline: none;
-}
-
-input[type=range]::-webkit-slider-runnable-track {
-    background: rgba(255, 255, 255, 0.05);
-    border: 0.2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 15px;
-    width: 100%;
-    height: 8.4px;
-    cursor: pointer;
-}
-
-input[type=range]:focus::-webkit-slider-runnable-track {
-
-}
-
-input[type=range]::-webkit-slider-thumb {
-    margin-top: -4px;
-    width: 16px;
-    height: 16px;
-    background: #ffffff;
-    border: 1px solid #000000;
-    border-radius: 50%;
-    cursor: pointer;
-    -webkit-appearance: none;
 }
 
