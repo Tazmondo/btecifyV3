@@ -81,18 +81,24 @@
 }
 
 
-
+html {
+    height: 100%
+}
 
 body {
     background-color: #121212;
     color: white;
     font-family: 'Roboto', serif;
     font-weight: 300;
-    margin: 0;
     box-sizing: border-box;
     line-height: 1.2em;
     user-select: none;
     min-width: 270px;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    /*overflow: hidden;*/
 }
 
 h1 {
@@ -123,54 +129,136 @@ h3 {
     font-weight: 300;
 }
 
+main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
 .playlists-container {
+    display: flex;
+    flex: 1 1 0;
+    height: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    overflow-y: auto;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+.playlist-card {
     background-color: rgba(255, 255, 255, 0.05);
+    display: flex;
+    width: 300px;
+    height: 150px;
+    justify-content: flex-start;
+    margin: 5px;
+    border-radius: 20px;
+}
+
+.playlist-card > img {
+    width: 128px;
+    height: 128px;
+}
+
+.playlist-card > div {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+}
+
+.playlist-card > div > h3 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 150px;
+    white-space: nowrap;
+}
+
+.playlist-card > div > em {
+    margin-top: -15px;
+}
+
+.playlist-card > div > svg {
+    display: block;
+    width: 48px;
+    height: 48px;
+    margin-top: 6px;
+    fill: rgba(0, 255, 0, 0.8);
+}
+
+.playlist-card > div > svg:hover {
+    fill: rgba(0, 255, 0, 1);
 }
 
 footer {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgb(25 25 25);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: fixed;
-    bottom: 0;
     width: 100%;
+    height: 130px;
+    z-index: 1;
 }
 
 footer img {
     width: 128px;
 }
 
-footer svg {
+.svg-button {
     fill: rgba(255, 255, 255, 0.8);
 }
 
-footer svg:hover {
+.svg-button:hover {
     fill: rgba(255, 255, 255, 1);
 }
 
-footer svg.active {
+.svg-button.active {
     fill: rgba(0, 255, 0, 0.8);
 }
 
-footer svg.active:hover {
+.svg-button.active:hover {
     fill: rgba(0, 255, 0, 1)
 }
 
 .player {
-    flex: 1
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 .player-buttons {
     text-align: center;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     margin-bottom: 15px;
 }
 
 .player-buttons > div {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.4);
     border-radius: 20px;
 }
 
@@ -210,17 +298,20 @@ svg.main-button {
 }
 
 .seeker {
-    min-width: 400px;
+    width: 100%;
+    min-width: 350px;
+    max-width: 450px;
     flex: 1;
-    text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 3px 0;
+    cursor: grab;
 }
 
 .seeker-background {
     width: 75%;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 1);
     margin: 5px 20px;
     border-radius: 5px;
     height: 7px;
@@ -233,27 +324,27 @@ svg.main-button {
     height: 100%;
     display: flex;
     align-items: center;
+    position: relative;
 }
 
-.seeker-background:hover > .seeker-foreground,
-.seeker-background:active > .seeker-foreground {
+.seeker:hover > .seeker-background > .seeker-foreground,
+.seeker:active > .seeker-background > .seeker-foreground {
     background-color: rgba(0, 255, 0, 0.8);
 
 }
-/*TODO: This still looks a little bit janky*/
 .seeker-thumb {
+    position: absolute;
     visibility: hidden;
     border-radius: 50%;
     height: 12px;
     width: 12px;
-    margin-left: -12px;
-    position: relative;
+    margin-left: -6px;
     left: 100%;
     background-color: rgba(255,255,255,1);
 }
 
-.seeker-background:hover > .seeker-foreground > .seeker-thumb,
-.seeker-background:active > .seeker-foreground > .seeker-thumb {
+.seeker:hover > .seeker-background > .seeker-foreground > .seeker-thumb,
+.seeker:active > .seeker-background > .seeker-foreground > .seeker-thumb {
     visibility: visible;
 }
 
