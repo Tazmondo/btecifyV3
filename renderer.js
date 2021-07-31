@@ -37,6 +37,7 @@ pauseButton.addEventListener("click", togglePlayPause)
 let seekerBackBar = document.getElementsByClassName("seeker-background")[0]
 let seekerFrontBar = document.getElementsByClassName("seeker-foreground")[0]
 let seekerThumb = document.getElementsByClassName("seeker-thumb")[0]
+let currentTime = document.getElementById("current-time")
 
 function getMousePosition(e, target) {
     // e = Mouse click event.
@@ -46,7 +47,20 @@ function getMousePosition(e, target) {
     return [x, y]
 }
 
+function getSongTimeFromPercentage(percentage, duration) {
+    let crudeTime = (percentage / 100) * duration
+    let wholeTime = Math.round(crudeTime)
+    let minutes = Math.floor(wholeTime/60)
+    let seconds = wholeTime % 60
+    if (seconds < 10) {
+        seconds = `0${seconds}`
+    }
+    return `${minutes}:${seconds}`
+}
+
 function updateSeeker(e, target) {
+    const songSeconds = 300
+
     let relativeX = getMousePosition(e, seekerBackBar)[0]
     let widthPercentage = relativeX / seekerBackBar.clientWidth * 100
     if (widthPercentage < 0) {
@@ -55,6 +69,7 @@ function updateSeeker(e, target) {
         widthPercentage = 100
     }
     seekerFrontBar.style = `width: ${widthPercentage}%`
+    currentTime.innerText = getSongTimeFromPercentage(widthPercentage, songSeconds)
 }
 
 seekerBackBar.addEventListener("mousedown", e => {
