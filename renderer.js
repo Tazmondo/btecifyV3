@@ -93,3 +93,16 @@ generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.p
 generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
 generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
 generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
+
+let navButtons = Array.from(document.getElementById("nav-bar").childNodes).filter(v => {return v.nodeName === "BUTTON"})
+
+navButtons.forEach((v, i, arr) => {
+    v.addEventListener("click", e =>{
+        v.classList.toggle("active", true)
+        arr.forEach(v2 => {
+            if (v2 !== v) {
+                v2.classList.toggle("active", false)
+            }
+        })
+    })
+})
