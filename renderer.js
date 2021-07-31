@@ -99,9 +99,11 @@ let navButtons = Array.from(document.getElementById("nav-bar").childNodes).filte
 navButtons.forEach((v, i, arr) => {
     v.addEventListener("click", e =>{
         v.classList.toggle("active", true)
+        document.getElementById(v.id + "-page").classList.toggle("visible", true)
         arr.forEach(v2 => {
             if (v2 !== v) {
                 v2.classList.toggle("active", false)
+                document.getElementById(v2.id + "-page").classList.toggle("visible", false)
             }
         })
     })
