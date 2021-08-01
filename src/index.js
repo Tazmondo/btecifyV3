@@ -1,16 +1,7 @@
 console.log("renderer running...")
 
-import homePageFunction from './home.js'
-import playlistPageFunction from './playlist.js'
-import player from './player.js'
-
-
-// HEADER //
-let pageNames = {
-    'home': homePageFunction,
-    'playlist': playlistPageFunction
-}
-
+import './home.js'
+import './playlist.js'
 
 function getPageIdFromNav(navName) {
     return navName.slice(0, -4)
@@ -27,9 +18,9 @@ function routeWithNavElement(navButton) {
     navButton.classList.toggle("active", true)
 
     let pageName = getPageIdFromNav(navButton.id)
-    if (pageNames[pageName] === undefined) {
-        throw "Invalid page"
-    }
+    // if (pageNames[pageName] === undefined) {
+    //     throw "Invalid page"
+    // }
 
     let selectedPage = document.getElementById(navButton.id + "-page")
     Array.from(document.querySelectorAll('main > div')).forEach(v => {
@@ -37,7 +28,7 @@ function routeWithNavElement(navButton) {
     })
     selectedPage.classList.toggle('hidden', false)
 
-    pageNames[pageName]()
+    // pageNames[pageName]()
     console.log(`Routed to ${pageName}.`)
 }
 
@@ -57,6 +48,7 @@ navButtons.forEach((v, i, arr) => {
 })
 
 // FOOTER //
+import player from './player.js'
 player()
 
 // MAIN EXECUTION //

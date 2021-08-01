@@ -221,6 +221,8 @@ main > * {
 
 main > *.hidden {
     max-width: 0;
+    padding: 0 !important;
+    margin: 0 !important;
     flex: 0 0 0;
     overflow: hidden;
 }
@@ -296,7 +298,6 @@ main > *.hidden {
 /* PLAYLIST PAGE STYLING */
 
 #playlist-nav-page {
-    box-sizing: border-box;
     display: flex;
     flex-direction: row;
     flex: 1;
