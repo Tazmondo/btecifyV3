@@ -32,7 +32,7 @@ function routeWithNavElement(navButton) {
     }
 
     let selectedPage = document.getElementById(navButton.id + "-page")
-    Array.from(document.querySelectorAll('main')).forEach(v => {
+    Array.from(document.querySelectorAll('main > div')).forEach(v => {
         v.classList.toggle('hidden', true)
     })
     selectedPage.classList.toggle('hidden', false)

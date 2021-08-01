@@ -15,14 +15,16 @@ function generatePlaylistCard(playlistName, thumbnailURL, numSongs, playFunction
 
 }
 
+generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
+generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
+generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
+generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
+generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
+generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
+generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
+
+
 function home() {
-    generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
-    generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
-    generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
-    generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
-    generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
-    generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
-    generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
 }
 
 export default home
