@@ -1,8 +1,8 @@
-console.log("renderer.js running...")
+console.log("renderer running...")
 
-import homePageFunction from './src/home.js'
-import playlistPageFunction from './src/playlists.js'
-import player from './src/player.js'
+import homePageFunction from './home.js'
+import playlistPageFunction from './playlist.js'
+import player from './player.js'
 
 
 // HEADER //
@@ -51,4 +51,4 @@ navButtons.forEach((v, i, arr) => {
 player()
 
 // MAIN EXECUTION //
-document.getElementById('playlist-nav').click()
+//document.getElementById('playlist-nav').click()

@@ -2,7 +2,7 @@ function home() {
     let header = document.getElementsByTagName('header')[0]
     header.insertAdjacentHTML('afterend',
         `
-        <main id="home-nav-page" class="visible">
+        <main id="home-nav-page">
         <h2>Your Playlists</h2>
         <div class="playlists-container">
             <div id="placeholder-card" class="playlist-card">

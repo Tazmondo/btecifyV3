@@ -2,7 +2,8 @@ const { app, BrowserWindow } = require('electron')
 const path = require('path')
 
 if (!app.isPackaged) {
-    require('electron-reload')(__dirname)
+    console.log("reload")
+    require('electron-reload')(app.getAppPath())
 }
 
 function createWindow () {
@@ -14,16 +15,13 @@ function createWindow () {
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
         },
-        icon: path.join(__dirname, 'assets/btecify.ico'),
+        icon: path.join(app.getAppPath(), 'src/assets/btecify.ico'),
         alwaysOnTop: false,
         frame: false
     })
 
-    win.loadFile('index.html')
+    win.loadFile('src/index.html')
 
-    win.on('move', (e) => {
-        win.webContents.send("moved")
-    })
 }
 
 app.whenReady().then(() => {
