@@ -16,7 +16,13 @@ function getPageIdFromNav(navName) {
     return navName.slice(0, -4)
 }
 
-function route(navButton) {
+function routeWithPageName(pageName) {
+    let navId = pageName + "-nav"
+    let navElement = document.getElementById(navId)
+    routeWithNavElement(navElement)
+}
+
+function routeWithNavElement(navButton) {
     console.log(navButton)
     navButton.classList.toggle("active", true)
 
@@ -25,9 +31,12 @@ function route(navButton) {
         throw "Invalid page"
     }
 
-    Array.from(document.getElementsByTagName('main')).forEach(v => {
-        v.remove()
+    let selectedPage = document.getElementById(navButton.id + "-page")
+    Array.from(document.querySelectorAll('main')).forEach(v => {
+        v.classList.toggle('hidden', true)
     })
+    selectedPage.classList.toggle('hidden', false)
+
     pageNames[pageName]()
     console.log(`Routed to ${pageName}.`)
 }
@@ -36,7 +45,7 @@ let navButtons = Array.from(document.getElementById("nav-bar").childNodes).filte
 
 navButtons.forEach((v, i, arr) => {
     v.addEventListener("click", e =>{
-        route(v)
+        routeWithNavElement(v)
         //document.getElementById(v.id + "-page").classList.toggle("visible", true) // Make the selected page visible
         arr.forEach(v2 => {
             if (v2 !== v) {
@@ -51,5 +60,4 @@ navButtons.forEach((v, i, arr) => {
 player()
 
 // MAIN EXECUTION //
-//document.getElementById('playlist-nav').click()
-playlistPageFunction()
+routeWithPageName('playlist')

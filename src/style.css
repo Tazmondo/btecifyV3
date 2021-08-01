@@ -197,6 +197,11 @@ button.active::after {
     background: #555;
 }
 
+main.hidden {
+    display: none !important;
+
+}
+
 
 /* HOME PAGE STYLING */
 #home-nav-page {
