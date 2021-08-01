@@ -1,24 +1,22 @@
+let pageHTML = `
+
+`
+
 function playlist() {
     let header = document.querySelector('header')
-    header.insertAdjacentHTML("afterend",`
-        <main id="playlist-nav-page">
-            <div id="playlist-section-1" class="playlist-section">
-                <div id="playlist-select-1" class="playlist-select">
-                    <h3>MUSIC</h3>
-                </div>
-                <div class="select-dropdown">
-                    <p>Playlist 1</p>
-                    <p>Playlist 2</p>
-                </div>
-                <div id="playlist-list-1" class="playlist-list">
-                    A song
-                </div>
-            </div>
-        </main>
-        
-        
-`)
+    header.insertAdjacentHTML("afterend", pageHTML)
 
+    Array.from(document.querySelectorAll('.playlist-section')).forEach(v => {
+        let selector = v.querySelector('.playlist-select')
+        let dropdown = v.querySelector('.select-dropdown')
+
+        dropdown.addEventListener('mouseenter', e => {
+            selector.classList.toggle("hover", true)
+        })
+        dropdown.addEventListener('mouseleave', e => {
+            selector.classList.toggle("hover", false)
+        })
+    })
 }
 
 export default playlist

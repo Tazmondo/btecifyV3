@@ -1,8 +1,5 @@
-function home() {
-    let header = document.getElementsByTagName('header')[0]
-    header.insertAdjacentHTML('afterend',
-        `
-        <main id="home-nav-page">
+let pageHTML = `
+    <main id="home-nav-page">
         <h2>Your Playlists</h2>
         <div class="playlists-container">
             <div id="placeholder-card" class="playlist-card">
@@ -17,13 +14,13 @@ function home() {
             </div>
         </div>
     </main>
-`)
+`
 
-    function generatePlaylistCard(playlistName, thumbnailURL, numSongs, playFunction) {
-        let container = document.getElementsByClassName("playlists-container")[0]
+function generatePlaylistCard(playlistName, thumbnailURL, numSongs, playFunction) {
+    let container = document.getElementsByClassName("playlists-container")[0]
 
-        container.insertAdjacentHTML('beforeend',
-            `<div class="playlist-card">
+    container.insertAdjacentHTML('beforeend',
+        `<div class="playlist-card">
         <img src="${thumbnailURL}" alt="${playlistName}">
         <div>
             <h3>${playlistName}</h3>
@@ -34,7 +31,11 @@ function home() {
         </div>
     </div>`)
 
-    }
+}
+
+function home() {
+    let header = document.getElementsByTagName('header')[0]
+    header.insertAdjacentHTML('afterend', pageHTML)
 
     generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
     generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
