@@ -140,7 +140,7 @@ button {
     margin: 0;
 
     background-color: rgba(255, 255, 255, 0.05);
-    color: rgb(255, 255, 255);
+    color: inherit;
     width: 100px;
     height: 20px;
     position: relative;
@@ -271,6 +271,65 @@ button.active::after {
     display: flex;
     flex-direction: row;
     flex: 1;
+    margin: 10px 5px 20px 5px;
+    gap: 1em;
+    min-height: 0;
+}
+
+.playlist-section {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 50%;
+}
+
+.playlist-select {
+    background-color: rgba(255, 255, 255, 0.1);
+    width: 100%;
+    height: 1.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.playlist-select > span {
+    text-align: center;
+}
+
+.playlist-select::after {
+    content: "";
+    background-image: url("assets/arrow_drop_down_white_24dp.svg");
+    width: 2em;
+    height: 2em;
+    background-size: 2em 2em;
+    position: absolute;
+    right: 0;
+    transform: rotate(90deg);
+    transition: transform 0.3s ease;
+}
+
+.playlist-select:hover::after,
+.select-dropdown:hover ~ .playlist-select::after{
+    transform: rotate(0);
+}
+
+.select-dropdown {
+    background: rgba(255, 255, 255, 0.2);
+    width: 100%;
+    max-height: 0;
+    transition: all 0.4s ease;
+    overflow-y: scroll;
+}
+
+.playlist-select:hover + .select-dropdown,
+.select-dropdown:hover {
+    max-height: 30%;
+}
+
+.playlist-list {
+    margin-top: 1em;
+    background-color: rgba(255, 255, 255, 0.1);
+    flex: 1;
 }
 
 /* FOOTER PLAYER  */
@@ -400,20 +459,21 @@ svg.main-button {
 }
 .seeker-thumb {
     position: absolute;
-    visibility: hidden;
     border-radius: 50%;
-    height: 12px;
-    width: 12px;
+    height: 0px;
+    width: 0px;
     margin-left: -6px;
     left: 100%;
-    background-color: rgba(255,255,255,1);
+    background-color: rgba(255,255,255,0);
 
-    transition: visibility 0s 0.05s;
+    transition: all 0.15s ease-out;
 }
 
 .seeker:hover > .seeker-background > .seeker-foreground > .seeker-thumb,
 .seeker:active > .seeker-background > .seeker-foreground > .seeker-thumb {
-    visibility: visible;
+    background-color: rgba(255,255,255,1);
+    height: 12px;
+    width: 12px;
 }
 
 .footer-side-buttons {

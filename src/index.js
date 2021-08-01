@@ -51,4 +51,4 @@ navButtons.forEach((v, i, arr) => {
 player()
 
 // MAIN EXECUTION //
-//document.getElementById('playlist-nav').click()
+document.getElementById('playlist-nav').click()
