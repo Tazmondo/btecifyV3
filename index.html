@@ -2,10 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
-    not sure if this is necessary since the app is self-contained and provide any opportunities for XSS
-    -->
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; img-src *">
     <link rel="stylesheet" href="style.css">
 
     <title>btecify</title>
@@ -19,22 +17,6 @@
         <button id="playlist-nav">Playlists</button>
     </nav>
 </header>
-
-<main id="home-nav-page" class="visible">
-    <h2>Your Playlists</h2>
-        <div class="playlists-container">
-            <div class="playlist-card" style="display: none">
-                <img src="https://static.thenounproject.com/png/17849-200.png" alt="PLAYLIST NAME">
-                <div>
-                    <h3>PLAYLIST NAME</h3>
-                    <em>50 songs</em>
-                    <svg class="svg-button" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/>
-                        <title>Play</title>
-                    </svg>
-                </div>
-            </div>
-        </div>
-</main>
 
 <main id="playlist-nav-page">
 
@@ -123,6 +105,6 @@
 
 </footer>
 
-<script src="renderer.js"></script>
+<script src="renderer.js" type="module"></script>
 </body>
 </html>

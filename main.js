@@ -1,9 +1,7 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
 
-const nodeEnvironment = process.env.NODE_ENV || "development"
-
-if (nodeEnvironment === "development") {
+if (!app.isPackaged) {
     require('electron-reload')(__dirname)
 }
 
