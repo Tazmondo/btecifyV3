@@ -216,7 +216,9 @@ main > * {
     width: 100vw;
     max-width: 100vw;
     flex: 1;
-    transition: all 0.75s ease;
+    overflow: hidden;
+
+    transition: all 0.7s ease-out;
 }
 
 main > *.hidden {
@@ -224,8 +226,6 @@ main > *.hidden {
     padding: 0 !important;
     margin: 0 !important;
     flex: 0 0 0;
-    overflow: hidden;
-    transition: all 0.75s ease;
 }
 
 /* HOME PAGE STYLING */
