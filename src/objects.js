@@ -1,3 +1,5 @@
+import {copyArray} from "./util.js";
+
 const placeholderURL = "./assets/thumbplaceholder.png"
 
 function Song(title, url, author="", album="", thumbnail="") {
@@ -43,7 +45,7 @@ function Playlist(name, songs=[]) {
         },
 
         getSongs() {
-            return songs
+            return copyArray(songs)
         },
 
         addSong(song) {
