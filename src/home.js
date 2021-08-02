@@ -1,3 +1,5 @@
+console.log("home.js")
+
 function generatePlaylistCard(playlistName, thumbnailURL, numSongs, playFunction) {
     let container = document.getElementsByClassName("playlists-container")[0]
 
@@ -15,16 +17,26 @@ function generatePlaylistCard(playlistName, thumbnailURL, numSongs, playFunction
 
 }
 
-generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
-generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
-generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
-generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
-generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
-generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
-generatePlaylistCard("music", "https://static.thenounproject.com/png/17849-200.png", 123)
+window.playlists = [
+    {name: 'music1', url: 'https://static.thenounproject.com/png/17849-200.png', len: 201},
+    {name: 'music2', url: 'https://static.thenounproject.com/png/17849-200.png', len: 23},
+    {name: 'music4', url: 'https://static.thenounproject.com/png/17849-200.png', len: 2023},
+    {name: 'music5', url: 'https://static.thenounproject.com/png/17849-200.png', len: 20},
+    {name: 'music6', url: 'https://static.thenounproject.com/png/17849-200.png', len: 2040},
+    {name: 'music7', url: 'https://static.thenounproject.com/png/17849-200.png', len: 100},
+    {name: 'music8', url: 'https://static.thenounproject.com/png/17849-200.png', len: 150},
 
+]
 
-function home() {
+function drawPage() {
+    Array.from(document.querySelectorAll('.playlist-card')).forEach(v => {
+        v.remove()
+    })
+    window.playlists.forEach(v => {
+        generatePlaylistCard(v.name, v.url, v.len)
+    })
 }
 
-export default home
+drawPage()
+
+console.log("aaaa")
