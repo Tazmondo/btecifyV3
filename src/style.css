@@ -225,6 +225,7 @@ main > *.hidden {
     margin: 0 !important;
     flex: 0 0 0;
     overflow: hidden;
+    transition: all 0.75s ease;
 }
 
 /* HOME PAGE STYLING */
@@ -360,6 +361,10 @@ main > *.hidden {
 .select-dropdown * {
     text-align: center;
     padding: 1px 0 1px 0;
+}
+
+.select-dropdown *.selected {
+    color: rgb(0, 255, 0);
 }
 
 .select-dropdown *:hover {
