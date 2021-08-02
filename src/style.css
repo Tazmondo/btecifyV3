@@ -253,6 +253,7 @@ main > *.hidden {
     width: 300px;
     height: 150px;
     justify-content: flex-start;
+    align-content: center;
     margin: 5px;
     border-radius: 20px;
 }
@@ -260,6 +261,7 @@ main > *.hidden {
 .playlist-card > img {
     width: 128px;
     height: 128px;
+    padding: 15px 15px 15px 15px;
 }
 
 .playlist-card > div {
@@ -267,6 +269,8 @@ main > *.hidden {
     flex-direction: column;
     align-content: center;
     justify-content: center;
+    text-align: center;
+    flex: 1;
 }
 
 .playlist-card > div > h3 {
@@ -277,12 +281,12 @@ main > *.hidden {
 }
 
 .playlist-card > div > em {
+    max-width: 150px;
     margin-top: -15px;
 }
 
 .playlist-card > div > svg {
-    display: block;
-    width: 48px;
+    width: 100%;
     height: 48px;
     margin-top: 6px;
     fill: rgba(0, 255, 0, 0.8);

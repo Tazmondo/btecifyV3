@@ -4,6 +4,7 @@ import './home.js'
 import './playlist.js'
 import './player.js'
 import './objects.js'
+import './controller.js'
 
 function getPageIdFromNav(navName) {
     return navName.slice(0, -4)

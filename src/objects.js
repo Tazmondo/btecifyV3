@@ -36,7 +36,7 @@ function validSong(song) {
     return Boolean(song?.getUUID && song?.getTitle && song?.getURL)
 }
 
-function Playlist(name, songs=[]) {
+function Playlist(name, songs=[], thumb=placeholderURL) {
     songs = songs.filter(validSong)
 
     return {
@@ -46,6 +46,14 @@ function Playlist(name, songs=[]) {
 
         getSongs() {
             return copyArray(songs)
+        },
+
+        getLength() {
+            return songs.length
+        },
+
+        getThumb() {
+            return thumb
         },
 
         addSong(song) {

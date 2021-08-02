@@ -1,12 +1,37 @@
-import { Song, Playlist } from "./objects.js";
+console.log("a")
 
-let allSongs = Playlist({
+import {Playlist, Song} from "./objects.js";
+import {copyArray} from "./util.js";
+
+let allSongs = localStorage['songs'] || Playlist({
     name: "All Songs"
 })
+let playlists = localStorage['playlists'] || []
 
-let playlists = []
+
+function makePlaylist(playlistArgs) {
+    let newPlaylist = Playlist(...playlistArgs)
+    playlists.push(newPlaylist)
+    dispatch('playlist')
+}
+
 let events = {
-    'playlist': []
+    'playlist': {
+        callbacks: [],
+        e: () => {return copyArray(playlists)}
+    },
+    'songs': {
+        callbacks: [],
+        e: () => {return copyArray(allSongs)}
+    }
+}
+
+function dispatch(eventName) {
+    if (validEvent(eventName)) {
+        throw "Tried to dispatch to an invalid event!"
+    }
+    events[eventName].callbacks.forEach(v => {v()})
+    return true
 }
 
 function validEvent(event) {
@@ -18,9 +43,11 @@ function unSubscribe(event, callback) {
         throw "Tried to unsubscribe from an invalid event!"
     }
 
-    let index = events[event].findIndex(v => {return v === callback})
+    let callbacks = events[event].callbacks;
+
+    let index = callbacks.findIndex(v => {return v === callback})
     if (index > -1) {
-        events[event].splice(index, 1)
+        callbacks.splice(index, 1)
         return true
     }
     return false
@@ -31,14 +58,15 @@ function subscribe(event, callback) {
         throw "Tried to subscribe to an invalid event!"
     }
     unSubscribe(event, callback)
-    events[event].push(callback)
+    events[event].callbacks.push(callback)
     return true
 }
 
-function dispatch(eventName, eventObj) {
-    if (validEvent(eventName)) {
-        throw "Tried to dispatch to an invalid event!"
-    }
-    events[eventName].forEach(v => {v(eventObj)})
-    return true
+function getPlaylistArray() {
+    return copyArray(playlists)
 }
+
+// FOR DEBUGGING
+Object.assign(window, {makePlaylist})
+
+export {getPlaylistArray, subscribe, unSubscribe}
