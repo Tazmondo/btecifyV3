@@ -148,8 +148,8 @@ button {
 
     background-color: rgba(255, 255, 255, 0.05);
     color: inherit;
-    width: 100px;
-    height: 20px;
+    min-width: 100px;
+    height: 1.5em;
     position: relative;
     display: flex;
     justify-content: center;
@@ -162,7 +162,7 @@ button {
 button:hover,
 button.active {
     background-color: rgba(255, 255, 255, 0.15);
-    height: 30px;
+    height: 2em;
     transition: all 0.2s ease-in-out;
 }
 
