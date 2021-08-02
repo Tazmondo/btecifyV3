@@ -65,6 +65,7 @@ seekerDiv.addEventListener("mousedown", e => {
         let relativeX = getMousePosition(e, seekerBackBar)[0]
         updateSeeker(relativeX, songLength)
     }
+    moveFunc(e)
     document.addEventListener("mousemove", moveFunc)
     document.addEventListener("mouseup", e => {
         document.removeEventListener("mousemove", moveFunc)
