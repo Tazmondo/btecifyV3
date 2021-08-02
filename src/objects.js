@@ -1,6 +1,6 @@
 const placeholderURL = "./assets/thumbplaceholder.png"
 
-function Song({title, url, author="", album="", thumbnail=""}={}) {
+function Song(title, url, author="", album="", thumbnail="") {
     let uuid = api.getUUID()
 
     return {
@@ -34,7 +34,7 @@ function validSong(song) {
     return Boolean(song?.getUUID && song?.getTitle && song?.getURL)
 }
 
-function Playlist({name, songs=[]}={}) {
+function Playlist(name, songs=[]) {
     songs = songs.filter(validSong)
 
     return {

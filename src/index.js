@@ -42,8 +42,6 @@ navButtons.forEach((v, i, arr) => {
     })
 })
 
-// FOOTER //
-
 
 // MAIN EXECUTION //
-routeWithPageName('playlist')
+routeWithPageName('home')
