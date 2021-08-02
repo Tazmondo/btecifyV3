@@ -1,10 +1,12 @@
 const { app, BrowserWindow } = require('electron')
 const path = require('path')
 
-if (!app.isPackaged) {
-    console.log("reload")
-    require('electron-reload')(app.getAppPath())
-}
+app.commandLine.appendSwitch('remote-debugging-port', '8315')
+
+// if (!app.isPackaged) {
+//     console.log("reload")
+//     require('electron-reload')(app.getAppPath())
+// }
 
 function createWindow () {
     const win = new BrowserWindow({
