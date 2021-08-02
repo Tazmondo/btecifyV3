@@ -218,14 +218,11 @@ main > * {
     flex: 1;
     overflow: hidden;
 
-    transition: all 0.7s ease-out;
+    transition: max-width 0.7s ease-out;
 }
 
 main > *.hidden {
     max-width: 0;
-    padding: 0 !important;
-    margin: 0 !important;
-    flex: 0 0 0;
 }
 
 /* HOME PAGE STYLING */
@@ -302,7 +299,6 @@ main > *.hidden {
     display: flex;
     flex-direction: row;
     flex: 1;
-    padding: 10px 5px 20px 5px;
     gap: 1em;
     min-height: 0;
 }
@@ -311,6 +307,7 @@ main > *.hidden {
     display: flex;
     flex-direction: column;
     flex: 1 1 50%;
+    padding: 10px 5px 20px 5px;
 }
 
 .playlist-select {
