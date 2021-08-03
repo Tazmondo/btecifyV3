@@ -83,6 +83,5 @@ function getPlaylistArray() {
 
 // FOR DEBUGGING
 Object.assign(window, {makePlaylist})
-makePlaylist(["test playlist 1", Array(13).fill(Song("test song", "test url"))])
 
 export {getPlaylistArray, subscribe, unSubscribe}
