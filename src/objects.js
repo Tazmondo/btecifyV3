@@ -2,8 +2,8 @@ import {copyArray} from "./util.js";
 
 const placeholderURL = "./assets/thumbplaceholder.png"
 
-function Song(title, url, author="", album="", thumbnail="") {
-    let uuid = api.getUUID()
+function Song(title, url, author = "", album = "", thumbnail = "", uuid = "") {
+    uuid = uuid || api.getUUID()
 
     return {
         getTitle() {
@@ -28,6 +28,10 @@ function Song(title, url, author="", album="", thumbnail="") {
 
         getUUID() {
             return uuid
+        },
+
+        toJSON() {
+            return ['song', title, url, author, album, thumbnail, uuid]
         }
     }
 }
@@ -77,11 +81,35 @@ function Playlist(name, songs=[], thumb=placeholderURL) {
                 return true
             }
             return false
+        },
+
+        toJSON() {
+            return ['playlist', name, songs, thumb]
         }
 
     }
 }
 
-Object.assign(window, {Song, Playlist}) // For console testing and debugging todo: remove me
+let parsers = {
+    'song': argArray => {
+        return Song(...argArray)
+    },
 
-export { Song, Playlist }
+    'playlist': argArray => {
+        return Playlist(...argArray)
+    }
+}
+
+function parseObject(k, v) {
+    if (Array.isArray(v)) {
+        let objName = v[0]
+        if (parsers[objName] !== undefined) {
+            return parsers[objName](v.slice(1))
+        }
+    }
+    return v
+}
+
+//Object.assign(window, {Song, Playlist, parseObject}) // For console testing and debugging todo: remove me
+
+export { Song, Playlist, parseObject }

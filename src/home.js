@@ -1,4 +1,4 @@
-console.log("home.js")
+console.log("home.js running...")
 import {getPlaylistArray, subscribe} from "./controller.js";
 
 function generatePlaylistCard(playlistName, thumbnailURL, numSongs, playFunction) {
@@ -29,5 +29,3 @@ function drawPage() {
 
 drawPage()
 subscribe('playlist', drawPage)
-
-console.log("aaaa")

@@ -1,4 +1,4 @@
-console.log("preloader running...")
+console.log("preloader.js running...")
 const {v4: uuidv4} = require('uuid')
 
 const { contextBridge, ipcRenderer} = require('electron')

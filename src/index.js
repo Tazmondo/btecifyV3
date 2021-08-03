@@ -1,4 +1,4 @@
-console.log("renderer running...")
+console.log("index.js running...")
 
 import './home.js'
 import './playlist.js'

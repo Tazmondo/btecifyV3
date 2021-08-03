@@ -1,28 +1,43 @@
-console.log("a")
+console.log("controller.js running...")
 
-import {Playlist, Song} from "./objects.js";
+import {Playlist, Song, parseObject} from "./objects.js";
 import {copyArray} from "./util.js";
 
-let allSongs = localStorage['songs'] || Playlist({
-    name: "All Songs"
-})
-let playlists = localStorage['playlists'] || []
+let allSongPlaylist = (() => {
+    if (localStorage['song'] !== undefined) {
+        return JSON.parse(localStorage['song'], parseObject)
+    }
+    return Playlist({
+        name: "All Songs"
+    })
+})()
+
+let playlistArray = (() => {
+    if (localStorage['playlist'] !== undefined) {
+        return JSON.parse(localStorage['playlist'], parseObject)
+    }
+    return []
+})()
 
 
 function makePlaylist(playlistArgs) {
     let newPlaylist = Playlist(...playlistArgs)
-    playlists.push(newPlaylist)
+    playlistArray.push(newPlaylist)
     dispatch('playlist')
 }
 
 let events = {
     'playlist': {
-        callbacks: [],
-        e: () => {return copyArray(playlists)}
+        callbacks: [ () => {
+            localStorage['playlist'] = JSON.stringify(playlistArray)
+        }],
+        e: () => {return copyArray(playlistArray)}
     },
     'songs': {
-        callbacks: [],
-        e: () => {return copyArray(allSongs)}
+        callbacks: [ () => {
+            localStorage['song'] = JSON.stringify(playlistArray)
+        }],
+        e: () => {return copyArray(allSongPlaylist)}
     }
 }
 
@@ -63,10 +78,11 @@ function subscribe(event, callback) {
 }
 
 function getPlaylistArray() {
-    return copyArray(playlists)
+    return copyArray(playlistArray)
 }
 
 // FOR DEBUGGING
 Object.assign(window, {makePlaylist})
+makePlaylist(["test playlist 1", Array(13).fill(Song("test song", "test url"))])
 
 export {getPlaylistArray, subscribe, unSubscribe}
