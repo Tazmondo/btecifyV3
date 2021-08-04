@@ -1,11 +1,11 @@
 console.log("index.js running...")
 
 // INITAIALISE PAGES
-import './home.js'
-import './playlist.js'
+import './homePage.js'
+import './playlistPage.js'
 
 // INITIALISE PLAYER
-import './player.js'
+import './footerPlayer.js'
 
 // INITIALISE SO THAT RESULT IS CACHED
 import './objects.js'

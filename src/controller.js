@@ -27,6 +27,22 @@ function makePlaylist(playlistArgs) {
     if (!doesPlaylistExist(newPlaylist)) {
         playlistArray.push(newPlaylist)
         dispatch('playlist')
+        return true
+    }
+    return false
+}
+
+function doesSongExist(song) {
+    return false // todo: song name searching and stuff
+}
+
+function makeSong(songArgs, playlists=[]) {
+    let newSong = Song(...songArgs)
+    if (!doesSongExist(newSong)) {
+        allSongPlaylist.addSong(newSong)
+        playlists.forEach(playlist => {
+            playlist.addSong(newSong)
+        })
     }
 }
 
@@ -37,7 +53,7 @@ let events = {
         }],
         e: () => {return copyArray(playlistArray)}
     },
-    'songs': {
+    'song': {
         callbacks: [ () => {
             localStorage['song'] = JSON.stringify(playlistArray)
         }],
@@ -94,5 +110,46 @@ function getPlaylistFromTitle(title) {
 
 // FOR DEBUGGING
 // Object.assign(window, {dispatch, makePlaylist, doesPlaylistExist})
+function readInputData() {
+    let inputData = api.getInputData()
+    let songs = []
+    console.log(inputData)
+    for (let playlist of inputData) {
+        for (let song of playlist.songs) {
+            if (!songs.find(v => {
+                return v.getURL() === song.songurl
+            })) {
+                let duration = (Number(song.duration.substr(3, 2)) * 60) + Number(song.duration.substr(6, 2))
+                if (isNaN(duration)) {throw "NaN duration"}
+                let newSong = Song(song.songname, song.songurl, duration, song.author, "", song.thumbnail)
+                songs.push(newSong)
+            }
+        }
+    }
+    console.log(songs)
+
+    let playlists = []
+
+    for (let playlist of inputData) {
+        if (playlist.playlistname !== "empty"){
+
+            let newPlaylist = Playlist(playlist.playlistname, songs.filter(v => {
+                return playlist.songs.find(v2 => {
+                    return v.getURL() === v2.songurl
+                })
+            }))
+            playlists.push(newPlaylist)
+        }
+    }
+
+    console.log(playlists)
+
+    allSongPlaylist = songs;
+    playlistArray = playlists;
+    dispatch('playlist')
+    dispatch('song')
+
+}
+//readInputData()
 
 export {getPlaylistArray, getPlaylistFromTitle, subscribe, unSubscribe, makePlaylist}

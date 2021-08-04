@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
+const fs = require('fs')
 
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
@@ -26,10 +27,28 @@ function createWindow () {
 
 }
 
+let cachedContents;
+
+function readInputData() {
+
+    if(cachedContents === undefined){
+
+        let file = fs.readFileSync(path.join(__dirname, "./db/input.txt"))
+        let contents = file.toString()
+        cachedContents = JSON.parse(contents)
+    }
+    return cachedContents
+}
+
+ipcMain.on('getinputdata', e=> {
+    e.returnValue = readInputData()
+})
+
+ipcMain.on('isdev', (e) => {
+    e.returnValue = !app.isPackaged
+})
+
 app.whenReady().then(() => {
-    ipcMain.on('isdev', (e) => {
-        e.returnValue = !app.isPackaged
-    })
 
     createWindow()
 
