@@ -30,7 +30,7 @@ function Song(title, url, duration, artist = "", album = "", thumbnail = "", uui
         },
 
         getAlbum() {
-            return album
+            return album || title
         },
 
         getURL() {
