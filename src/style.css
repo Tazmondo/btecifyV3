@@ -330,6 +330,7 @@ main > *.hidden {
     flex-direction: column;
     flex: 1 1 50%;
     padding: 10px 16px 20px 16px;
+    min-width: 0;
 }
 
 .playlist-select {
@@ -401,33 +402,76 @@ main > *.hidden {
     margin-top: 1em;
     background-color: rgba(255, 255, 255, 0.1);
     flex: 1;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 .song-list-item {
-    background: #111111;
+    background: #0c0c0c;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     padding: 10px;
-
+    gap: 1em;
     transition: all 0.3s ease;
+
 }
 
-.song-list-item:hover {
-    background: #4f4f4f;
+.song-list-item * {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: all 0.3s ease;
+
 }
 
 .song-list-item > .thumb-title-artist {
     display: flex;
     justify-content: flex-start;
     gap: 0.5em;
+    flex: 1;
 }
 
-.song-list-item  img {
+.song-list-item .title-artist {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+.song-list-item .title {
+    margin: 5px;
+}
+
+.song-list-item .artist {
+    margin: 0 5px 5px 5px;
+    font-size: 0.9em;
+    color: #dedede
+}
+
+.song-list-item .album {
+    text-align: center;
+}
+
+.song-list-item .duration {
+    color: #dedede;
+}
+
+.song-list-item img {
     width: 64px;
     height: 64px;
     object-fit: cover;
     align-self: center;
+}
+
+.song-list-item:hover {
+    background: #2a2a2a;
+}
+
+.song-list-item:hover .artist {
+    color: white;
+}
+
+.song-list-item:hover .duration {
+    color: white;
 }
 
 /* FOOTER PLAYER  */

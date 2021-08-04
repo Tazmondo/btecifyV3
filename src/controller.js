@@ -26,7 +26,7 @@ let events = {
     },
     'song': {
         callbacks: [ () => {
-            localStorage['song'] = JSON.stringify(playlistArray)
+            localStorage['song'] = JSON.stringify(allSongPlaylist)
         }],
         e: () => {return copyArray(allSongPlaylist)}
     }
@@ -158,4 +158,4 @@ function readInputData() {
     dispatch('song')
 
 }
-readInputData()
+//readInputData()

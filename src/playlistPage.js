@@ -51,6 +51,7 @@ function generateSongElement(song) {
     let title = document.createElement('p')
     title.classList.toggle("title")
     title.innerText = song.getTitle()
+    title.title = song.getTitle()
 
     let artist = document.createElement('p')
     artist.classList.toggle("artist")
