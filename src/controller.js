@@ -120,8 +120,12 @@ function readInputData() {
                 return v.getURL() === song.songurl
             })) {
                 let duration = durationMinutesToSeconds(song.duration)
-                if (isNaN(duration)) {throw "NaN duration"}
-                let newSong = Song(song.songname, song.songurl, duration, song.author, "", song.thumbnail)
+
+                if (isNaN(duration)) {
+                    throw "NaN duration"
+                }
+                let thumb = song.thumbnail.replace("hqdefault.jpg", "maxresdefault.jpg")
+                let newSong = Song(song.songname, song.songurl, duration, song.author, "", thumb)
                 songs.push(newSong)
             }
         }
