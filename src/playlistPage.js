@@ -1,4 +1,5 @@
 import {getPlaylistArray, getPlaylistFromTitle, subscribe} from "./controller.js";
+import {durationSecondsToMinutes} from "./util.js";
 
 Array.from(document.querySelectorAll('.playlist-section')).forEach(v => {
     let selector = v.querySelector('.playlist-select')
@@ -32,13 +33,26 @@ function generateSongElement(song) {
     newSongItem.classList.toggle("song-list-item")
 
     let thumbTitleArtist = document.createElement('div')
+    thumbTitleArtist.classList.toggle("thumb-title-artist")
+
+    let thumbCrop = document.createElement('div')
+    thumbCrop.classList.toggle("crop")
+
     let thumb = document.createElement('img')
+    thumb.classList.toggle("thumb")
     thumb.loading = 'lazy'
     thumb.src = song.getThumb()
 
     let titleArtist = document.createElement('div')
+    titleArtist.classList.toggle("title-artist")
+
     let title = document.createElement('p')
+    title.classList.toggle("title")
+    title.innerText = song.getTitle()
+
     let artist = document.createElement('p')
+    artist.classList.toggle("artist")
+    artist.innerText = song.getArtist()
 
     newSongItem.appendChild(thumbTitleArtist)
     thumbTitleArtist.appendChild(thumb)
@@ -47,9 +61,13 @@ function generateSongElement(song) {
     titleArtist.appendChild(artist)
 
     let album = document.createElement('div')
+    album.classList.toggle("album")
+    album.innerText = song.getAlbum()
     newSongItem.appendChild(album)
 
     let duration = document.createElement('div')
+    duration.classList.toggle("duration")
+    duration.innerText = durationSecondsToMinutes(song.getDurationSeconds())
     newSongItem.appendChild(duration)
 
     return newSongItem
