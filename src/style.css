@@ -261,10 +261,14 @@ main > *.hidden {
 }
 
 .playlist-card:hover {
-    -webkit-transform: translateZ(0) scale(1.05);
+    transform: scale(1.05);
 
     z-index: 1;
     border: solid 1px rgb(119, 119, 119);
+}
+
+.playlist-card:hover > div > svg{
+    fill: rgba(0, 255, 0, 0.65);
 }
 
 .playlist-card > img {
@@ -299,11 +303,13 @@ main > *.hidden {
     height: 48px;
     margin-top: 6px;
     align-self: center;
-    fill: rgba(0, 255, 0, 0.8);
+    fill: rgb(112, 112, 112);
+
+    transition: all 0.3s ease;
 }
 
 .playlist-card > div > svg:hover {
-    fill: rgba(0, 255, 0, 1);
+    fill: rgba(0, 255, 0, 0.9);
 }
 
 
@@ -321,21 +327,18 @@ main > *.hidden {
     display: flex;
     flex-direction: column;
     flex: 1 1 50%;
-    padding: 10px 5px 20px 5px;
+    padding: 10px 16px 20px 16px;
 }
 
 .playlist-select {
     background-color: rgba(255, 255, 255, 0.1);
     width: 100%;
-    height: 1.5em;
+    height: 2em;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-}
 
-.playlist-select > span {
-    text-align: center;
 }
 
 .playlist-select::after {
@@ -392,10 +395,14 @@ main > *.hidden {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.playlist-list {
+.song-list {
     margin-top: 1em;
     background-color: rgba(255, 255, 255, 0.1);
     flex: 1;
+}
+
+.song-list-item {
+    background: #4b4b4b;
 }
 
 /* FOOTER PLAYER  */

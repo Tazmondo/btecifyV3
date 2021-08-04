@@ -23,7 +23,7 @@ function drawPage() {
         v.remove()
     })
     getPlaylistArray().forEach(v => {
-        generatePlaylistCard(v.getName(), v.getThumb(), v.getLength())
+        generatePlaylistCard(v.getTitle(), v.getThumb(), v.getLength())
     })
 }
 

@@ -1,17 +1,24 @@
+console.log("objects.js running")
+
 import {copyArray} from "./util.js";
 
 const placeholderURL = "./assets/thumbplaceholder.png"
 
-function Song(title, url, author = "", album = "", thumbnail = "", uuid = "") {
+function validSong(song) {
+    return Boolean(song?.getUUID && song?.getTitle && song?.getURL)
+}
+
+function Song(title, url, artist = "", album = "", thumbnail = "", uuid = "") {
     uuid = uuid || api.getUUID()
+    album = album || title
 
     return {
         getTitle() {
             return title
         },
 
-        getAuthor() {
-            return author
+        getArtist() {
+            return artist
         },
 
         getAlbum() {
@@ -31,21 +38,18 @@ function Song(title, url, author = "", album = "", thumbnail = "", uuid = "") {
         },
 
         toJSON() {
-            return ['song', title, url, author, album, thumbnail, uuid]
+            return ['song', title, url, artist, album, thumbnail, uuid]
         }
     }
 }
 
-function validSong(song) {
-    return Boolean(song?.getUUID && song?.getTitle && song?.getURL)
-}
-
-function Playlist(name, songs=[], thumb=placeholderURL) {
+// todo: Song added dates
+function Playlist(title, songs=[], thumb="") {
     songs = songs.filter(validSong)
 
     return {
-        getName() {
-            return name
+        getTitle() {
+            return title
         },
 
         getSongs() {
@@ -57,7 +61,7 @@ function Playlist(name, songs=[], thumb=placeholderURL) {
         },
 
         getThumb() {
-            return thumb
+            return thumb || this.getSongs()[0]?.getThumb() || placeholderURL
         },
 
         addSong(song) {
@@ -84,7 +88,7 @@ function Playlist(name, songs=[], thumb=placeholderURL) {
         },
 
         toJSON() {
-            return ['playlist', name, songs, thumb]
+            return ['playlist', title, songs, thumb]
         }
 
     }

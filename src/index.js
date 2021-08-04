@@ -1,8 +1,13 @@
 console.log("index.js running...")
 
+// INITAIALISE PAGES
 import './home.js'
 import './playlist.js'
+
+// INITIALISE PLAYER
 import './player.js'
+
+// INITIALISE SO THAT RESULT IS CACHED
 import './objects.js'
 import './controller.js'
 

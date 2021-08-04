@@ -7,9 +7,7 @@ let allSongPlaylist = (() => {
     if (localStorage['song'] !== undefined) {
         return JSON.parse(localStorage['song'], parseObject)
     }
-    return Playlist({
-        name: "All Songs"
-    })
+    return Playlist("Songs")
 })()
 
 let playlistArray = (() => {
@@ -19,11 +17,17 @@ let playlistArray = (() => {
     return []
 })()
 
+function doesPlaylistExist(playlist) {
+    return playlistArray.map(v => {v.getTitle()}).includes(playlist.getTitle())
+}
 
 function makePlaylist(playlistArgs) {
     let newPlaylist = Playlist(...playlistArgs)
-    playlistArray.push(newPlaylist)
-    dispatch('playlist')
+
+    if (!doesPlaylistExist(newPlaylist)) {
+        playlistArray.push(newPlaylist)
+        dispatch('playlist')
+    }
 }
 
 let events = {
@@ -45,7 +49,10 @@ function dispatch(eventName) {
     if (validEvent(eventName)) {
         throw "Tried to dispatch to an invalid event!"
     }
-    events[eventName].callbacks.forEach(v => {v()})
+
+    events[eventName].callbacks.forEach(v => {
+        v()
+    })
     return true
 }
 
@@ -81,7 +88,11 @@ function getPlaylistArray() {
     return copyArray(playlistArray)
 }
 
-// FOR DEBUGGING
-Object.assign(window, {makePlaylist})
+function getPlaylistFromTitle(title) {
+    return playlistArray.find(v => {return v.getTitle() === title})
+}
 
-export {getPlaylistArray, subscribe, unSubscribe}
+// FOR DEBUGGING
+// Object.assign(window, {dispatch, makePlaylist, doesPlaylistExist})
+
+export {getPlaylistArray, getPlaylistFromTitle, subscribe, unSubscribe, makePlaylist}

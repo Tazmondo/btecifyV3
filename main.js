@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
@@ -27,6 +27,10 @@ function createWindow () {
 }
 
 app.whenReady().then(() => {
+    ipcMain.on('isdev', (e) => {
+        e.returnValue = !app.isPackaged
+    })
+
     createWindow()
 
     app.on('activate', function () {
