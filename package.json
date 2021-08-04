@@ -22,7 +22,8 @@
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
-    "uuid": "^3.4.0"
+    "uuid": "^3.4.0",
+    "youtube-dl-exec": "^1.2.4"
   },
   "config": {
     "forge": {
