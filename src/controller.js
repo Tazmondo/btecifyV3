@@ -17,11 +17,26 @@ let playlistArray = (() => {
     return []
 })()
 
+let events = {
+    'playlist': {
+        callbacks: [ () => {
+            localStorage['playlist'] = JSON.stringify(playlistArray)
+        }],
+        e: () => {return copyArray(playlistArray)}
+    },
+    'song': {
+        callbacks: [ () => {
+            localStorage['song'] = JSON.stringify(playlistArray)
+        }],
+        e: () => {return copyArray(allSongPlaylist)}
+    }
+}
+
 function doesPlaylistExist(playlist) {
     return playlistArray.map(v => {v.getTitle()}).includes(playlist.getTitle())
 }
 
-function makePlaylist(playlistArgs) {
+export function makePlaylist(playlistArgs) {
     let newPlaylist = Playlist(...playlistArgs)
 
     if (!doesPlaylistExist(newPlaylist)) {
@@ -36,28 +51,13 @@ function doesSongExist(song) {
     return false // todo: song name searching and stuff
 }
 
-function makeSong(songArgs, playlists=[]) {
+export function makeSong(songArgs, playlists=[]) {
     let newSong = Song(...songArgs)
     if (!doesSongExist(newSong)) {
         allSongPlaylist.addSong(newSong)
         playlists.forEach(playlist => {
             playlist.addSong(newSong)
         })
-    }
-}
-
-let events = {
-    'playlist': {
-        callbacks: [ () => {
-            localStorage['playlist'] = JSON.stringify(playlistArray)
-        }],
-        e: () => {return copyArray(playlistArray)}
-    },
-    'song': {
-        callbacks: [ () => {
-            localStorage['song'] = JSON.stringify(playlistArray)
-        }],
-        e: () => {return copyArray(allSongPlaylist)}
     }
 }
 
@@ -76,7 +76,7 @@ function validEvent(event) {
     return events[event] === undefined
 }
 
-function unSubscribe(event, callback) {
+export function unSubscribe(event, callback) {
     if (validEvent(event)) {
         throw "Tried to unsubscribe from an invalid event!"
     }
@@ -91,7 +91,7 @@ function unSubscribe(event, callback) {
     return false
 }
 
-function subscribe(event, callback) {
+export function subscribe(event, callback) {
     if (validEvent(event)) {
         throw "Tried to subscribe to an invalid event!"
     }
@@ -100,11 +100,11 @@ function subscribe(event, callback) {
     return true
 }
 
-function getPlaylistArray() {
+export function getPlaylistArray() {
     return copyArray(playlistArray)
 }
 
-function getPlaylistFromTitle(title) {
+export function getPlaylistFromTitle(title) {
     return playlistArray.find(v => {return v.getTitle() === title})
 }
 
@@ -151,5 +151,3 @@ function readInputData() {
 
 }
 //readInputData()
-
-export {getPlaylistArray, getPlaylistFromTitle, subscribe, unSubscribe, makePlaylist}
