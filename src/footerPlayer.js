@@ -1,3 +1,5 @@
+    import {durationSecondsToMinutes} from "./util.js";
+
 let paused = false
 
 document.getElementById("shuffle").addEventListener("click", ev => {
@@ -35,12 +37,7 @@ function getMousePosition(e, target) {
 function getSongTimeFromPercentage(percentage, duration) {
     let crudeTime = (percentage / 100) * duration
     let wholeTime = Math.round(crudeTime)
-    let minutes = Math.floor(wholeTime/60)
-    let seconds = wholeTime % 60
-    if (seconds < 10) {
-        seconds = `0${seconds}`
-    }
-    return `${minutes}:${seconds}`
+    return durationSecondsToMinutes(wholeTime)
 }
 
 function updateSeeker(relativeX, songSeconds) {

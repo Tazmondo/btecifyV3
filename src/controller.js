@@ -1,7 +1,7 @@
 console.log("controller.js running...")
 
 import {Playlist, Song, parseObject} from "./objects.js";
-import {copyArray} from "./util.js";
+import {copyArray, durationMinutesToSeconds} from "./util.js";
 
 let allSongPlaylist = (() => {
     if (localStorage['song'] !== undefined) {
@@ -119,7 +119,7 @@ function readInputData() {
             if (!songs.find(v => {
                 return v.getURL() === song.songurl
             })) {
-                let duration = (Number(song.duration.substr(3, 2)) * 60) + Number(song.duration.substr(6, 2))
+                let duration = durationMinutesToSeconds(song.duration)
                 if (isNaN(duration)) {throw "NaN duration"}
                 let newSong = Song(song.songname, song.songurl, duration, song.author, "", song.thumbnail)
                 songs.push(newSong)
