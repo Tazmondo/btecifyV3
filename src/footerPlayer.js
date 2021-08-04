@@ -72,7 +72,3 @@ seekerDiv.addEventListener("mousedown", e => {
         paused = false
     }, {once: true})
 })
-
-function player() {
-}
-export default player

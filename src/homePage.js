@@ -1,4 +1,4 @@
-console.log("home.js running...")
+console.log("homePage.js running...")
 import {getPlaylistArray, subscribe} from "./controller.js";
 
 function generatePlaylistCard(playlistName, thumbnailURL, numSongs, playFunction) {
