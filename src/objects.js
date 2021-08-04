@@ -10,7 +10,6 @@ function validSong(song) {
 
 function Song(title, url, duration, artist = "", album = "", thumbnail = "", uuid = "") {
     uuid = uuid || api.getUUID()
-    album = album || title
     let localUrl;
     let internetUrl;
 
