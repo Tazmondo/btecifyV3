@@ -61,6 +61,14 @@ function Playlist(title, songs=[], thumb="") {
 
     songs = songs.filter(validSong)
 
+    function sortSongs() {
+        songs.sort((a, b) => {
+            //console.log(a.getTitle(), b.getTitle(), a.getTitle() > b.getTitle())
+            return a.getTitle() > b.getTitle() ? 1 : -1
+        })
+    }
+    sortSongs()
+
     function removeSong(uuid) {
         let targetSongIndex = songs.findIndex(v => {
             return v.getUUID() === uuid
@@ -107,6 +115,7 @@ function Playlist(title, songs=[], thumb="") {
         addSong(song) {
             if (validSong(song) && !this.doesContainSong(song)) {
                 songs.push(song)
+                sortSongs()
                 return true
             }
             return false
@@ -116,7 +125,9 @@ function Playlist(title, songs=[], thumb="") {
             if (validSong(song)) {
                 let uuid = song.getUUID()
                 if (api.uuidIsValid(uuid)) {
-                    return removeSong(uuid);
+                    let result = removeSong(uuid);
+                    sortSongs()
+                    return result
                 }
             }
             throw "This should never be reached. removeSong called on an invalid song."
@@ -125,7 +136,9 @@ function Playlist(title, songs=[], thumb="") {
 
         removeSongWithUuid(uuid) {
             if (api.uuidIsValid(uuid)) {
-                return removeSong(uuid)
+                let result = removeSong(uuid)
+                sortSongs()
+                return result
             }
             throw "This should never be reached. removeSong called with an invalid uuid."
             return false
@@ -144,6 +157,7 @@ let parsers = {
     },
 
     'playlist': argArray => {
+        console.log("waw");
         return Playlist(...argArray)
     }
 }
