@@ -218,7 +218,11 @@ main > * {
     flex: 1;
     overflow: hidden;
 
+}
+
+main > *.switching {
     transition: max-width 0.7s ease-out;
+/*    If you change me, change in index.js as well*/
 }
 
 main > *.hidden {
