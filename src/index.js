@@ -48,6 +48,6 @@ navButtons.forEach((v, i, arr) => {
     })
 })
 
-
 // MAIN EXECUTION //
+
 routeWithPageName('home')
