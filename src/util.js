@@ -17,12 +17,12 @@ export function durationSecondsToMinutes(iSeconds) {
 
 export function durationMinutesToSeconds(iMinutes) {
     let duration = 0;
-    if (duration.length === 8) {
+    if (iMinutes.length === 8) {
         duration = (Number(iMinutes.substr(3, 2)) * 60) + Number(iMinutes.substr(6, 2))
-    } else if (duration.length === 5) {
+    } else if (iMinutes.length === 5) {
         duration = (Number(iMinutes.substr(0, 2)) * 60) + Number(iMinutes.substr(3, 2))
     } else {
-        throw new Error("Invalid duration was passed? This shouldn't be possible.")
+        throw new Error(`Invalid duration was passed ${iMinutes}`)
     }
 
     return duration
