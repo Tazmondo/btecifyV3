@@ -1,5 +1,7 @@
 ideas.txt
-node_modules
-.idea
+node_modules/
+.idea/
 
+ut/
+db/
 out/
