@@ -1,6 +1,11 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const fs = require('fs')
+const db = require('./src/db.js')(path.join(app.getAppPath(), './db')) // Initialise db in the database directory
+
+db.songExists("poggers").then(res => {
+    console.log(res)
+})
 
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
@@ -40,12 +45,16 @@ function readInputData() {
     return cachedContents
 }
 
-ipcMain.on('getinputdata', e=> {
+ipcMain.on('getInputData', e=> {
     e.returnValue = readInputData()
 })
 
-ipcMain.on('isdev', (e) => {
+ipcMain.on('isDev', (e) => {
     e.returnValue = !app.isPackaged
+})
+
+ipcMain.handle('fetchThumbnail', async (event, ...args) => {
+    return await db.songExists(args[0])
 })
 
 app.whenReady().then(() => {

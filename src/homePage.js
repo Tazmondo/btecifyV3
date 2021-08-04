@@ -1,12 +1,12 @@
 console.log("homePage.js running...")
 import {getPlaylistArray, subscribe} from "./controller.js";
 
-function generatePlaylistCard(playlistName, thumbnailURL, numSongs, playFunction) {
+function generatePlaylistCard(playlistName, thumbnailURLPromise, numSongs) {
     let container = document.getElementsByClassName("playlists-container")[0]
 
     container.insertAdjacentHTML('beforeend',
         `<div class="playlist-card">
-        <img src="${thumbnailURL}" alt="${playlistName}">
+        <div class="img-div"></div>
         <div>
             <h3>${playlistName}</h3>
             <em>${numSongs} ${numSongs === 1 ? "song" : "songs"}</em>
@@ -15,6 +15,12 @@ function generatePlaylistCard(playlistName, thumbnailURL, numSongs, playFunction
             </svg>
         </div>
     </div>`)
+
+    let card = container.lastElementChild
+    thumbnailURLPromise.then( res => {
+        let img = card.querySelector('.img-div');
+        img.style.backgroundImage = `url(${res})`
+    })
 
 }
 
@@ -29,3 +35,4 @@ function drawPage() {
 
 drawPage()
 subscribe('playlist', drawPage)
+Object.assign(window, {drawPage})

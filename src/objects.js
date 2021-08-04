@@ -1,6 +1,6 @@
 console.log("objects.js running")
 
-import {copyArray} from "./util.js";
+import {copyArray, randomIndex} from "./util.js";
 
 const placeholderURL = "./assets/thumbplaceholder.png"
 
@@ -36,8 +36,9 @@ function Song(title, url, duration, artist = "", album = "", thumbnail = "", uui
             return localUrl || internetUrl || url;
         },
 
-        getThumb() {
-            return thumbnail || placeholderURL
+        async getThumb() {
+            //let downloadedThumb = await api.fetchThumbnail(uuid)
+            return await api.fetchThumbnail(uuid) || thumbnail || placeholderURL
         },
 
         getUUID() {
@@ -56,6 +57,8 @@ function Song(title, url, duration, artist = "", album = "", thumbnail = "", uui
 
 // todo: Song added dates
 function Playlist(title, songs=[], thumb="") {
+    let cachedThumb; // So that when using random thumbnail, it is consistent.
+
     songs = songs.filter(validSong)
 
     function removeSong(uuid) {
@@ -85,8 +88,14 @@ function Playlist(title, songs=[], thumb="") {
             return songs.length
         },
 
-        getThumb() {
-            return thumb || this.getSongs()[0]?.getThumb() || placeholderURL
+        async getThumb() {
+            return thumb || cachedThumb ||
+                (
+                    songs.length > 0 ?
+                    // cachedThumb = ... will also return cached thumb so it can be used here
+                    cachedThumb = await songs[randomIndex(songs.length)]?.getThumb() :
+                    placeholderURL
+                )
         },
 
         doesContainSong(song) {

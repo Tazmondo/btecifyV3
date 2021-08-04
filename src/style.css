@@ -271,10 +271,12 @@ main > *.hidden {
     fill: rgba(0, 255, 0, 0.65);
 }
 
-.playlist-card > img {
+.playlist-card > .img-div {
     width: 50%;
-    height: 100%;
-    padding: 15px 15px 15px 15px;
+    height: calc(100% - 30px);
+    margin: 15px 15px 15px 15px;
+    background: #363636 center;
+    background-size: cover;
 }
 
 .playlist-card > div {

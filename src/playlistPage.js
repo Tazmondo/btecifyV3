@@ -41,7 +41,9 @@ function generateSongElement(song) {
     let thumb = document.createElement('img')
     thumb.classList.toggle("thumb")
     thumb.loading = 'lazy'
-    thumb.src = song.getThumb()
+    song.getThumb().then(res => {
+        thumb.src = res
+    })
 
     let titleArtist = document.createElement('div')
     titleArtist.classList.toggle("title-artist")

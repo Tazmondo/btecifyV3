@@ -100,8 +100,11 @@ export function subscribe(event, callback) {
     return true
 }
 
+// Returns a sorted array of playlists.
 export function getPlaylistArray() {
-    return copyArray(playlistArray)
+    return copyArray(playlistArray).sort((a, b) => {
+        return b.getLength() - a.getLength()
+    })
 }
 
 export function getPlaylistFromTitle(title) {
@@ -125,6 +128,7 @@ function readInputData() {
                     throw "NaN duration"
                 }
                 let thumb = song.thumbnail.replace("hqdefault.jpg", "maxresdefault.jpg")
+                thumb = thumb.replace("sddefault.jpg", "maxresdefault.jpg")
                 let newSong = Song(song.songname, song.songurl, duration, song.author, "", thumb)
                 songs.push(newSong)
             }
@@ -154,4 +158,4 @@ function readInputData() {
     dispatch('song')
 
 }
-//readInputData()
+readInputData()

@@ -5,9 +5,21 @@ const { contextBridge, ipcRenderer,  } = require('electron')
 
 contextBridge.exposeInMainWorld('api', {
     getUUID: () => {return uuidv4()},
+
     uuidIsValid: (uuid) => {return validate(uuid)},
-    isDev: ipcRenderer.sendSync('isdev'),
+
+    isDev: ipcRenderer.sendSync('isDev'),
+
     getInputData: () => {
-        return ipcRenderer.sendSync('getinputdata')
-    }
+        return ipcRenderer.sendSync('getInputData')
+    },
+
+    // Returns a promise to the path to a thumbnail image, or an empty string if it doesn't exist.
+    fetchThumbnail: async (uuid) => {
+        return await ipcRenderer.invoke('fetchThumbnail', uuid)
+    },
+
+    fetchMusic: (url, uuid) => {
+        // todo: download music through main.js
+}
 })

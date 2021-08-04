@@ -27,3 +27,7 @@ export function durationMinutesToSeconds(iMinutes) {
 
     return duration
 }
+
+export function randomIndex(maxIndex) {
+    return (Math.floor(Math.random() * maxIndex) + 1) - 1
+}
