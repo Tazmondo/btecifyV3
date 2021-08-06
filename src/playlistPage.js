@@ -41,19 +41,22 @@ function generateSongElement(song, songList) {
     let thumb = document.createElement('div')
     thumb.classList.toggle("thumb")
 
-    new IntersectionObserver((entries, observer) => {
-         entries.forEach( entry => {
-             if (entry.isIntersecting && entry.target.classList.contains('song-list-item')) {
-                 console.log(`observed ${song.getTitle()}`)
-                 song.getThumb().then(res => {
-                     thumb.style.backgroundImage = `url(${res})`
-                 })
-                 observer.disconnect()
-             }
-         })
-    }, {
-        root: null
-    }).observe(newSongItem)
+    let cachedThumb = song.getCachedThumb()
+    if (cachedThumb) {
+        thumb.style.backgroundImage = `url(${cachedThumb})`
+    } else{
+        new IntersectionObserver((entries, observer) => {
+            entries.forEach( entry => {
+                if (entry.isIntersecting && entry.target.classList.contains('song-list-item')) {
+                    console.log(`observed ${song.getTitle()}`)
+                    song.getThumb().then(res => {
+                        thumb.style.backgroundImage = `url(${res})`
+                    })
+                    observer.disconnect()
+                }
+            })
+        }).observe(newSongItem)
+    }
 
     let titleArtist = document.createElement('div')
     titleArtist.classList.toggle("title-artist")
@@ -118,6 +121,7 @@ function drawPage() {
         if (selectedPlaylistTitle !== undefined) {
             let selectedPlaylist = getPlaylistFromTitle(selectedPlaylistTitle)
             let songList = section.querySelector('.song-list')
+            songList.scrollTop = 0
 
             selectedPlaylist.getSongs().forEach(song => {
                 let newElement = generateSongElement(song, songList)

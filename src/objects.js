@@ -19,6 +19,8 @@ function Song(title, url, duration, artist = "", album = "", thumbnail = "", uui
         localUrl = url
     }
 
+    let cachedThumb;
+
     return {
         getTitle() {
             return title
@@ -37,8 +39,12 @@ function Song(title, url, duration, artist = "", album = "", thumbnail = "", uui
         },
 
         async getThumb() {
-            //let downloadedThumb = await api.fetchThumbnail(uuid)
-            return await api.fetchThumbnail(uuid) || thumbnail || placeholderURL
+            cachedThumb = await api.fetchThumbnail(uuid) || thumbnail || placeholderURL
+            return cachedThumb
+        },
+
+        getCachedThumb() {
+            return cachedThumb || false
         },
 
         getUUID() {
