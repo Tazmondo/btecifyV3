@@ -114,7 +114,24 @@ h1 {
     margin: 0;
     -webkit-app-region: drag;
     padding-bottom: 0.3em;
+
     transition: all 0.5s;
+
+    background-image: url("./assets/headerbg.png");
+    animation-name: header-animation;
+    animation-duration: 15s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes header-animation {
+    from {
+        background-position-x: 0;
+    }
+
+    to {
+        background-position-x: 2000px;
+    }
 }
 
 h1::before {
