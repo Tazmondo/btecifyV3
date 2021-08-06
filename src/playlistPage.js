@@ -28,7 +28,7 @@ function generatePlaylistListElement(playlist, selected) {
     return newElement
 }
 
-function generateSongElement(song) {
+function generateSongElement(song, songList) {
     let newSongItem = document.createElement('div')
     newSongItem.classList.toggle("song-list-item")
 
@@ -38,12 +38,22 @@ function generateSongElement(song) {
     let thumbCrop = document.createElement('div')
     thumbCrop.classList.toggle("crop")
 
-    let thumb = document.createElement('img')
+    let thumb = document.createElement('div')
     thumb.classList.toggle("thumb")
-    thumb.loading = 'lazy'
-    song.getThumb().then(res => {
-        thumb.src = res
-    })
+
+    new IntersectionObserver((entries, observer) => {
+         entries.forEach( entry => {
+             if (entry.isIntersecting && entry.target.classList.contains('song-list-item')) {
+                 console.log(`observed ${song.getTitle()}`)
+                 song.getThumb().then(res => {
+                     thumb.style.backgroundImage = `url(${res})`
+                 })
+                 observer.disconnect()
+             }
+         })
+    }, {
+        root: null
+    }).observe(newSongItem)
 
     let titleArtist = document.createElement('div')
     titleArtist.classList.toggle("title-artist")
@@ -110,7 +120,7 @@ function drawPage() {
             let songList = section.querySelector('.song-list')
 
             selectedPlaylist.getSongs().forEach(song => {
-                let newElement = generateSongElement(song)
+                let newElement = generateSongElement(song, songList)
 
                 songList.insertAdjacentElement('beforeend', newElement)
             })

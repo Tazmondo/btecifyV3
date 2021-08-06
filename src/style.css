@@ -459,11 +459,13 @@ main > *.hidden {
     color: #dedede;
 }
 
-.song-list-item img {
+.song-list-item .thumb {
     width: 64px;
     height: 64px;
-    object-fit: cover;
     align-self: center;
+    background-size: cover;
+    background-color: #2b2b2b;
+    background-position: center;
 }
 
 .song-list-item:hover {
