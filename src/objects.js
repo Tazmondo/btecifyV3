@@ -157,7 +157,6 @@ let parsers = {
     },
 
     'playlist': argArray => {
-        console.log("waw");
         return Playlist(...argArray)
     }
 }
