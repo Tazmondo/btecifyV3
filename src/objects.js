@@ -8,16 +8,22 @@ function validSong(song) {
     return Boolean(song?.getUUID && song?.getTitle && song?.getURL)
 }
 
-function Song(title, url, duration, artist = "", album = "", thumbnail = "", uuid = "") {
-    uuid = uuid || api.getUUID()
-    let localUrl;
-    let internetUrl;
-
-    if (url.startsWith('http')) {
-        internetUrl = url
-    } else { // todo: actually add a check for file music
-        localUrl = url
+function Song(title, urls, duration, artist = "", album = "", thumbnail = "", uuid = "") {
+    if (urls.length === 0 || urls.length > 2) {
+        throw new Error(`Number of song urls is ${urls.length}`)
     }
+
+    uuid = uuid || api.getUUID()
+    let localUrl = "";
+    let internetUrl = "";
+
+    urls.forEach(url => {
+        if (url.startsWith('http')) {
+            internetUrl = url
+        } else { // todo: actually add a check for file music
+            localUrl = url
+        }
+    })
 
     let cachedThumb;
 
@@ -35,7 +41,7 @@ function Song(title, url, duration, artist = "", album = "", thumbnail = "", uui
         },
 
         getURL() {
-            return localUrl || internetUrl || url;
+            return localUrl || internetUrl;
         },
 
         async getThumb() {
@@ -56,7 +62,7 @@ function Song(title, url, duration, artist = "", album = "", thumbnail = "", uui
         },
 
         toJSON() {
-            return ['song', title, url, duration, artist, album, thumbnail, uuid]
+            return ['song', title, [internetUrl, localUrl], duration, artist, album, thumbnail, uuid]
         }
     }
 }
