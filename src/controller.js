@@ -20,13 +20,13 @@ let playlistArray = (() => {
 let events = {
     'playlist': {
         callbacks: [ () => {
-            localStorage['playlist'] = JSON.stringify(playlistArray)
+            //localStorage['playlist'] = JSON.stringify(playlistArray)
         }],
         e: () => {return copyArray(playlistArray)}
     },
     'song': {
         callbacks: [ () => {
-            localStorage['song'] = JSON.stringify(allSongPlaylist)
+            //localStorage['song'] = JSON.stringify(allSongPlaylist)
         }],
         e: () => {return copyArray(allSongPlaylist)}
     }
@@ -129,7 +129,7 @@ function readInputData() {
                 }
                 let thumb = song.thumbnail.replace("hqdefault.jpg", "maxresdefault.jpg")
                 thumb = thumb.replace("sddefault.jpg", "maxresdefault.jpg")
-                let newSong = Song(song.songname, [song.songurl], duration, song.author, "", thumb)
+                let newSong = Song(song.songname, [song.songurl], duration, song.author, "", [thumb])
                 songs.push(newSong)
             }
         }
@@ -154,6 +154,8 @@ function readInputData() {
 
     allSongPlaylist = songs;
     playlistArray = playlists;
+    localStorage['song'] = JSON.stringify(allSongPlaylist)
+    localStorage['playlist'] = JSON.stringify(playlistArray)
     dispatch('playlist')
     dispatch('song')
 

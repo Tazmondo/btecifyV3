@@ -8,24 +8,36 @@ function validSong(song) {
     return Boolean(song?.getUUID && song?.getTitle && song?.getURL)
 }
 
-function Song(title, urls, duration, artist = "", album = "", thumbnail = "", uuid = "") {
+function Song(title, urls, duration, artist = "", album = "", thumbnails = [], uuid = "") {
     if (urls.length === 0 || urls.length > 2) {
         throw new Error(`Number of song urls is ${urls.length}`)
+    }
+    if (thumbnails.length > 2) {
+        throw new Error(`Number of thumbnails is ${urls.thumbnails}`)
     }
 
     uuid = uuid || api.getUUID()
     let localUrl = "";
-    let internetUrl = "";
+    let remoteUrl = "";
+
+    let localThumb = "";
+    let remoteThumb = "";
 
     urls.forEach(url => {
         if (url.startsWith('http')) {
-            internetUrl = url
+            remoteUrl = url
         } else { // todo: actually add a check for file music
             localUrl = url
         }
     })
 
-    let cachedThumb;
+    thumbnails.forEach(thumbnail => {
+        if (thumbnail.startsWith('http')) {
+            remoteThumb = thumbnail
+        } else { // todo: actually add a check for file thumb
+            localThumb = thumbnail
+        }
+    })
 
     return {
         getTitle() {
@@ -41,16 +53,18 @@ function Song(title, urls, duration, artist = "", album = "", thumbnail = "", uu
         },
 
         getURL() {
-            return localUrl || internetUrl;
+            return localUrl || remoteUrl;
         },
 
         async getThumb() {
-            cachedThumb = await api.fetchThumbnail(uuid) || thumbnail || placeholderURL
-            return cachedThumb
+            if (!localThumb && remoteThumb) {
+                localThumb = await api.fetchThumbnail(uuid, remoteThumb) || ""
+            }
+            return localThumb || remoteThumb || placeholderURL
         },
 
         getCachedThumb() {
-            return cachedThumb || false
+            return localThumb || false // todo: remove me
         },
 
         getUUID() {
@@ -62,7 +76,7 @@ function Song(title, urls, duration, artist = "", album = "", thumbnail = "", uu
         },
 
         toJSON() {
-            return ['song', title, [internetUrl, localUrl], duration, artist, album, thumbnail, uuid]
+            return ['song', title, [remoteUrl, localUrl], duration, artist, album, [remoteThumb, localThumb], uuid]
         }
     }
 }

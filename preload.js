@@ -15,8 +15,9 @@ contextBridge.exposeInMainWorld('api', {
     },
 
     // Returns a promise to the path to a thumbnail image, or an empty string if it doesn't exist.
-    fetchThumbnail: async (uuid) => {
-        return await ipcRenderer.invoke('fetchThumbnail', uuid)
+    fetchThumbnail: async (uuid, url) => {
+        let result = await ipcRenderer.invoke('fetchThumbnail', uuid, url)
+        return result
     },
 
     fetchMusic: (url, uuid) => {

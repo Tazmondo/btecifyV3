@@ -3,10 +3,6 @@ const path = require('path')
 const fs = require('fs')
 const db = require('./src/db.js')(path.join(app.getAppPath(), './db')) // Initialise db in the database directory
 
-db.songExists("poggers").then(res => {
-    console.log(res)
-})
-
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
 // if (!app.isPackaged) {
@@ -14,7 +10,35 @@ app.commandLine.appendSwitch('remote-debugging-port', '8315')
 //     require('electron-reload')(app.getAppPath())
 // }
 
+for (let funcName in db) {
+    console.log(`Registering ${funcName} with:\n ${db[funcName]}`)
+    ipcMain.handle(funcName, async (e, ...args) => {
+        return db[funcName](args)
+    })
+}
+
+ipcMain.on('getInputData', e=> {
+    e.returnValue = readInputData()
+})
+
+ipcMain.on('isDev', (e) => {
+    e.returnValue = !app.isPackaged
+})
+
+let cachedContents;
+
+function readInputData() {
+
+    if(cachedContents === undefined){
+        let file = fs.readFileSync(path.join(__dirname, "./db/input.txt"))
+        let contents = file.toString()
+        cachedContents = JSON.parse(contents)
+    }
+    return cachedContents
+
+}
 function createWindow () {
+
     const win = new BrowserWindow({
         width: 1200,
         height: 700,
@@ -31,31 +55,6 @@ function createWindow () {
     win.loadFile('src/index.html')
 
 }
-
-let cachedContents;
-
-function readInputData() {
-
-    if(cachedContents === undefined){
-
-        let file = fs.readFileSync(path.join(__dirname, "./db/input.txt"))
-        let contents = file.toString()
-        cachedContents = JSON.parse(contents)
-    }
-    return cachedContents
-}
-
-ipcMain.on('getInputData', e=> {
-    e.returnValue = readInputData()
-})
-
-ipcMain.on('isDev', (e) => {
-    e.returnValue = !app.isPackaged
-})
-
-ipcMain.handle('fetchThumbnail', async (event, ...args) => {
-    return await db.songExists(args[0])
-})
 
 app.whenReady().then(() => {
 
