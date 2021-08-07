@@ -1,9 +1,10 @@
 console.log("preloader.js running...")
 const {v4: uuidv4, validate} = require('uuid')
 
-const { contextBridge, ipcRenderer,  } = require('electron')
+const dbFunctions = require('./ipc.js')(false)
+const { contextBridge, ipcRenderer } = require('electron')
 
-contextBridge.exposeInMainWorld('api', {
+let api = {
     getUUID: () => {return uuidv4()},
 
     uuidIsValid: (uuid) => {return validate(uuid)},
@@ -13,14 +14,13 @@ contextBridge.exposeInMainWorld('api', {
     getInputData: () => {
         return ipcRenderer.sendSync('getInputData')
     },
-
-    // Returns a promise to the path to a thumbnail image, or an empty string if it doesn't exist.
-    fetchThumbnail: async (uuid, url) => {
-        let result = await ipcRenderer.invoke('fetchThumbnail', uuid, url)
-        return result
-    },
-
-    fetchMusic: (url, uuid) => {
-        // todo: download music through main.js
 }
-})
+
+for (let funcName in dbFunctions) {
+    console.log(`Registering ${funcName}`)
+    api[funcName] = async (...args) => {
+        return await ipcRenderer.invoke(funcName, ...args)
+    }
+}
+
+contextBridge.exposeInMainWorld('api', api)

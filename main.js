@@ -1,42 +1,15 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const fs = require('fs')
-const db = require('./src/db.js')(path.join(app.getAppPath(), './db')) // Initialise db in the database directory
+require('./ipc.js')(true, app.isPackaged)
 
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
 // if (!app.isPackaged) {
 //     console.log("reload")
-//     require('electron-reload')(app.getAppPath())
+//     require('electron-reload')(__dirname)
 // }
 
-for (let funcName in db) {
-    console.log(`Registering ${funcName} with:\n ${db[funcName]}`)
-    ipcMain.handle(funcName, async (e, ...args) => {
-        return db[funcName](args)
-    })
-}
-
-ipcMain.on('getInputData', e=> {
-    e.returnValue = readInputData()
-})
-
-ipcMain.on('isDev', (e) => {
-    e.returnValue = !app.isPackaged
-})
-
-let cachedContents;
-
-function readInputData() {
-
-    if(cachedContents === undefined){
-        let file = fs.readFileSync(path.join(__dirname, "./db/input.txt"))
-        let contents = file.toString()
-        cachedContents = JSON.parse(contents)
-    }
-    return cachedContents
-
-}
 function createWindow () {
 
     const win = new BrowserWindow({
@@ -47,7 +20,7 @@ function createWindow () {
         webPreferences: {
             preload: path.join(__dirname, 'preload.js'),
         },
-        icon: path.join(app.getAppPath(), 'src/assets/btecify.ico'),
+        icon: path.join(__dirname, 'src/assets/btecify.ico'),
         alwaysOnTop: false,
         frame: false
     })
