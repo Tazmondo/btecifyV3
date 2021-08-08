@@ -161,3 +161,5 @@ function readInputData() {
 
 }
 //readInputData()
+
+api.deleteUnusedThumbnails(allSongPlaylist.getSongs().map(v => {return v.getUUID()}))

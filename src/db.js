@@ -3,10 +3,6 @@ const path = require("path");
 const axios = require("axios");
 
 function db(dbPath) {
-    const path = require('path')
-    const fs = require('fs')
-    const axios = require('axios')
-
     const thumbPath = path.join(dbPath, "./thumbnails")
     const musicPath = path.join(dbPath, "./music")
 
@@ -51,6 +47,10 @@ function db(dbPath) {
             console.log(`Downloaded ${url} for ${uuid}`)
 
             let ext = response.data.responseUrl.substr(response.data.responseUrl.length - 3, 3)
+            switch (ext) {
+                case "jpeg":
+                    ext = "jpg"
+            }
             let imageName = `${uuid}.${ext}`;
             let imagePath = path.resolve(thumbPath, imageName)
             response.data.pipe(fs.createWriteStream(imagePath))
@@ -91,8 +91,17 @@ function db(dbPath) {
             return false
         },
 
-        async deleteUnusedThumbnails(uuidNoDelete) {
+        // Takes an array of used UUIDs. Deletes all other thumbnails.
+        async deleteUnusedThumbnails(args) {
+            let uuidNoDelete = args[0]
+            let fileNames = await fs.promises.readdir(thumbPath)
 
+            for (let fileName of fileNames) {
+                if (!uuidNoDelete.includes(fileName.substr(0, 36)) || fileName.length !== 40) {
+                    console.log(`Delete ${fileName}`)
+                    await fs.promises.rm(path.join(thumbPath, fileName))
+                }
+            }
         },
 
         async songExists(uuid) { // todo: finish (check for music file extension)
