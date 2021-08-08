@@ -15,22 +15,31 @@ Array.from(document.querySelectorAll('.playlist-section')).forEach(v => {
 })
 
 
-function generatePlaylistListElement(playlist, selected) {
+function generatePlaylistListElement(playlist, state) {
     let title = playlist.getTitle()
     let newElement = document.createElement('div')
 
     newElement.classList.toggle("playlist-choice")
-    if (selected) {
-        newElement.classList.toggle('selected')
+
+    switch (state) {
+        case "selected":
+            newElement.classList.toggle('selected')
+            break
+
+        case "disabled":
+            newElement.classList.toggle('disabled')
+            break
     }
+
     newElement.innerText = title
 
     return newElement
 }
 
-function generateSongElement(song, songList) {
+function generateSongElement(song, songList, superSub="") {
     let newSongItem = document.createElement('div')
     newSongItem.classList.toggle("song-list-item")
+    if (superSub) { newSongItem.classList.toggle(superSub) }
 
     let thumbTitleArtist = document.createElement('div')
     thumbTitleArtist.classList.toggle("thumb-title-artist")
@@ -48,7 +57,6 @@ function generateSongElement(song, songList) {
         new IntersectionObserver((entries, observer) => {
             entries.forEach( entry => {
                 if (entry.isIntersecting && entry.target.classList.contains('song-list-item')) {
-                    console.log(`observed ${song.getTitle()}`)
                     song.getThumb().then(res => {
                         thumb.style.backgroundImage = `url(${res})`
                     })
@@ -89,9 +97,17 @@ function generateSongElement(song, songList) {
     return newSongItem
 }
 
-function playlistClickCallback(section, playlist) {
-    section.dataset.selected = playlist.getTitle()
+function playlistClickCallback(section, playlist, selected=false) {
+    if (selected) {
+        section.dataset.selected = ""
+    } else {
+        section.dataset.selected = playlist.getTitle()
+    }
     drawPage()
+}
+
+function isSongInSongArray (songArray, song) {
+    return songArray.some(v => {return v.getUUID() === song.getUUID()})
 }
 
 function drawPage() {
@@ -102,31 +118,97 @@ function drawPage() {
     let playlists = getPlaylistArray()
 
     let playlistSections = document.querySelectorAll('.playlist-section')
+    let selectedPlaylists = Array.from(playlistSections).map(section => {
+        return getPlaylistFromTitle(section.dataset.selected)
+    })
 
-    playlistSections.forEach((section) => {
+    playlistSections.forEach((section, index) => {
         let dropdown = section.children[1]
-        let selectedPlaylistTitle = section.dataset.selected;
+        let selectedPlaylist = selectedPlaylists[index]
+        let selectedPlaylistTitle = selectedPlaylist?.getTitle()
 
-        section.querySelector('.playlist-select > h3').innerText = selectedPlaylistTitle || "Select playlist..."
+        let otherPlaylist = selectedPlaylists[1 - index] // Get the other element of the selectedPlaylist array
+
+        section.querySelector('.playlist-select > h3').innerText = selectedPlaylistTitle ?? "Select playlist..."
 
         playlists.forEach(playlist => {
-            let newElement = generatePlaylistListElement(playlist, (selectedPlaylistTitle === playlist.getTitle()))
+            let state = ""
+            if (selectedPlaylistTitle === playlist.getTitle()) {
+                state = "selected"
+            }
+            if (playlist.getTitle() === otherPlaylist?.getTitle()) {
+                state = "disabled"
+            }
+            let newElement = generatePlaylistListElement(playlist, state)
 
-            newElement.addEventListener('click', e => {
-                playlistClickCallback(section, playlist)
-            })
+            if (!state) {
+                newElement.addEventListener('click', e => {
+                    playlistClickCallback(section, playlist)
+                })
+            } else if (state === "selected") {
+                newElement.addEventListener('click', e => {
+                    playlistClickCallback(section, playlist, true)
+                })
+            }
             dropdown.insertAdjacentElement('beforeend', newElement)
         })
 
-        if (selectedPlaylistTitle !== undefined) {
-            let selectedPlaylist = getPlaylistFromTitle(selectedPlaylistTitle)
+        if (selectedPlaylist !== undefined) {
             let songList = section.querySelector('.song-list')
             songList.scrollTop = 0
+            let superSongs = []
+            let subSongs = []
 
-            selectedPlaylist.getSongs().forEach(song => {
-                let newElement = generateSongElement(song, songList)
+            if (otherPlaylist !== undefined) {
+                superSongs = selectedPlaylist.getSuperSongs(otherPlaylist.getSongs())
+                subSongs = selectedPlaylist.getSubSongs(otherPlaylist.getSongs())
+            }
 
-                songList.insertAdjacentElement('beforeend', newElement)
+            let songs = selectedPlaylist.getSongs()
+            songs.push(...subSongs)
+
+            // songs.sort((a, b) => {
+            //     //console.log(a.getTitle(), b.getTitle(), a.getTitle() > b.getTitle())
+            //     return a.getTitle() > b.getTitle() ? 1 : -1
+            // })
+
+            songs.forEach(song => {
+                let superSub = ""
+                if (isSongInSongArray(superSongs, song)) {
+                    superSub = "super"
+                } else if (isSongInSongArray(subSongs, song)) {
+                    superSub = "sub"
+                }
+                let newElement = generateSongElement(song, songList, superSub)
+
+                switch (superSub) {
+                    case "":
+                        songList.insertAdjacentElement('beforeend', newElement)
+                        break
+                    case "super": {
+                        let superItems = Array.from(section.querySelectorAll('.song-list-item.super'))
+                        if (superItems.length > 0) {
+                            superItems.pop().insertAdjacentElement('afterend', newElement)
+                            break
+                        }
+                        songList.insertAdjacentElement('afterbegin', newElement)
+                        break
+                    }
+                    case "sub": {
+                        let subItems = Array.from(section.querySelectorAll('.song-list-item.sub'))
+                        let superItems = Array.from(section.querySelectorAll('.song-list-item.super'))
+                        if (subItems.length > 0) {
+                            subItems.pop().insertAdjacentElement('afterend', newElement)
+                            break
+                        }
+                        if (superItems.length > 0) {
+                            superItems.pop().insertAdjacentElement('afterend', newElement)
+                            break
+                        }
+                        songList.insertAdjacentElement('afterbegin', newElement)
+                        break
+                    }
+                }
             })
         }
     })

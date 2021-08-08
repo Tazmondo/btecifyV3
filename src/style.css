@@ -415,6 +415,11 @@ main > *.hidden {
     color: rgb(0, 255, 0);
 }
 
+.select-dropdown > *.disabled {
+    font-size: 1em;
+    color: rgb(145, 145, 145)
+}
+
 .select-dropdown :nth-child(even) {
     background-color: rgba(0, 0, 0, 0.1);
 }
@@ -434,6 +439,14 @@ main > *.hidden {
     gap: 1em;
     transition: all 0.3s ease;
 
+}
+
+.song-list-item.super {
+    background: #33402e;
+}
+
+.song-list-item.sub {
+    background: #3e2325;
 }
 
 .song-list-item * {

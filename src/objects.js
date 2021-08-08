@@ -194,6 +194,16 @@ function Playlist(title, songs=[], thumb="") {
             return false
         },
 
+        // Take a song array and return all songs in the playlist that do not exist in the array.
+        getSuperSongs(songArray) {
+            return songs.filter(v => {return !songArray.some(v2 => {return v.getUUID() === v2.getUUID()})})
+        },
+
+        // Take a song array and return all songs in it that aren't in the playlist.
+        getSubSongs(songArray) {
+            return songArray.filter(v => {return !songs.some(v2 => {return v.getUUID() === v2.getUUID()})})
+        },
+
         // For JSON.stringify
         toJSON() {
             return ['playlist', title, songs, thumb]
