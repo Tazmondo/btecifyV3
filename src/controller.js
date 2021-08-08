@@ -36,29 +36,8 @@ function doesPlaylistExist(playlist) {
     return playlistArray.map(v => {v.getTitle()}).includes(playlist.getTitle())
 }
 
-export function makePlaylist(playlistArgs) {
-    let newPlaylist = Playlist(...playlistArgs)
-
-    if (!doesPlaylistExist(newPlaylist)) {
-        playlistArray.push(newPlaylist)
-        dispatch('playlist')
-        return true
-    }
-    return false
-}
-
 function doesSongExist(song) {
     return false // todo: song name searching and stuff
-}
-
-export function makeSong(songArgs, playlists=[]) {
-    let newSong = Song(...songArgs)
-    if (!doesSongExist(newSong)) {
-        allSongPlaylist.addSong(newSong)
-        playlists.forEach(playlist => {
-            playlist.addSong(newSong)
-        })
-    }
 }
 
 function dispatch(eventName) {
@@ -74,6 +53,27 @@ function dispatch(eventName) {
 
 function validEvent(event) {
     return events[event] === undefined
+}
+
+export function makePlaylist(playlistArgs) {
+    let newPlaylist = Playlist(...playlistArgs)
+
+    if (!doesPlaylistExist(newPlaylist)) {
+        playlistArray.push(newPlaylist)
+        dispatch('playlist')
+        return true
+    }
+    return false
+}
+
+export function makeSong(songArgs, playlists=[]) {
+    let newSong = Song(...songArgs)
+    if (!doesSongExist(newSong)) {
+        allSongPlaylist.addSong(newSong)
+        playlists.forEach(playlist => {
+            playlist.addSong(newSong)
+        })
+    }
 }
 
 export function unSubscribe(event, callback) {
