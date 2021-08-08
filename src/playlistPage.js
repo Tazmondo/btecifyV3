@@ -1,4 +1,4 @@
-import {getPlaylistArray, getPlaylistFromTitle, subscribe} from "./controller.js";
+import {getPlaylistArray, getPlaylistFromTitle, removeFromPlaylist, addToPlaylist, subscribe} from "./controller.js";
 import {durationSecondsToMinutes} from "./util.js";
 
 Array.from(document.querySelectorAll('.playlist-section')).forEach(v => {
@@ -55,6 +55,9 @@ function generateSongElement(song, playlist, superSub, otherPlaylist, isRightSid
     duration.innerText = durationSecondsToMinutes(song.getDurationSeconds())
 
     removeButton.querySelector('title').textContent = `Remove from ${playlist.getTitle()}`
+    removeButton.addEventListener('click', e => {
+        removeFromPlaylist(playlist, song)
+    })
 
     if (superSub) {
         newSongItem.classList.toggle("super")
@@ -72,6 +75,9 @@ function generateSongElement(song, playlist, superSub, otherPlaylist, isRightSid
         }
 
         addButton.querySelector('title').textContent = `Add to ${otherPlaylist.getTitle()}`
+        addButton.addEventListener('click', e => {
+            addToPlaylist(otherPlaylist, song)
+        })
     }
 
     let cachedThumb = song.getCachedThumb()
@@ -107,6 +113,14 @@ function isSongInSongArray (songArray, song) {
 }
 
 function drawPage() {
+    let prevScroll1 = document.querySelector('#playlist-section-1 .song-list')?.scrollTop
+    let prevScroll2 = document.querySelector('#playlist-section-2 .song-list')?.scrollTop
+    let prevSelected1 = document.querySelector('#playlist-section-1 .select-dropdown .selected')?.innerText
+    let prevSelected2 = document.querySelector('#playlist-section-2 .select-dropdown .selected')?.innerText
+
+    let prevScroll = [prevScroll1, prevScroll2]
+    let prevSelected = [prevSelected1, prevSelected2]
+
     document.querySelectorAll('.select-dropdown *, .song-list *.song-list-item').forEach(v => {
         v.remove()
     })
@@ -151,7 +165,7 @@ function drawPage() {
 
         if (selectedPlaylist !== undefined) {
             let songList = section.querySelector('.song-list')
-            songList.scrollTop = 0
+
             let superSongs = []
 
             if (otherPlaylist !== undefined) {
@@ -182,6 +196,12 @@ function drawPage() {
                 }
 
             })
+
+            if (prevSelected[index] === selectedPlaylist.getTitle()) {
+                songList.scrollTop = prevScroll[index]
+            } else {
+                songList.scrollTop = 0
+            }
         }
     })
 }

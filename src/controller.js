@@ -66,6 +66,18 @@ export function makePlaylist(playlistArgs) {
     return false
 }
 
+export function addToPlaylist(playlist, song) {
+    let result = playlist.addSong(song)
+    dispatch('playlist')
+    return result
+}
+
+export function removeFromPlaylist(playlist, song) {
+    let result = playlist.removeSongWithSong(song)
+    dispatch('playlist')
+    return result
+}
+
 export function makeSong(songArgs, playlists=[]) {
     let newSong = Song(...songArgs)
     if (!doesSongExist(newSong)) {
