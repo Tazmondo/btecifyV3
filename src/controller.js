@@ -152,7 +152,7 @@ function readInputData() {
 
     console.log(playlists)
 
-    allSongPlaylist = songs;
+    allSongPlaylist = Playlist("Songs", songs);
     playlistArray = playlists;
     localStorage['song'] = JSON.stringify(allSongPlaylist)
     localStorage['playlist'] = JSON.stringify(playlistArray)
