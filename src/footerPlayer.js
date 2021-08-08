@@ -1,4 +1,4 @@
-    import {durationSecondsToMinutes} from "./util.js";
+import {durationSecondsToMinutes} from "./util.js";
 
 let paused = false
 
