@@ -36,7 +36,7 @@ function generatePlaylistListElement(playlist, state) {
     return newElement
 }
 
-function generateSongElement(song, songList, superSub="") {
+function generateSongElement(song, songList, superSub=false) {
     let template = document.querySelector('#song-list-item-template')
     let newSongItem = template.content.firstElementChild.cloneNode(true)
     let thumb = newSongItem.querySelector('.thumb')
@@ -51,7 +51,7 @@ function generateSongElement(song, songList, superSub="") {
     album.innerText = song.getAlbum()
     duration.innerText = durationSecondsToMinutes(song.getDurationSeconds())
 
-    if (superSub) {newSongItem.classList.toggle(superSub)}
+    if (superSub) {newSongItem.classList.toggle("super")}
 
     let cachedThumb = song.getCachedThumb()
     if (cachedThumb) {
@@ -132,58 +132,33 @@ function drawPage() {
             let songList = section.querySelector('.song-list')
             songList.scrollTop = 0
             let superSongs = []
-            let subSongs = []
 
             if (otherPlaylist !== undefined) {
                 superSongs = selectedPlaylist.getSuperSongs(otherPlaylist.getSongs())
-                subSongs = selectedPlaylist.getSubSongs(otherPlaylist.getSongs())
             }
 
             let songs = selectedPlaylist.getSongs()
-            songs.push(...subSongs)
-
-            // songs.sort((a, b) => {
-            //     //console.log(a.getTitle(), b.getTitle(), a.getTitle() > b.getTitle())
-            //     return a.getTitle() > b.getTitle() ? 1 : -1
-            // })
 
             songs.forEach(song => {
-                let superSub = ""
+                let superSong = false
                 if (isSongInSongArray(superSongs, song)) {
-                    superSub = "super"
-                } else if (isSongInSongArray(subSongs, song)) {
-                    superSub = "sub"
+                    superSong = true
                 }
-                let newElement = generateSongElement(song, songList, superSub)
+                let newElement = generateSongElement(song, songList, superSong)
 
-                switch (superSub) {
-                    case "":
-                        songList.insertAdjacentElement('beforeend', newElement)
-                        break
-                    case "super": {
-                        let superItems = Array.from(section.querySelectorAll('.song-list-item.super'))
-                        if (superItems.length > 0) {
-                            superItems.pop().insertAdjacentElement('afterend', newElement)
-                            break
-                        }
+                if(superSong) {
+                    let superItems = Array.from(section.querySelectorAll('.song-list-item.super'))
+                    if (superItems.length > 0) {
+                        superItems.pop().insertAdjacentElement('afterend', newElement)
+
+                    } else {
                         songList.insertAdjacentElement('afterbegin', newElement)
-                        break
                     }
-                    case "sub": {
-                        let subItems = Array.from(section.querySelectorAll('.song-list-item.sub'))
-                        let superItems = Array.from(section.querySelectorAll('.song-list-item.super'))
-                        if (subItems.length > 0) {
-                            subItems.pop().insertAdjacentElement('afterend', newElement)
-                            break
-                        }
-                        if (superItems.length > 0) {
-                            superItems.pop().insertAdjacentElement('afterend', newElement)
-                            break
-                        }
-                        songList.insertAdjacentElement('afterbegin', newElement)
-                        break
-                    }
+
+                } else {
+                    songList.insertAdjacentElement('beforeend', newElement)
                 }
+
             })
         }
     })
