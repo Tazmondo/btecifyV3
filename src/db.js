@@ -13,6 +13,8 @@ function db(dbPath) {
     console.log(thumbPath)
     console.log(musicPath);
 
+    // Takes a filename and a directory, and checks whether that file (not including extension) exists. If yes then
+    // return full filename (With extension) else return false.
     async function getFile(fileName, dir) {
         let fileNames = await fs.promises.readdir(dir)
         let filtered = fileNames.filter(v => {
@@ -32,10 +34,13 @@ function db(dbPath) {
         return false
     }
 
+    // Calls getFile with the thumbnail path and the given uuid.
     async function getThumb(uuid) {
         return await getFile(uuid, thumbPath)
     }
 
+    // Takes a uuid and url and downloads a thumbnail to the thumbnail path with the uuid as the name. Returns the name
+    // of the created image, or false if the request fails, or "download failed." if the download fails.
     async function downloadThumbnail(uuid, url) {
         try {
             let response = await axios({
@@ -75,6 +80,7 @@ function db(dbPath) {
             return Boolean(await getThumb(uuid))
         },
 
+        // Returns an existing thumbnail given the uuid and url or downloads it if it does not exist.
         async fetchThumbnail (args) {
             let uuid = args[0]
             let url = args[1]
