@@ -37,7 +37,7 @@ function doesPlaylistExist(playlist) {
 }
 
 function doesSongExist(song) {
-    return false // todo: song name searching and stuff
+    return false // todo: song name searching and stuff to check for potential duplicates
 }
 
 function dispatch(eventName) {
