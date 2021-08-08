@@ -37,18 +37,21 @@ function generatePlaylistListElement(playlist, state) {
 }
 
 function generateSongElement(song, songList, superSub="") {
-    let newSongItem = document.createElement('div')
-    newSongItem.classList.toggle("song-list-item")
-    if (superSub) { newSongItem.classList.toggle(superSub) }
+    let template = document.querySelector('#song-list-item-template')
+    let newSongItem = template.content.firstElementChild.cloneNode(true)
+    let thumb = newSongItem.querySelector('.thumb')
+    let title = newSongItem.querySelector('.title')
+    let artist = newSongItem.querySelector('.artist')
+    let album = newSongItem.querySelector('.album')
+    let duration = newSongItem.querySelector('.duration')
 
-    let thumbTitleArtist = document.createElement('div')
-    thumbTitleArtist.classList.toggle("thumb-title-artist")
+    title.innerText = song.getTitle()
+    title.title = song.getTitle()
+    artist.innerText = song.getArtist()
+    album.innerText = song.getAlbum()
+    duration.innerText = durationSecondsToMinutes(song.getDurationSeconds())
 
-    let thumbCrop = document.createElement('div')
-    thumbCrop.classList.toggle("crop")
-
-    let thumb = document.createElement('div')
-    thumb.classList.toggle("thumb")
+    if (superSub) {newSongItem.classList.toggle(superSub)}
 
     let cachedThumb = song.getCachedThumb()
     if (cachedThumb) {
@@ -65,34 +68,6 @@ function generateSongElement(song, songList, superSub="") {
             })
         }).observe(newSongItem)
     }
-
-    let titleArtist = document.createElement('div')
-    titleArtist.classList.toggle("title-artist")
-
-    let title = document.createElement('p')
-    title.classList.toggle("title")
-    title.innerText = song.getTitle()
-    title.title = song.getTitle()
-
-    let artist = document.createElement('p')
-    artist.classList.toggle("artist")
-    artist.innerText = song.getArtist()
-
-    newSongItem.appendChild(thumbTitleArtist)
-    thumbTitleArtist.appendChild(thumb)
-    thumbTitleArtist.appendChild(titleArtist)
-    titleArtist.appendChild(title)
-    titleArtist.appendChild(artist)
-
-    let album = document.createElement('div')
-    album.classList.toggle("album")
-    album.innerText = song.getAlbum()
-    newSongItem.appendChild(album)
-
-    let duration = document.createElement('div')
-    duration.classList.toggle("duration")
-    duration.innerText = durationSecondsToMinutes(song.getDurationSeconds())
-    newSongItem.appendChild(duration)
 
     return newSongItem
 }
@@ -111,7 +86,7 @@ function isSongInSongArray (songArray, song) {
 }
 
 function drawPage() {
-    document.querySelectorAll('.select-dropdown *, .song-list *').forEach(v => {
+    document.querySelectorAll('.select-dropdown *, .song-list *.song-list-item').forEach(v => {
         v.remove()
     })
 
