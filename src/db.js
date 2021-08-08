@@ -49,7 +49,6 @@ function db(dbPath) {
                 responseType: 'stream'
             })
             console.log(`Downloaded ${url} for ${uuid}`)
-            // pipe the result stream into a file on disc
 
             let ext = response.data.responseUrl.substr(response.data.responseUrl.length - 3, 3)
             let imageName = `${uuid}.${ext}`;

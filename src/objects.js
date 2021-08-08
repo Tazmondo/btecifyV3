@@ -17,6 +17,7 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
     }
 
     uuid = uuid || api.getUUID()
+
     let localUrl = "";
     let remoteUrl = "";
 
@@ -35,27 +36,43 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
         if (thumbnail.startsWith('http')) {
             remoteThumb = thumbnail
         } else { // todo: actually add a check for file thumb
+
             localThumb = thumbnail
         }
     })
 
     return {
+        // Returns string title
         getTitle() {
             return title
         },
 
+        // Returns string artist
         getArtist() {
             return artist
         },
+        // Returns string uuid
+        getUUID() {
+            return uuid
+        },
 
+        // Returns localurl or the remoteurl if local does not exist.
         getAlbum() {
             return album
         },
 
+        // Returns a url to the thumbnail, downloading it locally if it doesn't exist, or falling back to the remote
+        // url and lastly the placeholder url
         getURL() {
             return localUrl || remoteUrl;
         },
 
+        // Returns length of song in seconds
+        getDurationSeconds() {
+            return duration
+        },
+
+        // Only returns local url if it exists. Used to avoid unnecessary
         async getThumb() {
             if (!localThumb && remoteThumb) {
                 localThumb = await api.fetchThumbnail(uuid, remoteThumb) || ""
@@ -63,18 +80,12 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
             return localThumb || remoteThumb || placeholderURL
         },
 
+        // Returns string album
         getCachedThumb() {
-            return localThumb || false // todo: remove me
+            return localThumb || false
         },
 
-        getUUID() {
-            return uuid
-        },
-
-        getDurationSeconds() {
-            return duration
-        },
-
+        // Used by JSON.stringify
         toJSON() {
             return ['song', title, [remoteUrl, localUrl], duration, artist, album, [remoteThumb, localThumb], uuid]
         }
@@ -87,6 +98,7 @@ function Playlist(title, songs=[], thumb="") {
 
     songs = songs.filter(validSong)
 
+    // Sorts song list in place by title.
     function sortSongs() {
         songs.sort((a, b) => {
             //console.log(a.getTitle(), b.getTitle(), a.getTitle() > b.getTitle())
@@ -95,6 +107,7 @@ function Playlist(title, songs=[], thumb="") {
     }
     sortSongs()
 
+    // Removes a song from a playlist using its uuid. Boolean indicating success returned.
     function removeSong(uuid) {
         let targetSongIndex = songs.findIndex(v => {
             return v.getUUID() === uuid
@@ -110,18 +123,23 @@ function Playlist(title, songs=[], thumb="") {
     }
 
     return {
+        // Returns string title.
         getTitle() {
             return title
         },
 
+        // Returns a copy of the song array.
         getSongs() {
             return copyArray(songs)
         },
 
+        // Returns integer number of songs in song playlist.
         getLength() {
             return songs.length
         },
 
+        // Async, returns a thumbnail randomly chosen from songs in the playlist, and on subsequent calls, the one
+        // returned from the first call.
         async getThumb() {
             return thumb || cachedThumb ||
                 (
@@ -132,12 +150,14 @@ function Playlist(title, songs=[], thumb="") {
                 )
         },
 
-        doesContainSong(song) {
+        // Returns boolean indicating whether the playlist contains a certain song object.
+        doesContainSong(songObject) {
             return songs.some(v => {
-                return v.getUUID() === song.getUUID()
+                return v.getUUID() === songObject.getUUID()
             })
         },
 
+        // Add song object to songs. Return boolean indicating success.
         addSong(song) {
             if (validSong(song) && !this.doesContainSong(song)) {
                 songs.push(song)
@@ -147,6 +167,8 @@ function Playlist(title, songs=[], thumb="") {
             return false
         },
 
+        // Attempts to remove a song from songs using a song Object. Returns a boolean indicating success.
+        // Throws an error if an invalid song Object is passed.
         removeSongWithSong(song) {
             if (validSong(song)) {
                 let uuid = song.getUUID()
@@ -156,20 +178,23 @@ function Playlist(title, songs=[], thumb="") {
                     return result
                 }
             }
-            throw "This should never be reached. removeSong called on an invalid song."
+            throw `This should never be reached. removeSong called on an invalid song: ${song}`
             return false
         },
 
+        // Attempts to remove a song using a uuid. Returns a boolean indicating success.
+        // Throws an error if given an invalid uuid.
         removeSongWithUuid(uuid) {
             if (api.uuidIsValid(uuid)) {
                 let result = removeSong(uuid)
                 sortSongs()
                 return result
             }
-            throw "This should never be reached. removeSong called with an invalid uuid."
+            throw `This should never be reached. removeSong called with an invalid uuid: ${uuid}`
             return false
         },
 
+        // For JSON.stringify
         toJSON() {
             return ['playlist', title, songs, thumb]
         }

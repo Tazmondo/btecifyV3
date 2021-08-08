@@ -20,13 +20,13 @@ let playlistArray = (() => {
 let events = {
     'playlist': {
         callbacks: [ () => {
-            //localStorage['playlist'] = JSON.stringify(playlistArray)
+            localStorage['playlist'] = JSON.stringify(playlistArray)
         }],
         e: () => {return copyArray(playlistArray)}
     },
     'song': {
         callbacks: [ () => {
-            //localStorage['song'] = JSON.stringify(allSongPlaylist)
+            localStorage['song'] = JSON.stringify(allSongPlaylist)
         }],
         e: () => {return copyArray(allSongPlaylist)}
     }

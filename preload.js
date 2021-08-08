@@ -16,6 +16,7 @@ let api = {
     },
 }
 
+// Expose db functions to the renderer.
 for (let funcName in dbFunctions) {
     console.log(`Registering ${funcName}`)
     api[funcName] = async (...args) => {
