@@ -68,6 +68,13 @@ function db(dbPath) {
 
     return {
 
+        // Takes a uuid and returns a boolean as to whether a thumbnail is downloaded for that uuid.
+        async thumbExists(args) {
+            let uuid = args[0]
+
+            return Boolean(await getThumb(uuid))
+        },
+
         async fetchThumbnail (args) {
             let uuid = args[0]
             let url = args[1]
