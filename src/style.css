@@ -342,7 +342,6 @@ main > *.hidden {
     display: flex;
     flex-direction: row;
     flex: 1;
-    gap: 1em;
     min-height: 0;
 }
 
@@ -350,7 +349,7 @@ main > *.hidden {
     display: flex;
     flex-direction: column;
     flex: 1 1 50%;
-    padding: 10px 16px 20px 16px;
+    padding: 10px 16px 0 16px;
     min-width: 0;
 }
 
@@ -367,7 +366,7 @@ main > *.hidden {
 
 .playlist-select::after {
     content: "";
-    background-image: url("assets/arrow_drop_down_white_24dp.svg");
+    background-image: url("assets/svg/arrow_drop_down_white_24dp.svg");
     width: 2em;
     height: 2em;
     background-size: 2em 2em;
@@ -453,7 +452,6 @@ main > *.hidden {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
-    transition: all 0.3s ease;
 
 }
 
@@ -502,12 +500,20 @@ main > *.hidden {
     background: #2a2a2a;
 }
 
+.song-list-item.super:hover {
+    background: #5a6e4f;
+}
+
 .song-list-item:hover .artist {
     color: white;
 }
 
 .song-list-item:hover .duration {
     color: white;
+}
+
+.song-list-item .svg-button.hidden {
+    display: none;
 }
 
 /* FOOTER PLAYER  */

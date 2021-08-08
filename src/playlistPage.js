@@ -36,7 +36,7 @@ function generatePlaylistListElement(playlist, state) {
     return newElement
 }
 
-function generateSongElement(song, songList, superSub=false) {
+function generateSongElement(song, playlist, superSub, otherPlaylist, isRightSide) {
     let template = document.querySelector('#song-list-item-template')
     let newSongItem = template.content.firstElementChild.cloneNode(true)
     let thumb = newSongItem.querySelector('.thumb')
@@ -45,13 +45,34 @@ function generateSongElement(song, songList, superSub=false) {
     let album = newSongItem.querySelector('.album')
     let duration = newSongItem.querySelector('.duration')
 
+    let removeButton = newSongItem.querySelector('.playlist-page-remove-from-playlist')
+
+
     title.innerText = song.getTitle()
     title.title = song.getTitle()
     artist.innerText = song.getArtist()
     album.innerText = song.getAlbum()
     duration.innerText = durationSecondsToMinutes(song.getDurationSeconds())
 
-    if (superSub) {newSongItem.classList.toggle("super")}
+    removeButton.querySelector('title').textContent = `Remove from ${playlist.getTitle()}`
+
+    if (superSub) {
+        newSongItem.classList.toggle("super")
+
+        let addButtonEast = newSongItem.querySelector('.playlist-page-add-to-playlist-east')
+        let addButtonWest = newSongItem.querySelector('.playlist-page-add-to-playlist-west')
+        let addButton;
+
+        if (isRightSide) {
+            addButtonWest.classList.toggle("hidden")
+            addButton = addButtonWest
+        } else {
+            addButtonEast.classList.toggle("hidden")
+            addButton = addButtonEast
+        }
+
+        addButton.querySelector('title').textContent = `Add to ${otherPlaylist.getTitle()}`
+    }
 
     let cachedThumb = song.getCachedThumb()
     if (cachedThumb) {
@@ -144,7 +165,8 @@ function drawPage() {
                 if (isSongInSongArray(superSongs, song)) {
                     superSong = true
                 }
-                let newElement = generateSongElement(song, songList, superSong)
+                let newElement = generateSongElement(song, selectedPlaylist, superSong, otherPlaylist,
+                    section.id==="playlist-section-2")
 
                 if(superSong) {
                     let superItems = Array.from(section.querySelectorAll('.song-list-item.super'))
