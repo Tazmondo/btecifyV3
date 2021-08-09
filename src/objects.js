@@ -55,14 +55,12 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
         getUUID() {
             return uuid
         },
-
-        // Returns localurl or the remoteurl if local does not exist.
+        // Returns string album
         getAlbum() {
             return album
         },
 
-        // Returns a url to the thumbnail, downloading it locally if it doesn't exist, or falling back to the remote
-        // url and lastly the placeholder url
+        // Returns localurl or the remoteurl if local does not exist.
         getURL() {
             return localUrl || remoteUrl;
         },
@@ -72,7 +70,9 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
             return duration
         },
 
-        // Only returns local url if it exists. Used to avoid unnecessary
+
+        // Returns a url to the thumbnail, downloading it locally if it doesn't exist, or falling back to the remote
+        // url and lastly the placeholder url
         async getThumb() {
             if (!localThumb && remoteThumb) {
                 localThumb = await api.fetchThumbnail(uuid, remoteThumb) || ""
@@ -80,7 +80,7 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
             return localThumb || remoteThumb || placeholderURL
         },
 
-        // Returns string album
+        // Only returns local url if it exists. Used to avoid unnecessary async calls
         getCachedThumb() {
             return localThumb || false
         },
