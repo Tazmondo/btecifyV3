@@ -2,7 +2,7 @@ console.log("controller.js running...")
 
 // IMPORTING AND SETTING UP
 
-import {Playlist, Song, parseObject} from "./objects.js";
+import {Playlist, Song} from "./objects.js";
 import {copyArray, durationMinutesToSeconds} from "./util.js";
 
 
@@ -10,11 +10,11 @@ import {copyArray, durationMinutesToSeconds} from "./util.js";
 
 import EventController from './eventController.js'
 
-import ObjectControllerInit from './objectController.js'
-const ObjectController = ObjectControllerInit(EventController.dispatch)
+import InitObjectController from './objectController.js'
+const ObjectController = InitObjectController(EventController.dispatch)
 
-import MusicPlayerInit from './musicPlayer.js'
-const MusicPlayer = MusicPlayerInit(EventController.dispatch)
+import InitMusicController from './musicPlayer.js'
+const MusicPlayer = InitMusicController(EventController.dispatch)
 
 
 // PAGE IMPORTS
@@ -41,7 +41,7 @@ const events = {
     },
     'playing': {
         callbacks: [],
-        e: () => {return musicPlayer.getInfo()}
+        e: () => {return MusicPlayer.getInfo()}
     }
 }
 
@@ -51,10 +51,28 @@ for (let eventName in events) {
 
 router().routeWithPageName('home')
 
-footerPlayerInit(EventController.subscribe)
+footerPlayerInit(
+    EventController.subscribe
+)
 
-homePageInit(EventController.subscribe, ObjectController.getPlaylistArray)
-playlistPageInit(EventController.subscribe, ObjectController.getPlaylistArray, ObjectController.getPlaylistFromTitle, ObjectController.removeFromPlaylist, ObjectController.addToPlaylist)
+homePageInit(
+    EventController.subscribe,
+
+    ObjectController.getPlaylistArray
+)
+
+playlistPageInit(
+    [
+        EventController.subscribe,
+
+        ObjectController.getPlaylistArray,
+        ObjectController.getPlaylistFromTitle,
+        ObjectController.removeFromPlaylist,
+        ObjectController.addToPlaylist,
+
+        MusicPlayer.setSong,
+    ]
+)
 
 
 

@@ -1,6 +1,14 @@
 import {durationSecondsToMinutes} from "./util.js";
 
-function initPage(subscribe, getPlaylistArray, getPlaylistFromTitle, removeFromPlaylist, addToPlaylist) {
+function initPage(funcs) {
+    const [
+        subscribe,
+        getPlaylistArray,
+        getPlaylistFromTitle,
+        removeFromPlaylist,
+        addToPlaylist,
+        setSong
+    ] = funcs
 
     Array.from(document.querySelectorAll('.playlist-section')).forEach(v => {
         let selector = v.querySelector('.playlist-select')
@@ -96,6 +104,11 @@ function initPage(subscribe, getPlaylistArray, getPlaylistFromTitle, removeFromP
                 })
             }).observe(newSongItem)
         }
+
+        newSongItem.addEventListener('dblclick', e => {
+            console.log(`Request play ${song.getTitle()}`);
+            setSong(song)
+        })
 
         return newSongItem
     }

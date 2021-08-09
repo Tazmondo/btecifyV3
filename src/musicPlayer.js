@@ -44,9 +44,16 @@ function MusicPlayer(dispatch) {
         },
 
         setSong(song) {
-            currentSong = song
-            player.src = song.getSource()
-            play()
+            console.log(`play ${song.getTitle()}`)
+            song.getSource().then(res => {
+                currentSong = song
+                player.src = res
+                play()
+                dispatch('playing')
+            }).catch(e => {
+                console.error("setSong() failed");
+                console.error(e.message);
+            })
         },
 
         setSongFromUrl(urlStream) {

@@ -66,9 +66,12 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
 
         async getSource() {
             if (!localUrl && remoteUrl) {
-                localUrl = await api.fetchSong(uuid, remoteUrl) || ""
+                let source = await api.fetchSong(uuid, remoteUrl) || ""
+                if (source.includes(uuid)) {
+                    localUrl = source
+                }
             }
-            return localUrl || remoteUrl || ""
+            return localUrl || (() => {throw new Error("Song has no available source.")})()
         },
 
         getVideoId() {
@@ -79,7 +82,6 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
         getDurationSeconds() {
             return duration
         },
-
 
         // Returns a url to the thumbnail, downloading it locally if it doesn't exist, or falling back to the remote
         // url and lastly the placeholder url
