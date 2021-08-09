@@ -25,7 +25,7 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
     let remoteThumb = "";
 
     urls.forEach(url => {
-        if (url.startsWith('http')) {
+        if (url.startsWith('http://') || url.startsWith('https://') || url.includes("www.")) {
             remoteUrl = url
         } else { // todo: actually add a check for file music
             localUrl = url
@@ -33,10 +33,9 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
     })
 
     thumbnails.forEach(thumbnail => {
-        if (thumbnail.startsWith('http')) {
+        if (thumbnail.startsWith('http://') || thumbnail.startsWith('https://') || thumbnail.includes("www.") ) {
             remoteThumb = thumbnail
         } else { // todo: actually add a check for file thumb
-
             localThumb = thumbnail
         }
     })
@@ -67,6 +66,10 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
 
         getSource() {
             return localUrl || api.getSource(remoteUrl)
+        },
+
+        getVideoId() {
+            return remoteUrl.substr(remoteUrl.length-11, 11)
         },
 
         // Returns length of song in seconds
