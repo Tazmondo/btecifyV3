@@ -1,7 +1,9 @@
 console.log("footerPlayer.js running")
 import {durationSecondsToMinutes} from "./util.js";
+import {EventController, MusicController} from "./controller.js";
 
-function initPage(subscribe) {
+function initPage() {
+    const {subscribe} = EventController
 
     let paused = false;
 

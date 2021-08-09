@@ -1,14 +1,16 @@
 import {durationSecondsToMinutes} from "./util.js";
 
-function initPage(funcs) {
-    const [
-        subscribe,
+import { EventController, ObjectController, MusicController } from './controller.js'
+function initPage() {
+
+    const {subscribe} = EventController
+    const {
         getPlaylistArray,
         getPlaylistFromTitle,
         removeFromPlaylist,
-        addToPlaylist,
-        setSong
-    ] = funcs
+        addToPlaylist
+    } = ObjectController
+    const {setSong} = MusicController
 
     Array.from(document.querySelectorAll('.playlist-section')).forEach(v => {
         let selector = v.querySelector('.playlist-select')

@@ -1,6 +1,9 @@
 console.log("homePage.js running...")
+import { EventController, ObjectController, MusicController } from './controller.js'
 
 function initPage(subscribe, getPlaylistArray) {
+    const {subscribe} = EventController
+    const {getPlaylistArray} = ObjectController
 
     function generatePlaylistCard(playlistName, thumbnailURLPromise, numSongs) {
         let container = document.getElementsByClassName("playlists-container")[0]
