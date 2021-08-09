@@ -690,3 +690,23 @@ svg.main-button {
     justify-content: flex-end;
 }
 
+.footer-side-buttons > * {
+    margin-left: 8px;
+}
+
+.volume-seeker {
+    width: 100%;
+    max-width: 150px;
+    min-width: 100px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    cursor: grab;
+    padding: 0;
+}
+
+.volume-seeker .seeker-background {
+    width: 100%;
+    margin: 0;
+}
+
