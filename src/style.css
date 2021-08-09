@@ -528,8 +528,19 @@ footer {
     z-index: 1;
 }
 
+footer > .song-info {
+    height: 100%;
+    padding-top: 11px;
+    padding-left: 12px
+}
+
+
 footer img {
     width: 128px;
+}
+
+footer img.hidden {
+    display: none;
 }
 
 .svg-button {

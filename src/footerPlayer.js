@@ -1,6 +1,9 @@
-import {durationSecondsToMinutes} from "./util.js";
+console.log("footerPlayer.js running")
 
-let paused = false
+import {durationSecondsToMinutes} from "./util.js";
+import {playSong, subscribe} from "./controller.js";
+
+let paused = false;
 
 document.getElementById("shuffle").addEventListener("click", ev => {
     ev.currentTarget.classList.toggle("active")
@@ -13,13 +16,16 @@ document.getElementById("repeat").addEventListener("click", ev => {
 let playButton = document.getElementById("play")
 let pauseButton = document.getElementById("pause")
 
-function togglePlayPause(ev) {
-    playButton.classList.toggle("inactive")
-    pauseButton.classList.toggle("inactive")
+function play() {
+
 }
 
-playButton.addEventListener("click", togglePlayPause)
-pauseButton.addEventListener("click", togglePlayPause)
+function pause() {
+
+}
+
+playButton.addEventListener("click", play)
+pauseButton.addEventListener("click", pause)
 
 let seekerDiv = document.getElementsByClassName("seeker")[0]
 let seekerBackBar = document.getElementsByClassName("seeker-background")[0]
@@ -55,9 +61,6 @@ function updateSeeker(relativeX, songSeconds) {
 }
 
 seekerDiv.addEventListener("mousedown", e => {
-    const songLength = 300
-    paused = true
-
     let moveFunc = (e) => {
         let relativeX = getMousePosition(e, seekerBackBar)[0]
         updateSeeker(relativeX, songLength)
@@ -66,6 +69,46 @@ seekerDiv.addEventListener("mousedown", e => {
     document.addEventListener("mousemove", moveFunc)
     document.addEventListener("mouseup", e => {
         document.removeEventListener("mousemove", moveFunc)
-        paused = false
     }, {once: true})
 })
+
+function drawPage(info) {
+    let song = info.currentSong
+    let paused = info.paused
+
+    let thumbImg = document.querySelector('footer > img');
+    let title = document.querySelector('footer .songname > strong');
+    let artist = document.querySelector('footer .artist');
+    let album = document.querySelector('footer .album');
+
+    if (song) {
+
+        song.getThumb().then(thumb => {
+            thumbImg.src = thumb ?? ""
+            thumbImg.style.display = 'initial'
+            thumbImg.classList.toggle('hidden', false)
+        })
+
+        title.innerText = song.getTitle()
+        artist.innerText = song.getArtist()
+        album.innerText = song.getAlbum()
+
+    } else {
+        thumbImg.style.display = 'none'
+        title.innerText = ""
+        artist.innerText = ""
+        album.innerText = ""
+        thumbImg.classList.toggle('hidden', true)
+    }
+
+    if (paused || !song) {
+        playButton.classList.toggle("inactive", true)
+        pauseButton.classList.toggle("inactive", false)
+    } else {
+        playButton.classList.toggle("inactive", false)
+        pauseButton.classList.toggle("inactive", true)
+    }
+}
+
+subscribe('playing', drawPage)
+playSong()

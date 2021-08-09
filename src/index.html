@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP    -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; img-src *">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; img-src *; media-src *">
     <link rel="stylesheet" href="style.css">
 
     <title>btecify</title>
@@ -89,12 +89,12 @@
 
 <footer>
 
-    <img src="./assets/maxresdefault.jpg" loading="lazy" alt="Song Thumbnail">
+    <img src="" loading="lazy" alt="Song Thumbnail" class="hidden">
 
-    <div>
-        <p id="songname"><strong>SONGNAME</strong></p>
-        <p>ARTIST</p>
-        <p>ALBUM</p>
+    <div class="song-info">
+        <p class="songname"><strong></strong></p>
+        <p class="artist"></p>
+        <p class="album"></p>
     </div>
 
     <div class="player">

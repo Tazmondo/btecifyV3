@@ -3,6 +3,13 @@ console.log("controller.js running...")
 import {Playlist, Song, parseObject} from "./objects.js";
 import {copyArray, durationMinutesToSeconds} from "./util.js";
 
+import initMusicPlayer from './musicPlayer.js'
+let musicPlayer = initMusicPlayer()
+
+musicPlayer.setCallback((e, info) => {
+    console.log(info.time, e)
+})
+
 let allSongPlaylist = (() => {
     if (localStorage['song'] !== undefined) {
         return JSON.parse(localStorage['song'], parseObject)
@@ -29,6 +36,10 @@ let events = {
             localStorage['song'] = JSON.stringify(allSongPlaylist)
         }],
         e: () => {return copyArray(allSongPlaylist)}
+    },
+    'playing': {
+        callbacks: [],
+        e: () => {return musicPlayer.getInfo()}
     }
 }
 
@@ -46,7 +57,7 @@ function dispatch(eventName) {
     }
 
     events[eventName].callbacks.forEach(v => {
-        v()
+        v(events[eventName].e())
     })
     return true
 }
@@ -121,6 +132,11 @@ export function getPlaylistArray() {
 
 export function getPlaylistFromTitle(title) {
     return playlistArray.find(v => {return v.getTitle() === title})
+}
+
+export function playSong() {
+    musicPlayer.setSong(allSongPlaylist.getSongs()[0])
+    dispatch('playing')
 }
 
 // FOR DEBUGGING

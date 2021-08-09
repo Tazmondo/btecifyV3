@@ -65,6 +65,10 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
             return localUrl || remoteUrl;
         },
 
+        getSource() {
+            return localUrl || api.getSource(remoteUrl)
+        },
+
         // Returns length of song in seconds
         getDurationSeconds() {
             return duration
