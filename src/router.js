@@ -12,8 +12,10 @@ function initRouter() {
         Array.from(document.querySelectorAll('main > div')).forEach(v => {
             v.classList.toggle('switching', true)
             v.classList.toggle('hidden', true)
-            v.addEventListener('transitionend', () => {
-                v.classList.toggle('switching', false)
+            v.addEventListener('transitionend', (e) => {
+                if (e.target === v) {
+                    v.classList.toggle('switching', false)
+                }
             })
         })
         selectedPage.classList.toggle('hidden', false)
