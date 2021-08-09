@@ -64,8 +64,11 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
             return localUrl || remoteUrl;
         },
 
-        getSource() {
-            return localUrl || api.getSource(remoteUrl)
+        async getSource() {
+            if (!localUrl && remoteUrl) {
+                localUrl = await api.fetchSong(uuid, remoteUrl) || ""
+            }
+            return localUrl || remoteUrl || ""
         },
 
         getVideoId() {
