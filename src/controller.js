@@ -1,41 +1,43 @@
 console.log("controller.js running...")
 
+// IMPORTING AND SETTING UP
+
 import {Playlist, Song, parseObject} from "./objects.js";
 import {copyArray, durationMinutesToSeconds} from "./util.js";
 
-import initMusicPlayer from './musicPlayer.js'
-let musicPlayer = initMusicPlayer()
 
-musicPlayer.setCallback((e, info) => {
-    console.log(info.time, e)
-})
+// CONTROLLER IMPORTS
 
-let allSongPlaylist = (() => {
-    if (localStorage['song'] !== undefined) {
-        return JSON.parse(localStorage['song'], parseObject)
-    }
-    return Playlist("Songs")
-})()
+import EventController from './eventController.js'
 
-let playlistArray = (() => {
-    if (localStorage['playlist'] !== undefined) {
-        return JSON.parse(localStorage['playlist'], parseObject)
-    }
-    return []
-})()
+import ObjectControllerInit from './objectController.js'
+const ObjectController = ObjectControllerInit(EventController.dispatch)
 
-let events = {
+import MusicPlayerInit from './musicPlayer.js'
+const MusicPlayer = MusicPlayerInit(EventController.dispatch)
+
+
+// PAGE IMPORTS
+
+import router from './router.js'
+
+import footerPlayerInit from './footerPlayer.js'
+
+import homePageInit from './homePage.js'
+import playlistPageInit from './playlistPage.js'
+
+const events = {
     'playlist': {
         callbacks: [ () => {
-            localStorage['playlist'] = JSON.stringify(playlistArray)
+            localStorage['playlist'] = JSON.stringify(ObjectController.playlistArray)
         }],
-        e: () => {return copyArray(playlistArray)}
+        e: () => {return copyArray(ObjectController.playlistArray)}
     },
     'song': {
         callbacks: [ () => {
-            localStorage['song'] = JSON.stringify(allSongPlaylist)
+            localStorage['song'] = JSON.stringify(ObjectController.allSongPlaylist)
         }],
-        e: () => {return copyArray(allSongPlaylist)}
+        e: () => {return copyArray(ObjectController.allSongPlaylist)}
     },
     'playing': {
         callbacks: [],
@@ -43,104 +45,22 @@ let events = {
     }
 }
 
-function doesPlaylistExist(playlist) {
-    return playlistArray.map(v => {v.getTitle()}).includes(playlist.getTitle())
+for (let eventName in events) {
+    EventController.setupEvent(eventName, events[eventName].callbacks, events[eventName].e)
 }
 
-function doesSongExist(song) {
-    return false // todo: song name searching and stuff to check for potential duplicates
-}
+router().routeWithPageName('home')
 
-function dispatch(eventName) {
-    if (validEvent(eventName)) {
-        throw "Tried to dispatch to an invalid event!"
-    }
+footerPlayerInit(EventController.subscribe)
 
-    events[eventName].callbacks.forEach(v => {
-        v(events[eventName].e())
-    })
-    return true
-}
+homePageInit(EventController.subscribe, ObjectController.getPlaylistArray)
+playlistPageInit(EventController.subscribe, ObjectController.getPlaylistArray, ObjectController.getPlaylistFromTitle, ObjectController.removeFromPlaylist, ObjectController.addToPlaylist)
 
-function validEvent(event) {
-    return events[event] === undefined
-}
 
-export function makePlaylist(playlistArgs) {
-    let newPlaylist = Playlist(...playlistArgs)
 
-    if (!doesPlaylistExist(newPlaylist)) {
-        playlistArray.push(newPlaylist)
-        dispatch('playlist')
-        return true
-    }
-    return false
-}
-
-export function addToPlaylist(playlist, song) {
-    let result = playlist.addSong(song)
-    dispatch('playlist')
-    return result
-}
-
-export function removeFromPlaylist(playlist, song) {
-    let result = playlist.removeSongWithSong(song)
-    dispatch('playlist')
-    return result
-}
-
-export function makeSong(songArgs, playlists=[]) {
-    let newSong = Song(...songArgs)
-    if (!doesSongExist(newSong)) {
-        allSongPlaylist.addSong(newSong)
-        playlists.forEach(playlist => {
-            playlist.addSong(newSong)
-        })
-    }
-}
-
-export function unSubscribe(event, callback) {
-    if (validEvent(event)) {
-        throw "Tried to unsubscribe from an invalid event!"
-    }
-
-    let callbacks = events[event].callbacks;
-
-    let index = callbacks.findIndex(v => {return v === callback})
-    if (index > -1) {
-        callbacks.splice(index, 1)
-        return true
-    }
-    return false
-}
-
-export function subscribe(event, callback) {
-    if (validEvent(event)) {
-        throw "Tried to subscribe to an invalid event!"
-    }
-    unSubscribe(event, callback)
-    events[event].callbacks.push(callback)
-    return true
-}
-
-// Returns a sorted array of playlists.
-export function getPlaylistArray() {
-    return copyArray(playlistArray).sort((a, b) => {
-        return b.getLength() - a.getLength()
-    })
-}
-
-export function getPlaylistFromTitle(title) {
-    return playlistArray.find(v => {return v.getTitle() === title})
-}
-
-export function playSong() {
-    musicPlayer.setSong(allSongPlaylist.getSongs()[0])
-    dispatch('playing')
-}
 
 // FOR DEBUGGING
-// Object.assign(window, {dispatch, makePlaylist, doesPlaylistExist})
+// Object.assign(window, {EventController.dispatch, makePlaylist, doesPlaylistExist})
 function readInputData() {
     let inputData = api.getInputData()
     let songs = []
@@ -180,14 +100,14 @@ function readInputData() {
 
     console.log(playlists)
 
-    allSongPlaylist = Playlist("Songs", songs);
-    playlistArray = playlists;
-    localStorage['song'] = JSON.stringify(allSongPlaylist)
-    localStorage['playlist'] = JSON.stringify(playlistArray)
-    dispatch('playlist')
-    dispatch('song')
+    ObjectController.allSongPlaylist = Playlist("Songs", songs);
+    ObjectController.playlistArray = playlists;
+    localStorage['song'] = JSON.stringify(ObjectController.allSongPlaylist)
+    localStorage['playlist'] = JSON.stringify(ObjectController.playlistArray)
+    EventController.dispatch('playlist')
+    EventController.dispatch('song')
 
 }
 //readInputData()
 
-api.deleteUnusedThumbnails(allSongPlaylist.getSongs().map(v => {return v.getUUID()}))
+api.deleteUnusedThumbnails(ObjectController.allSongPlaylist.getSongs().map(v => {return v.getUUID()}))

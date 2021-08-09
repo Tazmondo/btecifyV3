@@ -1,6 +1,6 @@
 console.log("musicPlayer.js running")
 
-function MusicPlayer() {
+function MusicPlayer(dispatch) {
     let history = [];
     let currentSong;
     let currentPlaylist;
@@ -46,6 +46,12 @@ function MusicPlayer() {
         setSong(song) {
             currentSong = song
             player.src = song.getSource()
+            play()
+        },
+
+        setSongFromUrl(urlStream) {
+            currentSong = undefined
+            player.src = urlStream
             play()
         },
 
