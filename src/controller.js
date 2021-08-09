@@ -14,7 +14,10 @@ import InitObjectController from './objectController.js'
 const ObjectController = InitObjectController(EventController.dispatch)
 
 import InitMusicController from './musicPlayer.js'
-const MusicPlayer = InitMusicController(EventController.dispatch)
+const MusicController = InitMusicController(EventController.dispatch)
+
+export {EventController, ObjectController, MusicController}
+
 
 
 // PAGE IMPORTS
@@ -41,7 +44,7 @@ const events = {
     },
     'playing': {
         callbacks: [],
-        e: () => {return MusicPlayer.getInfo()}
+        e: () => {return MusicController.getInfo()}
     }
 }
 
@@ -51,28 +54,9 @@ for (let eventName in events) {
 
 router().routeWithPageName('home')
 
-footerPlayerInit(
-    EventController.subscribe
-)
-
-homePageInit(
-    EventController.subscribe,
-
-    ObjectController.getPlaylistArray
-)
-
-playlistPageInit(
-    [
-        EventController.subscribe,
-
-        ObjectController.getPlaylistArray,
-        ObjectController.getPlaylistFromTitle,
-        ObjectController.removeFromPlaylist,
-        ObjectController.addToPlaylist,
-
-        MusicPlayer.setSong,
-    ]
-)
+footerPlayerInit()
+homePageInit()
+playlistPageInit()
 
 
 
@@ -129,3 +113,5 @@ function readInputData() {
 //readInputData()
 
 api.removeUnusedDownloads(ObjectController.allSongPlaylist.getSongs().map(v => {return v.getUUID()}))
+
+

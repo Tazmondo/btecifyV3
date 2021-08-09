@@ -1,4 +1,4 @@
-console.log("musicPlayer.js running")
+console.log("musicController.js running")
 
 function MusicPlayer(dispatch) {
     let history = [];
