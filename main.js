@@ -24,7 +24,7 @@ function createWindow () {
         alwaysOnTop: false,
         frame: false
     })
-    win.webContents.openDevTools()
+    // win.webContents.openDevTools()
     win.loadFile('src/index.html')
 
 }
