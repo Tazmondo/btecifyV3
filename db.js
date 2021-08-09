@@ -132,6 +132,17 @@ function db(dbPath) {
         }
     }
 
+    async function removeFilesNotMatching(whitelist, dir) {
+        let fileNames = await fs.promises.readdir(dir)
+
+        for (let fileName of fileNames) {
+            if (!whitelist.includes(extractNameAndExt(fileName)[0])) {
+                console.log(`Delete ${fileName}`)
+                await fs.promises.rm(path.join(thumbPath, fileName))
+            }
+        }
+    }
+
     return {
 
         // Takes a uuid and returns a boolean as to whether a thumbnail is downloaded for that uuid.
@@ -153,17 +164,21 @@ function db(dbPath) {
             return false
         },
 
-        // Takes an array of used UUIDs. Deletes all other thumbnails.
         async deleteUnusedThumbnails(args) {
             let uuidNoDelete = args[0]
-            let fileNames = await fs.promises.readdir(thumbPath)
+            await removeFilesNotMatching(uuidNoDelete, thumbPath)
+        },
 
-            for (let fileName of fileNames) {
-                if (!uuidNoDelete.includes(fileName.substr(0, 36)) || fileName.length !== 40) {
-                    console.log(`Delete ${fileName}`)
-                    await fs.promises.rm(path.join(thumbPath, fileName))
-                }
-            }
+        async deleteUnusedSongs(args) {
+            let uuidNoDelete = args[0]
+            await removeFilesNotMatching(uuidNoDelete, musicPath)
+
+        },
+
+        // Takes an array of used UUIDs. Deletes all other downloads.
+        async removeUnusedDownloads(args) {
+            this.deleteUnusedThumbnails(args)
+            this.deleteUnusedSongs(args)
         },
 
         // Returns boolean as to whether a song has been downloaded

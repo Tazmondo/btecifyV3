@@ -110,4 +110,4 @@ function readInputData() {
 }
 //readInputData()
 
-api.deleteUnusedThumbnails(ObjectController.allSongPlaylist.getSongs().map(v => {return v.getUUID()}))
+api.removeUnusedDownloads(ObjectController.allSongPlaylist.getSongs().map(v => {return v.getUUID()}))
