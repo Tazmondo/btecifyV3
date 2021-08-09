@@ -4,8 +4,9 @@ import {EventController, MusicController} from "./controller.js";
 
 function initPage() {
     const {subscribe} = EventController
+    const {setTime} = MusicController
 
-    let paused = false;
+    let songLength = undefined;
 
     document.getElementById("shuffle").addEventListener("click", ev => {
         ev.currentTarget.classList.toggle("active")
@@ -18,6 +19,17 @@ function initPage() {
     let playButton = document.getElementById("play")
     let pauseButton = document.getElementById("pause")
 
+    let thumbImg = document.querySelector('footer .song-thumb');
+    let title = document.querySelector('footer .songname > strong');
+    let artist = document.querySelector('footer .artist');
+    let album = document.querySelector('footer .album');
+
+    let seekerDiv = document.getElementsByClassName("seeker")[0]
+    let seekerBackBar = document.getElementsByClassName("seeker-background")[0]
+    let seekerFrontBar = document.getElementsByClassName("seeker-foreground")[0]
+    let currentTime = document.getElementById("current-time")
+    let endTime = document.getElementById('end-time')
+
     function play() {
 
     }
@@ -29,10 +41,7 @@ function initPage() {
     playButton.addEventListener("click", play)
     pauseButton.addEventListener("click", pause)
 
-    let seekerDiv = document.getElementsByClassName("seeker")[0]
-    let seekerBackBar = document.getElementsByClassName("seeker-background")[0]
-    let seekerFrontBar = document.getElementsByClassName("seeker-foreground")[0]
-    let currentTime = document.getElementById("current-time")
+
 
     function getMousePosition(e, target) {
         // e = Mouse click event.
@@ -42,48 +51,61 @@ function initPage() {
         return [x, y]
     }
 
-    function getSongTimeFromPercentage(percentage, duration) {
-        let crudeTime = (percentage / 100) * duration
-        let wholeTime = Math.round(crudeTime)
-        return durationSecondsToMinutes(wholeTime)
-    }
-
-    function updateSeeker(relativeX, songSeconds) {
-
-        let widthPercentage = relativeX / seekerBackBar.clientWidth * 100
-        if (widthPercentage < 0) {
-            widthPercentage = 0
-        } else if (widthPercentage > 100) {
-            widthPercentage = 100
+    function getSongTimeFromPercentage(percentage) {
+        if (songLength) {
+            let crudeTime = (percentage / 100) * songLength
+            let wholeTime = Math.round(crudeTime)
+            return durationSecondsToMinutes(wholeTime)
         }
-        seekerFrontBar.style = `width: ${widthPercentage}%`
-        currentTime.innerText = getSongTimeFromPercentage(widthPercentage, songSeconds)
-
-        console.log(`Set duration to ${widthPercentage}%`)
+        return '0:00'
     }
 
-    seekerDiv.addEventListener("mousedown", e => {
+    function updateSeeker(seconds) {
+        if (songLength) {
+            let percentage = seconds / songLength * 100
+
+            if (percentage < 0) {
+                percentage = 0
+            } else if (percentage > 100) {
+                percentage = 100
+            }
+            seekerFrontBar.style = `width: ${percentage}%`
+            currentTime.innerText = getSongTimeFromPercentage(percentage)
+        }
+    }
+
+    function seekerClick(e) {
+        let oldX = 0;
+        let currentEvent = e
+
         let moveFunc = (e) => {
             let relativeX = getMousePosition(e, seekerBackBar)[0]
-            updateSeeker(relativeX, songLength)
+            let time = relativeX / seekerBackBar.clientWidth * songLength
+            updateSeeker(time)
+            setTime(time)
         }
-        moveFunc(e)
-        document.addEventListener("mousemove", moveFunc)
+        moveFunc(currentEvent)
+        let interval = setInterval(() => {
+            if (currentEvent.clientX !== oldX) {
+                moveFunc(currentEvent)
+                oldX = currentEvent.clientX
+            }
+        }, 50)
+        document.addEventListener("mousemove", (e) => {
+            currentEvent = e
+        })
         document.addEventListener("mouseup", e => {
             document.removeEventListener("mousemove", moveFunc)
+            clearInterval(interval)
         }, {once: true})
-    })
+    }
 
     function drawPage(info) {
-        let song = info.currentSong
-        let paused = info.paused
-
-        let thumbImg = document.querySelector('footer > img');
-        let title = document.querySelector('footer .songname > strong');
-        let artist = document.querySelector('footer .artist');
-        let album = document.querySelector('footer .album');
+        let song = info?.currentSong
+        let paused = info?.paused
 
         if (song) {
+            songLength = song.getDurationSeconds()
 
             song.getThumb().then(thumb => {
                 thumbImg.src = thumb ?? ""
@@ -94,6 +116,9 @@ function initPage() {
             title.innerText = song.getTitle()
             artist.innerText = song.getArtist()
             album.innerText = song.getAlbum()
+            endTime.innerText = durationSecondsToMinutes(song.getDurationSeconds())
+
+            seekerDiv.addEventListener("mousedown", seekerClick)
 
         } else {
             thumbImg.style.display = 'none'
@@ -101,18 +126,27 @@ function initPage() {
             artist.innerText = ""
             album.innerText = ""
             thumbImg.classList.toggle('hidden', true)
+
+            seekerDiv.removeEventListener('mousedown', seekerClick)
         }
 
         if (paused || !song) {
-            playButton.classList.toggle("inactive", true)
-            pauseButton.classList.toggle("inactive", false)
-        } else {
             playButton.classList.toggle("inactive", false)
             pauseButton.classList.toggle("inactive", true)
+        } else {
+            playButton.classList.toggle("inactive", true)
+            pauseButton.classList.toggle("inactive", false)
         }
     }
 
+    function updateSongTime(time) {
+        currentTime.innerText = durationSecondsToMinutes(Math.floor(time))
+        updateSeeker(time)
+    }
+
+    drawPage()
     subscribe('playing', drawPage)
+    subscribe('songtime', updateSongTime)
 }
 
 export default initPage

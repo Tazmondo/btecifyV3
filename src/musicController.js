@@ -30,6 +30,10 @@ function MusicPlayer(dispatch) {
         }
     }
 
+    player.addEventListener('timeupdate', e=>{
+        dispatch('songtime')
+    })
+
     return {
         getInfo,
         pause,
@@ -66,10 +70,14 @@ function MusicPlayer(dispatch) {
             currentPlaylist = playlist
         },
 
-        setCallback(event, callback) {
-              player.addEventListener(event, (e) => {
-                  callback(e, getInfo())
-              })
+        getTime() {
+            return player.currentTime
+        },
+
+        setTime(seconds) {
+            player.play() // In case the song has ended and playback has stopped.
+            player.currentTime = seconds
+            return player.currentTime
         },
     }
 }

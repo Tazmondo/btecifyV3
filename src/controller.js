@@ -13,7 +13,7 @@ import EventController from './eventController.js'
 import InitObjectController from './objectController.js'
 const ObjectController = InitObjectController(EventController.dispatch)
 
-import InitMusicController from './musicPlayer.js'
+import InitMusicController from './musicController.js'
 const MusicController = InitMusicController(EventController.dispatch)
 
 export {EventController, ObjectController, MusicController}
@@ -45,6 +45,10 @@ const events = {
     'playing': {
         callbacks: [],
         e: () => {return MusicController.getInfo()}
+    },
+    'songtime': {
+        callbacks: [],
+        e: () => {return MusicController.getTime()}
     }
 }
 

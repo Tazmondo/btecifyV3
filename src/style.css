@@ -528,10 +528,18 @@ footer {
     z-index: 1;
 }
 
-footer > .song-info {
+footer .footer-left-info {
+    width: 30%;
+    display: flex;
+}
+
+footer .song-info {
     height: 100%;
     padding-top: 11px;
-    padding-left: 12px
+    padding-left: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 
@@ -560,6 +568,7 @@ footer img.hidden {
 }
 
 .player {
+    width: 40%;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -638,7 +647,7 @@ svg.main-button {
 }
 
 .seeker-foreground {
-    width: 50%;
+    width: 0%;
     background: rgba(255,255,255,0.3);
     border-radius: 5px;
     height: 100%;
@@ -676,5 +685,7 @@ svg.main-button {
 
 .footer-side-buttons {
     display: flex;
+    width: 30%;
+    justify-content: flex-end;
 }
 
