@@ -1,7 +1,7 @@
 const path = require("path");
 const {ipcMain} = require('electron')
 const fs = require("fs");
-const db = require('./src/db.js')(path.join(__dirname, './db')) // Initialise db in the database director
+const db = require('./db.js')(path.join(__dirname, './db')) // Initialise db in the database director
 
 function ipc(main, isPackaged) {
     for (let funcName in db) {
