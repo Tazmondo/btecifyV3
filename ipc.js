@@ -1,7 +1,10 @@
 const path = require("path");
 const {ipcMain} = require('electron')
 const fs = require("fs");
-const db = require('./db.js')(path.join(__dirname, './db')) // Initialise db in the database director
+
+const dbPath = path.join(__dirname, './db')
+fs.promises.mkdir(dbPath).then(res => {console.log("Made db path")}).catch(e => {console.log("db path already exists")})
+const db = require('./db.js')(dbPath) // Initialise db in the database director
 
 function ipc(main, isPackaged) {
     for (let funcName in db) {

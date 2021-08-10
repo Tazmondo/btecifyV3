@@ -21,6 +21,9 @@ function db(dbPath) {
     const thumbPath = path.join(dbPath, "./thumbnails")
     const musicPath = path.join(dbPath, "./music")
 
+    fs.promises.mkdir(thumbPath).then(res => {console.log("Made thumbnail path")}).catch(e => {console.log("Thumbnail path already exists")})
+    fs.promises.mkdir(musicPath).then(res => {console.log("Made music path")}).catch(e => {console.log("Music path already exists")})
+
     console.log(thumbPath)
     console.log(musicPath);
 
