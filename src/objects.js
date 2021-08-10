@@ -86,10 +86,14 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
         // Returns a url to the thumbnail, downloading it locally if it doesn't exist, or falling back to the remote
         // url and lastly the placeholder url
         async getThumb() {
+            let result;
             if (!localThumb && remoteThumb) {
-                localThumb = await api.fetchThumbnail(uuid, remoteThumb) || ""
+                result = await api.fetchThumbnail(uuid, remoteThumb) || ""
+                if (result.includes('db/thumbnails')) {
+                    localThumb = result
+                }
             }
-            return localThumb || remoteThumb || placeholderURL
+            return localThumb || result || placeholderURL
         },
 
         // Only returns local url if it exists. Used to avoid unnecessary async calls

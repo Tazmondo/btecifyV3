@@ -163,8 +163,10 @@ function db(dbPath) {
 
             if (imageName) {
                 return `../db/thumbnails/${imageName}`
+            } else {
+                let replacedUrl = url.replace("maxresdefault", "hqdefault");
+                return replacedUrl
             }
-            return false
         },
 
         async deleteUnusedThumbnails(args) {
