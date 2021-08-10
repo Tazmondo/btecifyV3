@@ -21,7 +21,7 @@ export {EventController, ObjectController, MusicController}
 
 // PAGE IMPORTS
 
-import router from './router.js'
+import router from './headerNav.js'
 
 import footerPlayerInit from './footerPlayer.js'
 
