@@ -107,6 +107,10 @@ function initController(dispatch, save) {
         getPlaylistFromTitle(title) {
             return playlistArray.find(v => {return v.getTitle() === title})
         },
+
+        getPlaylistsWithSong(song) {
+            return playlistArray.filter(playlist => playlist.doesContainSong(song))
+        },
     }
 }
 

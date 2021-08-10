@@ -3,7 +3,7 @@ import { EventController, ObjectController, MusicController } from './controller
 
 function initPage() {
     const {subscribe} = EventController
-    const {getPlaylistArray,getPlaylistFromTitle} = ObjectController
+    const {getPlaylistArray,getPlaylistFromTitle, getPlaylistsWithSong} = ObjectController
     const {setPlaylist} = MusicController
 
     function generatePlaylistCard(playlistName, thumbnailURLPromise, numSongs) {
@@ -42,8 +42,22 @@ function initPage() {
         })
     }
 
+    function highlightPlayingSongPlaylists(info) {
+        let song = info.currentSong
+        if (song) {
+            let playlistCards = document.querySelectorAll('.playlists-container > .playlist-card')
+            let playlistsToSelect = getPlaylistsWithSong(song)
+
+            playlistCards.forEach(card => {
+                let title = card.querySelector('h3').innerText
+                card.classList.toggle("selected", playlistsToSelect.some(playlist => playlist.getTitle() === title))
+            })
+        }
+    }
+
     drawPage()
     subscribe('playlist', drawPage)
+    subscribe('playing', highlightPlayingSongPlaylists)
 }
 
 export default initPage

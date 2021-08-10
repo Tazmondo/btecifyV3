@@ -279,15 +279,25 @@ main > *.hidden {
     align-content: center;
     margin: 5px;
     border-radius: 20px;
+    border: solid 1px rgb(0, 0, 0);
 
     transition: all 0.5s;
 }
 
 .playlist-card:hover {
-    transform: scale(1.05);
+    /*transform: scale(1.05);*/
 
     z-index: 1;
     border: solid 1px rgb(119, 119, 119);
+}
+
+.playlist-card.selected {
+    border: solid 1px rgb(27, 108, 4);
+}
+
+.playlist-card.selected:hover {
+    border: solid 1px rgb(42, 161, 9);
+    box-shadow: #173d13 0 0 10px 3px;
 }
 
 .playlist-card:hover > div > svg{
@@ -570,6 +580,7 @@ footer img {
 
 .svg-button:hover {
     fill: rgba(255, 255, 255, 1);
+    filter: drop-shadow(0 0 5px #050);
 }
 
 .svg-button.active {
@@ -577,7 +588,7 @@ footer img {
 }
 
 .svg-button.active:hover {
-    fill: rgba(0, 255, 0, 1)
+    fill: rgba(0, 255, 0, 1);
 }
 
 .player {
