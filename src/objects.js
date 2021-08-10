@@ -39,6 +39,7 @@ function Song(updatedCallback, title, urls, duration, artist = "", album = "", t
             localThumb = thumbnail
         }
     })
+    updatedCallback()
 
     return {
         // Returns string title
@@ -108,6 +109,7 @@ function Song(updatedCallback, title, urls, duration, artist = "", album = "", t
                     localThumb = result
                 }
             }
+            updatedCallback()
             return localThumb || result || placeholderURL
         },
 
@@ -146,6 +148,7 @@ function Playlist(updatedCallback, title, songs=[], thumb="") {
 
         if (targetSongIndex > -1) {
             songs.splice(targetSongIndex, 1)
+            updatedCallback()
             return true
         } else {
             console.warn("Tried to remove from a playlist a song that it didn't contain.")
@@ -191,13 +194,15 @@ function Playlist(updatedCallback, title, songs=[], thumb="") {
         // Async, returns a thumbnail randomly chosen from songs in the playlist, and on subsequent calls, the one
         // returned from the first call.
         async getThumb() {
-            return thumb || cachedThumb ||
+            let result = thumb || cachedThumb ||
                 (
                     this.getLength() > 0 ?
                     // cachedThumb = ... will also return cached thumb so it can be used here
                     cachedThumb = await getEnabledSongs()[randomIndex(this.getLength())]?.getThumb() :
                     placeholderURL
                 )
+            updatedCallback()
+            return result
         },
 
         // Returns boolean indicating whether the playlist contains a certain song object.
@@ -212,6 +217,7 @@ function Playlist(updatedCallback, title, songs=[], thumb="") {
             if (validSong(song) && !this.doesContainSong(song)) {
                 songs.push(song)
                 sortSongs()
+                updatedCallback()
                 return true
             }
             return false
@@ -225,6 +231,7 @@ function Playlist(updatedCallback, title, songs=[], thumb="") {
                 if (api.uuidIsValid(uuid)) {
                     let result = removeSong(uuid);
                     sortSongs()
+                    updatedCallback()
                     return result
                 }
             }
@@ -238,6 +245,7 @@ function Playlist(updatedCallback, title, songs=[], thumb="") {
             if (api.uuidIsValid(uuid)) {
                 let result = removeSong(uuid)
                 sortSongs()
+                updatedCallback()
                 return result
             }
             throw `This should never be reached. removeSong called with an invalid uuid: ${uuid}`
