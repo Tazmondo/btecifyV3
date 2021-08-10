@@ -3,7 +3,8 @@ import { EventController, ObjectController, MusicController } from './controller
 
 function initPage() {
     const {subscribe} = EventController
-    const {getPlaylistArray} = ObjectController
+    const {getPlaylistArray,getPlaylistFromTitle} = ObjectController
+    const {setPlaylist} = MusicController
 
     function generatePlaylistCard(playlistName, thumbnailURLPromise, numSongs) {
         let container = document.getElementsByClassName("playlists-container")[0]
@@ -24,6 +25,10 @@ function initPage() {
         thumbnailURLPromise.then( res => {
             let img = card.querySelector('.img-div');
             img.style.backgroundImage = `url(${res})`
+        })
+
+        card.querySelector('.svg-button').addEventListener('click', e=>{
+            setPlaylist(getPlaylistFromTitle(playlistName))
         })
 
     }

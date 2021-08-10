@@ -4,9 +4,10 @@ import {EventController, MusicController} from "./controller.js";
 
 function initPage() {
     const {subscribe} = EventController
-    const {setTime, setVolume} = MusicController
+    const {setTime, setVolume, forward, back, setRepeat} = MusicController
 
     let songLength = undefined;
+    let currentSong;
 
     // Used as the difference between quieter sounds is more audible than louder sounds, so the volume slider
     // should have a higher range at lower volumes.
@@ -18,15 +19,26 @@ function initPage() {
 
     document.getElementById("repeat").addEventListener("click", ev => {
         ev.currentTarget.classList.toggle("active")
+        setRepeat(ev.currentTarget.classList.contains('active'))
     })
 
-    let playButton = document.getElementById("play")
-    let pauseButton = document.getElementById("pause")
+    document.getElementById('skip-forward').addEventListener('click', e=>{
+        forward()
+    })
+
+    document.getElementById('skip-back').addEventListener('click', e=>{
+        back()
+    })
+
 
     let thumbImg = document.querySelector('footer .song-thumb');
     let title = document.querySelector('footer .songname > strong');
     let artist = document.querySelector('footer .artist');
     let album = document.querySelector('footer .album');
+
+    let playlistTitle = document.querySelector('#player-playlist-header')
+    let playButton = document.getElementById("play")
+    let pauseButton = document.getElementById("pause")
 
     let seekerDiv = document.querySelector(".player .seeker")
     let seekerBackBar = seekerDiv.querySelector('.seeker-background')
@@ -37,6 +49,8 @@ function initPage() {
     let volumeSeeker = document.querySelector('.volume-seeker')
     let volumeBack = volumeSeeker.querySelector('.seeker-background')
     let volumeFront = volumeSeeker.querySelector('.seeker-foreground')
+    let volumeButton = document.querySelector('#footer-volume-control')
+    let volumeButtonMuted = document.querySelector('#footer-volume-control-muted')
 
 
     function play() {
@@ -134,15 +148,22 @@ function initPage() {
 
     function drawPage(info) {
         let song = info?.currentSong
+        let playlist = info?.currentPlaylist
         let paused = info?.paused
+        let volume = info?.volume ** (1/volMod) ?? 0.5
+
+        playlistTitle.innerText = playlist?.getTitle() || " \n " // Take up same amount of height as if it had text.
 
         if (song) {
+            currentSong = song
             songLength = song.getDurationSeconds()
-
+            thumbImg.style.display = 'none'
             song.getThumb().then(thumb => {
-                thumbImg.src = thumb ?? ""
-                thumbImg.style.display = 'initial'
-                thumbImg.classList.toggle('hidden', false)
+                if (song === currentSong) { // Make sure you dont overwrite thumbnail of another song.
+                    thumbImg.src = thumb ?? ""
+                    thumbImg.style.display = 'initial'
+                    thumbImg.classList.toggle('hidden', false)
+                }
             })
 
             title.innerText = song.getTitle()
@@ -170,8 +191,16 @@ function initPage() {
             pauseButton.classList.toggle("inactive", false)
         }
 
-        volumeFront.style.width = `${((info?.volume ?? 0.5)** (1/volMod)) * 100}%`
+        volumeFront.style.width = `${volume * 100}%`
         volumeSeeker.addEventListener('mousedown', volumeClick)
+        if (volume === 0) {
+            volumeButton.classList.toggle('inactive', true)
+            volumeButtonMuted.classList.toggle('inactive', false)
+        } else {
+            volumeButton.classList.toggle('inactive', false)
+            volumeButtonMuted.classList.toggle('inactive', true)
+        }
+
     }
 
     function updateSongTime(time) {

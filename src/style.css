@@ -616,7 +616,7 @@ svg.main-button {
     fill: rgba(0, 255, 0, 0.8);
 }
 
-.player-buttons svg.inactive {
+svg.inactive {
     display: none;
 }
 

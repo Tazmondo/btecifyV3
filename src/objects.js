@@ -150,6 +150,18 @@ function Playlist(title, songs=[], thumb="") {
             return songs.length
         },
 
+
+        // Takes an array of songs, returning a random song that does not exist in the array.
+        getRandomFilteredSong(filter=[]) {
+            let possibleSongs = songs.filter(v => {
+                return !filter.includes(v)
+            })
+            if (possibleSongs.length > 0) {
+                return possibleSongs[randomIndex(possibleSongs.length)]
+            }
+            return false
+        },
+
         // Async, returns a thumbnail randomly chosen from songs in the playlist, and on subsequent calls, the one
         // returned from the first call.
         async getThumb() {

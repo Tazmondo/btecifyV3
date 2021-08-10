@@ -10,7 +10,7 @@ function initPage() {
         removeFromPlaylist,
         addToPlaylist
     } = ObjectController
-    const {setSong} = MusicController
+    const {forceSetSong} = MusicController
 
     Array.from(document.querySelectorAll('.playlist-section')).forEach(v => {
         let selector = v.querySelector('.playlist-select')
@@ -109,7 +109,7 @@ function initPage() {
 
         newSongItem.addEventListener('dblclick', e => {
             console.log(`Request play ${song.getTitle()}`);
-            setSong(song)
+            forceSetSong(song)
         })
 
         return newSongItem
