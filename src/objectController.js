@@ -1,7 +1,36 @@
-import {parseObject, Playlist, Song} from "./objects.js";
+import {Playlist, Song} from "./objects.js";
 import {copyArray} from "./util.js";
 
 function initController(dispatch) {
+    function updatedSongCallback() {
+        dispatch('song')
+        dispatch('playlist')
+    }
+
+    function updatedPlaylistCallback() {
+        dispatch('playlist')
+    }
+
+    let parsers = {
+        'song': argArray => {
+            return Song(updatedSongCallback, ...argArray)
+        },
+
+        'playlist': argArray => {
+            return Playlist(updatedPlaylistCallback, ...argArray)
+        }
+    }
+
+    function parseObject(k, v) {
+        if (Array.isArray(v)) {
+            let objName = v[0]
+            if (parsers[objName] !== undefined) {
+                return parsers[objName](v.slice(1))
+            }
+        }
+        return v
+    }
+
     let allSongPlaylist = (() => {
         if (localStorage['song'] !== undefined) {
             return JSON.parse(localStorage['song'], parseObject)

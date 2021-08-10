@@ -428,8 +428,9 @@ main > *.hidden {
 .song-list {
     margin-top: 1em;
     background-color: rgba(255, 255, 255, 0.1);
-    flex: 1;
     overflow-y: scroll;
+    flex-shrink: 100;
+/*    There might be a better way of doing this*/
 }
 
 .song-list-item {
@@ -439,6 +440,17 @@ main > *.hidden {
     padding: 10px;
     gap: 1em;
     transition: all 0.3s ease;
+    text-decoration-line: line-through;
+}
+
+.song-list-item.enabled {
+    background: #0c0c0c;
+    display: flex;
+    align-items: flex-start;
+    padding: 10px;
+    gap: 1em;
+    transition: all 0.3s ease;
+    text-decoration-line: none;
 
 }
 
@@ -499,11 +511,11 @@ main > *.hidden {
 }
 
 .song-list-item:hover {
-    background: #2a2a2a;
+    background: #1e1e1e;
 }
 
 .song-list-item.super:hover {
-    background: #5a6e4f;
+    background: #315429;
 }
 
 .song-list-item:hover .artist {

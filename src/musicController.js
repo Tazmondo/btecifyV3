@@ -37,9 +37,11 @@ function MusicPlayer(dispatch) {
                 player.src = res
                 play()
                 dispatch('playing')
+                return true
             }).catch(e => {
                 console.error("setSong() failed");
                 console.error(e.message);
+                return false
             }).finally(()=>settingSong = false)
         }
     }

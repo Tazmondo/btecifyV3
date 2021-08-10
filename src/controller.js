@@ -8,7 +8,8 @@ import {copyArray, durationMinutesToSeconds} from "./util.js";
 
 // CONTROLLER IMPORTS
 
-import EventController from './eventController.js'
+import InitEventController from './eventController.js'
+const EventController = InitEventController()
 
 import InitObjectController from './objectController.js'
 const ObjectController = InitObjectController(EventController.dispatch)
@@ -28,17 +29,18 @@ import footerPlayerInit from './footerPlayer.js'
 import homePageInit from './homePage.js'
 import playlistPageInit from './playlistPage.js'
 
+function saveData() {
+    localStorage['playlist'] = JSON.stringify(ObjectController.playlistArray)
+    localStorage['song'] = JSON.stringify(ObjectController.allSongPlaylist)
+}
+
 const events = {
     'playlist': {
-        callbacks: [ () => {
-            localStorage['playlist'] = JSON.stringify(ObjectController.playlistArray)
-        }],
+        callbacks: [saveData],
         e: () => {return copyArray(ObjectController.playlistArray)}
     },
     'song': {
-        callbacks: [ () => {
-            localStorage['song'] = JSON.stringify(ObjectController.allSongPlaylist)
-        }],
+        callbacks: [saveData],
         e: () => {return copyArray(ObjectController.allSongPlaylist)}
     },
     'playing': {

@@ -8,7 +8,7 @@ function validSong(song) {
     return Boolean(song?.getUUID && song?.getTitle && song?.getURL)
 }
 
-function Song(title, urls, duration, artist = "", album = "", thumbnails = [], uuid = "") {
+function Song(updatedCallback, title, urls, duration, artist = "", album = "", thumbnails = [], uuid = "", disabled=false) {
     if (urls.length === 0 || urls.length > 2) {
         throw new Error(`Number of song urls is ${urls.length}`)
     }
@@ -64,14 +64,29 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
             return localUrl || remoteUrl;
         },
 
+        isDisabled() {
+            return disabled
+        },
+
         async getSource() {
             if (!localUrl && remoteUrl) {
+                console.group(title)
+                console.log(`Fetching `);
                 let source = await api.fetchSong(uuid, remoteUrl) || ""
+                console.log(`Fetched `)
+                console.groupEnd()
                 if (source.includes(uuid)) {
                     localUrl = source
                 }
             }
-            return localUrl || (() => {throw new Error("Song has no available source.")})()
+            if (localUrl) {
+                updatedCallback()
+                return localUrl
+            } else {
+                disabled = true
+                updatedCallback()
+                throw new Error("Song has no available source. Will become disabled.")
+            }
         },
 
         getVideoId() {
@@ -103,13 +118,13 @@ function Song(title, urls, duration, artist = "", album = "", thumbnails = [], u
 
         // Used by JSON.stringify
         toJSON() {
-            return ['song', title, [remoteUrl, localUrl], duration, artist, album, [remoteThumb, localThumb], uuid]
+            return ['song', title, [remoteUrl, localUrl], duration, artist, album, [remoteThumb, localThumb], uuid, disabled]
         }
     }
 }
 
 // todo: Song added dates
-function Playlist(title, songs=[], thumb="") {
+function Playlist(updatedCallback, title, songs=[], thumb="") {
     let cachedThumb; // So that when using random thumbnail, it is consistent.
 
     songs = songs.filter(validSong)
@@ -138,7 +153,14 @@ function Playlist(title, songs=[], thumb="") {
         }
     }
 
+    // Returns array of songs that are not disabled.
+    function getEnabledSongs() {
+        return copyArray(songs).filter( v => !v.isDisabled())
+    }
+
     return {
+        getEnabledSongs,
+
         // Returns string title.
         getTitle() {
             return title
@@ -149,15 +171,15 @@ function Playlist(title, songs=[], thumb="") {
             return copyArray(songs)
         },
 
-        // Returns integer number of songs in song playlist.
+        // Returns integer number of enabled songs in song playlist.
         getLength() {
-            return songs.length
+            return getEnabledSongs().length
         },
 
 
         // Takes an array of songs, returning a random song that does not exist in the array.
         getRandomFilteredSong(filter=[]) {
-            let possibleSongs = songs.filter(v => {
+            let possibleSongs = getEnabledSongs().filter(v => {
                 return !filter.includes(v)
             })
             if (possibleSongs.length > 0) {
@@ -171,9 +193,9 @@ function Playlist(title, songs=[], thumb="") {
         async getThumb() {
             return thumb || cachedThumb ||
                 (
-                    songs.length > 0 ?
+                    this.getLength() > 0 ?
                     // cachedThumb = ... will also return cached thumb so it can be used here
-                    cachedThumb = await songs[randomIndex(songs.length)]?.getThumb() :
+                    cachedThumb = await getEnabledSongs()[randomIndex(this.getLength())]?.getThumb() :
                     placeholderURL
                 )
         },
@@ -240,26 +262,6 @@ function Playlist(title, songs=[], thumb="") {
     }
 }
 
-let parsers = {
-    'song': argArray => {
-        return Song(...argArray)
-    },
-
-    'playlist': argArray => {
-        return Playlist(...argArray)
-    }
-}
-
-function parseObject(k, v) {
-    if (Array.isArray(v)) {
-        let objName = v[0]
-        if (parsers[objName] !== undefined) {
-            return parsers[objName](v.slice(1))
-        }
-    }
-    return v
-}
-
 //Object.assign(window, {Song, Playlist, parseObject}) // For console testing and debugging todo: remove me
 
-export { Song, Playlist, parseObject }
+export { Song, Playlist }

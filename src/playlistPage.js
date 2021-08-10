@@ -50,6 +50,7 @@ function initPage() {
     function generateSongElement(song, playlist, superSub, otherPlaylist, isRightSide) {
         let template = document.querySelector('#song-list-item-template')
         let newSongItem = template.content.firstElementChild.cloneNode(true)
+        newSongItem.classList.toggle('enabled', !song.isDisabled())
         let thumb = newSongItem.querySelector('.thumb')
         let title = newSongItem.querySelector('.title')
         let artist = newSongItem.querySelector('.artist')
@@ -107,10 +108,12 @@ function initPage() {
             }).observe(newSongItem)
         }
 
-        newSongItem.addEventListener('dblclick', e => {
-            console.log(`Request play ${song.getTitle()}`);
-            forceSetSong(song)
-        })
+        if (!song.isDisabled()) {
+            newSongItem.addEventListener('dblclick', e => {
+                console.log(`Request play ${song.getTitle()}`);
+                forceSetSong(song)
+            })
+        }
 
         return newSongItem
     }
