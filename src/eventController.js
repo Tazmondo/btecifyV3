@@ -1,13 +1,13 @@
 function initController() {
     let events = {}
 
-    function validEvent(event) {
+    function invalidEvent(event) {
         return events[event] === undefined
     }
 
     function unSubscribe(event, callback) {
-        if (validEvent(event)) {
-            throw "Tried to unsubscribe from an invalid event!"
+        if (invalidEvent(event)) {
+            return false
         }
 
         let callbacks = events[event].callbacks;
@@ -30,8 +30,8 @@ function initController() {
         },
 
         dispatch(eventName) {
-            if (validEvent(eventName)) {
-                throw "Tried to dispatch to an invalid event!"
+            if (invalidEvent(eventName)) {
+                return false
             }
 
             events[eventName].callbacks.forEach(v => {
@@ -41,8 +41,8 @@ function initController() {
         },
 
         subscribe(event, callback) {
-            if (validEvent(event)) {
-                throw "Tried to subscribe to an invalid event!"
+            if (invalidEvent(event)) {
+                return false
             }
             unSubscribe(event, callback)
             events[event].callbacks.push(callback)

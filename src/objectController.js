@@ -1,10 +1,13 @@
 import {Playlist, Song} from "./objects.js";
 import {copyArray} from "./util.js";
 
-function initController(dispatch) {
-    function updatedSongCallback() {
-        dispatch('song')
-        dispatch('playlist')
+function initController(dispatch, save) {
+    function updatedSongCallback(redraw) {
+        if (redraw) {
+            dispatch('song')
+            dispatch('playlist')
+        }
+        save()
     }
 
     function updatedPlaylistCallback() {

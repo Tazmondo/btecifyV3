@@ -39,7 +39,6 @@ function Song(updatedCallback, title, urls, duration, artist = "", album = "", t
             localThumb = thumbnail
         }
     })
-    updatedCallback()
 
     return {
         // Returns string title
@@ -81,11 +80,11 @@ function Song(updatedCallback, title, urls, duration, artist = "", album = "", t
                 }
             }
             if (localUrl) {
-                updatedCallback()
+                updatedCallback(false)
                 return localUrl
             } else {
                 disabled = true
-                updatedCallback()
+                updatedCallback(true)
                 throw new Error("Song has no available source. Will become disabled.")
             }
         },
@@ -107,9 +106,9 @@ function Song(updatedCallback, title, urls, duration, artist = "", album = "", t
                 result = await api.fetchThumbnail(uuid, remoteThumb) || ""
                 if (result.includes('db/thumbnails')) {
                     localThumb = result
+                    updatedCallback(false)
                 }
             }
-            updatedCallback()
             return localThumb || result || placeholderURL
         },
 
@@ -194,15 +193,13 @@ function Playlist(updatedCallback, title, songs=[], thumb="") {
         // Async, returns a thumbnail randomly chosen from songs in the playlist, and on subsequent calls, the one
         // returned from the first call.
         async getThumb() {
-            let result = thumb || cachedThumb ||
-                (
-                    this.getLength() > 0 ?
-                    // cachedThumb = ... will also return cached thumb so it can be used here
-                    cachedThumb = await getEnabledSongs()[randomIndex(this.getLength())]?.getThumb() :
-                    placeholderURL
-                )
-            updatedCallback()
-            return result
+            return thumb || cachedThumb || await (async () => {
+                if (this.getLength() > 0) {
+                    cachedThumb = await getEnabledSongs()[randomIndex(this.getLength())]?.getThumb() || placeholderURL
+                    updatedCallback()
+                    return cachedThumb
+                }
+            })()
         },
 
         // Returns boolean indicating whether the playlist contains a certain song object.

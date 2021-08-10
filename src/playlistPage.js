@@ -132,6 +132,7 @@ function initPage() {
     }
 
     function drawPage() {
+        console.log("redaw");
         let prevScroll1 = document.querySelector('#playlist-section-1 .song-list')?.scrollTop
         let prevScroll2 = document.querySelector('#playlist-section-2 .song-list')?.scrollTop
         let prevSelected1 = document.querySelector('#playlist-section-1 .select-dropdown .selected')?.innerText
