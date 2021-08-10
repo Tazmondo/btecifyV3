@@ -7,7 +7,6 @@ import {copyArray, durationMinutesToSeconds} from "./util.js";
 
 
 function saveData() {
-    console.log("Saving...")
     localStorage['playlist'] = JSON.stringify(ObjectController.playlistArray)
     localStorage['song'] = JSON.stringify(ObjectController.allSongPlaylist)
 }

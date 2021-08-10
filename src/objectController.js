@@ -10,8 +10,11 @@ function initController(dispatch, save) {
         save()
     }
 
-    function updatedPlaylistCallback() {
-        dispatch('playlist')
+    function updatedPlaylistCallback(redraw) {
+        if (redraw) {
+            dispatch('playlist')
+        }
+        save()
     }
 
     let parsers = {

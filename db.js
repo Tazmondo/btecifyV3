@@ -111,6 +111,7 @@ function db(dbPath) {
                 progress: false,
                 quiet: true,
             })
+            console.log(`Downloaded ${url} for ${uuid}`)
             return await getSong(uuid)
         } catch (e) {
             console.log("downloadSong() failed")

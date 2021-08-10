@@ -24,6 +24,8 @@ function Song(updatedCallback, title, urls, duration, artist = "", album = "", t
     let localThumb = "";
     let remoteThumb = "";
 
+    let cachedThumb;
+
     urls.forEach(url => {
         if (url.startsWith('http://') || url.startsWith('https://') || url.includes("www.")) {
             remoteUrl = url
@@ -69,19 +71,14 @@ function Song(updatedCallback, title, urls, duration, artist = "", album = "", t
         },
 
         async getSource() {
-            if (!localUrl && remoteUrl) {
                 console.group(title)
                 console.log(`Fetching `);
                 let source = await api.fetchSong(uuid, remoteUrl) || ""
                 console.log(`Fetched `)
                 console.groupEnd()
-                if (source.includes(uuid)) {
-                    localUrl = source
-                }
-            }
-            if (localUrl) {
+            if (source) {
                 updatedCallback(false)
-                return localUrl
+                return source
             } else {
                 disabled = true
                 updatedCallback(true)
@@ -101,20 +98,13 @@ function Song(updatedCallback, title, urls, duration, artist = "", album = "", t
         // Returns a url to the thumbnail, downloading it locally if it doesn't exist, or falling back to the remote
         // url and lastly the placeholder url
         async getThumb() {
-            let result;
-            if (!localThumb && remoteThumb) {
-                result = await api.fetchThumbnail(uuid, remoteThumb) || ""
-                if (result.includes('db/thumbnails')) {
-                    localThumb = result
-                    updatedCallback(false)
-                }
-            }
-            return localThumb || result || placeholderURL
+            let thumb = await api.fetchThumbnail(uuid, remoteThumb)
+            return cachedThumb = (thumb || placeholderURL)
         },
 
         // Only returns local url if it exists. Used to avoid unnecessary async calls
         getCachedThumb() {
-            return localThumb || false
+            return cachedThumb || false
         },
 
         // Used by JSON.stringify
@@ -196,7 +186,7 @@ function Playlist(updatedCallback, title, songs=[], thumb="") {
             return thumb || cachedThumb || await (async () => {
                 if (this.getLength() > 0) {
                     cachedThumb = await getEnabledSongs()[randomIndex(this.getLength())]?.getThumb() || placeholderURL
-                    updatedCallback()
+                    updatedCallback(false)
                     return cachedThumb
                 }
             })()
