@@ -19,7 +19,6 @@ const MusicController = InitMusicController(EventController.dispatch)
 export {EventController, ObjectController, MusicController}
 
 
-
 // PAGE IMPORTS
 
 import router from './router.js'
