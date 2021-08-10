@@ -142,7 +142,11 @@ function db(dbPath) {
         for (let fileName of fileNames) {
             if (!whitelist.includes(extractNameAndExt(fileName)[0])) {
                 console.log(`Delete ${fileName}`)
-                await fs.promises.rm(path.join(thumbPath, fileName))
+                try {
+                    await fs.promises.rm(path.join(dir, fileName))
+                } catch (e) {
+                    console.error(e.message);
+                }
             }
         }
     }
