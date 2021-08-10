@@ -345,6 +345,7 @@ main > *.hidden {
 
 .playlist-card > div > svg:hover {
     fill: rgba(0, 255, 0, 0.9);
+    filter: drop-shadow(0 0 5px #090);
 }
 
 
@@ -580,7 +581,7 @@ footer img {
 
 .svg-button:hover {
     fill: rgba(255, 255, 255, 1);
-    filter: drop-shadow(0 0 5px #050);
+    filter: drop-shadow(0 0 5px #fff);
 }
 
 .svg-button.active {
@@ -589,6 +590,7 @@ footer img {
 
 .svg-button.active:hover {
     fill: rgba(0, 255, 0, 1);
+    filter: drop-shadow(0 0 5px #0f0);
 }
 
 .player {
@@ -631,10 +633,6 @@ svg.main-button {
     fill: rgba(255, 255, 255, 1);
 }
 
-.player-buttons svg.active {
-    fill: rgba(0, 255, 0, 0.8);
-}
-
 svg.inactive {
     display: none;
 }
@@ -648,7 +646,8 @@ svg.inactive {
 .player-buttons #play:hover, .player-buttons #pause:hover {
     height: 36px;
     width: 36px;
-        fill: rgba(0, 255, 0, 1);
+    fill: rgba(0, 255, 0, 1);
+    filter: drop-shadow(0 0 5px #0f0);
 }
 
 .seeker {
