@@ -22,12 +22,15 @@ const ObjectController = InitObjectController(EventController.dispatch, saveData
 import InitMusicController from './musicController.js'
 const MusicController = InitMusicController(EventController.dispatch)
 
-export {EventController, ObjectController, MusicController}
+import InitRouteController from './routeController.js'
+const RouteController = InitRouteController()
+
+export {EventController, ObjectController, MusicController, RouteController}
 
 
 // PAGE IMPORTS
 
-import router from './headerNav.js'
+import navInit from './headerNav.js'
 
 import footerPlayerInit from './footerPlayer.js'
 
@@ -63,8 +66,9 @@ for (let eventName in events) {
     EventController.setupEvent(eventName, events[eventName].callbacks, events[eventName].e)
 }
 
-router().routeWithPageName('home')
+RouteController.routeWithPageName('home')
 
+navInit()
 footerPlayerInit()
 homePageInit()
 playlistPageInit()
