@@ -155,16 +155,20 @@ function initPage() {
         playlistTitle.innerText = playlist?.getTitle() || " \n " // Take up same amount of height as if it had text.
 
         if (song) {
-            currentSong = song
             songLength = song.getDurationSeconds()
-            thumbImg.style.display = 'none'
-            song.getThumb().then(thumb => {
-                if (song === currentSong) { // Make sure you dont overwrite thumbnail of another song.
-                    thumbImg.src = thumb ?? ""
-                    thumbImg.style.display = 'initial'
-                    thumbImg.classList.toggle('hidden', false)
-                }
-            })
+
+            if (song !== currentSong) {
+                thumbImg.style.visibility = 'hidden'
+                song.getThumb().then(thumb => {
+                    if (song === currentSong) { // Make sure you dont overwrite thumbnail of another song.
+                        thumbImg.src = thumb ?? ""
+                        thumbImg.style.visibility = 'visible'
+                        thumbImg.classList.toggle('hidden', false)
+                    }
+                })
+            }
+
+            currentSong = song
 
             title.innerText = song.getTitle()
             artist.innerText = song.getArtist()
@@ -174,7 +178,7 @@ function initPage() {
             seekerDiv.addEventListener("mousedown", seekerClick)
 
         } else {
-            thumbImg.style.display = 'none'
+            thumbImg.style.visibility = 'hidden'
             title.innerText = ""
             artist.innerText = ""
             album.innerText = ""
