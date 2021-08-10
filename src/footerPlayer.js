@@ -4,9 +4,13 @@ import {EventController, MusicController} from "./controller.js";
 
 function initPage() {
     const {subscribe} = EventController
-    const {setTime} = MusicController
+    const {setTime, setVolume} = MusicController
 
     let songLength = undefined;
+
+    // Used as the difference between quieter sounds is more audible than louder sounds, so the volume slider
+    // should have a higher range at lower volumes.
+    let volMod = 2.5
 
     document.getElementById("shuffle").addEventListener("click", ev => {
         ev.currentTarget.classList.toggle("active")
@@ -24,18 +28,27 @@ function initPage() {
     let artist = document.querySelector('footer .artist');
     let album = document.querySelector('footer .album');
 
-    let seekerDiv = document.getElementsByClassName("seeker")[0]
-    let seekerBackBar = document.getElementsByClassName("seeker-background")[0]
-    let seekerFrontBar = document.getElementsByClassName("seeker-foreground")[0]
+    let seekerDiv = document.querySelector(".player .seeker")
+    let seekerBackBar = seekerDiv.querySelector('.seeker-background')
+    let seekerFrontBar = seekerDiv.querySelector('.seeker-foreground')
     let currentTime = document.getElementById("current-time")
     let endTime = document.getElementById('end-time')
 
-    function play() {
+    let volumeSeeker = document.querySelector('.volume-seeker')
+    let volumeBack = volumeSeeker.querySelector('.seeker-background')
+    let volumeFront = volumeSeeker.querySelector('.seeker-foreground')
 
+
+    function play() {
+        MusicController.play()
+        playButton.classList.toggle("inactive")
+        pauseButton.classList.toggle("inactive")
     }
 
     function pause() {
-
+        MusicController.pause()
+        playButton.classList.toggle("inactive")
+        pauseButton.classList.toggle("inactive")
     }
 
     playButton.addEventListener("click", play)
@@ -78,7 +91,7 @@ function initPage() {
         let oldX = 0;
         let currentEvent = e
 
-        let moveFunc = (e) => {
+        function moveFunc(e) {
             let relativeX = getMousePosition(e, seekerBackBar)[0]
             let time = relativeX / seekerBackBar.clientWidth * songLength
             updateSeeker(time)
@@ -86,17 +99,37 @@ function initPage() {
         }
         moveFunc(currentEvent)
         let interval = setInterval(() => {
+            console.log(currentEvent.clientX, oldX);
             if (currentEvent.clientX !== oldX) {
                 moveFunc(currentEvent)
                 oldX = currentEvent.clientX
             }
         }, 50)
-        document.addEventListener("mousemove", (e) => {
+        function mouseMove(e) {
             currentEvent = e
-        })
+        }
+        document.addEventListener("mousemove", mouseMove)
+        document.addEventListener("mouseup", e => {
+            document.removeEventListener("mousemove", mouseMove)
+            clearInterval(interval)
+        }, {once: true})
+    }
+
+    function volumeClick(e) {
+
+        function moveFunc(e) {
+            let relativeX = getMousePosition(e, volumeBack)[0]
+            let volume = relativeX / volumeBack.clientWidth
+            if (volume < 0) {volume = 0}
+            if  (volume > 1) {volume = 1}
+
+            setVolume(volume ** volMod)
+        }
+
+        moveFunc(e)
+        document.addEventListener("mousemove", moveFunc)
         document.addEventListener("mouseup", e => {
             document.removeEventListener("mousemove", moveFunc)
-            clearInterval(interval)
         }, {once: true})
     }
 
@@ -137,6 +170,9 @@ function initPage() {
             playButton.classList.toggle("inactive", true)
             pauseButton.classList.toggle("inactive", false)
         }
+
+        volumeFront.style.width = `${((info?.volume ?? 0.5)** (1/volMod)) * 100}%`
+        volumeSeeker.addEventListener('mousedown', volumeClick)
     }
 
     function updateSongTime(time) {

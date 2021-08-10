@@ -6,7 +6,7 @@ function MusicPlayer(dispatch) {
     let currentPlaylist;
     let player = new Audio()
     player.autoplay = true
-    player.volume = 0.1
+    player.volume = localStorage.volume || 0.1
 
     Object.assign(window, {player}) // for testing
 
@@ -25,14 +25,28 @@ function MusicPlayer(dispatch) {
             currentSong,
             currentPlaylist,
             history,
-            'paused': player.paused,
-            'time': player.currentTime,
+            paused: player.paused || player.ended,
+            time: player.currentTime,
+            volume: player.volume
         }
     }
 
     player.addEventListener('timeupdate', e=>{
         dispatch('songtime')
     })
+
+    function dispatchPlaying() {
+        dispatch('playing')
+    }
+
+    player.onended = dispatchPlaying
+    player.onplay = dispatchPlaying
+    player.onplaying = dispatchPlaying
+    player.onseeked = dispatchPlaying
+    player.onstalled = dispatchPlaying
+    player.onpause = dispatchPlaying
+    player.onvolumechange = dispatchPlaying
+
 
     return {
         getInfo,
@@ -79,6 +93,12 @@ function MusicPlayer(dispatch) {
             player.currentTime = seconds
             return player.currentTime
         },
+
+        setVolume(volume) {
+            player.volume = volume
+            localStorage.volume = volume
+            dispatch('playing')
+        }
     }
 }
 
