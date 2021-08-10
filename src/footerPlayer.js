@@ -99,7 +99,6 @@ function initPage() {
         }
         moveFunc(currentEvent)
         let interval = setInterval(() => {
-            console.log(currentEvent.clientX, oldX);
             if (currentEvent.clientX !== oldX) {
                 moveFunc(currentEvent)
                 oldX = currentEvent.clientX
