@@ -39,33 +39,32 @@ export function randomIndex(maxIndex) {
 }
 
 export function pageEntry(page) {
+    console.log("entering", page)
     page.classList.toggle("switching", true)
-    page.classList.toggle("hidden",false)
+    // page.classList.toggle("hidden",false)
     page.dataset.exit = "false"
 
-    // setTimeout(() => {
-    //     page.classList.toggle("hidden",false)
-    // }, 1) // Without this delay, the animation is sometimes skipped.
+    setTimeout(() => {
+        page.classList.toggle("hidden",false)
+    }, 1) // Without this delay, the animation is sometimes skipped.
 
     setTimeout(() => {
-        if (!(page.dataset.exit === "true")) {
+        if (page.dataset.exit === "false") {
             page.classList.toggle("switching", false)
         }
     }, 800) // Transition length + a bit
 }
 
-export function pageExit(page) {
+export function pageExit(page, remove=false) {
     page.dataset.exit = "true"
     page.classList.toggle("switching", true)
     page.classList.toggle("hidden", true)
+    setTimeout(() => {
+        if (remove) {
+            console.log("Deleting", page)
+            page.remove()
+        } else if (page.dataset.exit === "true") {
+            page.classList.toggle("switching", false)
+        }
+    }, 800) // Transition length + a bit
 }
- export function isElementInViewport (el) {
-    let rect = el.getBoundingClientRect();
-
-    return (
-         rect.top >= 0 &&
-         rect.left >= 0 &&
-         rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /* or $(window).height() */
-         rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
-     );
- }
