@@ -71,10 +71,6 @@ RouteController.routeWithPageName('home')
 
 navInit()
 footerPlayerInit()
-homePageInit()
-playlistPageInit()
-
-
 
 
 // FOR DEBUGGING

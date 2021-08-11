@@ -37,3 +37,20 @@ export function durationMinutesToSeconds(iMinutes) {
 export function randomIndex(maxIndex) {
     return (Math.floor(Math.random() * maxIndex) + 1) - 1
 }
+
+export function pageEntry(page) {
+    page.classList.toggle("switching", true)
+
+    setTimeout(() => {
+        page.classList.toggle("hidden",false)
+    }, 1) // Without this delay, the animation is sometimes skipped.
+
+    setTimeout(() => {
+        page.classList.toggle("switching", false)
+    }, 700) // Transition length
+}
+
+export function pageExit(page) {
+    page.classList.toggle("hidden", true)
+    setTimeout(() => page.remove(), 700)
+}

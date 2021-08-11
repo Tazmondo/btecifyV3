@@ -1,9 +1,13 @@
-import {durationSecondsToMinutes} from "../util.js";
+import {durationSecondsToMinutes, pageEntry, pageExit} from "../util.js";
 
 import { EventController, ObjectController, MusicController } from '../controller.js'
-function initPage() {
 
-    const {subscribe} = EventController
+let state = {
+}
+
+function initPage(position) {
+
+    const {subscribe, unSubscribe} = EventController
     const {
         getPlaylistArray,
         getPlaylistFromTitle,
@@ -26,13 +30,13 @@ function initPage() {
     })
 
 
-    function generatePlaylistListElement(playlist, state) {
+    function generatePlaylistListElement(playlist, selectedOrDisabled) {
         let title = playlist.getTitle()
         let newElement = document.createElement('div')
 
         newElement.classList.toggle("playlist-choice")
 
-        switch (state) {
+        switch (selectedOrDisabled) {
             case "selected":
                 newElement.classList.toggle('selected')
                 break
@@ -225,8 +229,17 @@ function initPage() {
         })
     }
 
-    drawPage()
+    let page = document.getElementById('playlist-template').content.firstElementChild.cloneNode(true)
+    document.querySelector('main').insertAdjacentElement(position, page)
+    pageEntry(page)
+
     subscribe('playlist', drawPage)
+
+    drawPage()
+    return function unInitPage() {
+        unSubscribe('playlist', drawPage)
+        pageExit(page)
+    }
 }
 
 export default initPage

@@ -1,13 +1,18 @@
+import {pageEntry, pageExit} from "../util.js";
+
 console.log("homePage.js running...")
 import { EventController, ObjectController, MusicController } from '../controller.js'
 
-function initPage() {
-    const {subscribe} = EventController
+function initPage(position) {
+    console.log("init page");
+    const {subscribe, unSubscribe} = EventController
     const {getPlaylistArray,getPlaylistFromTitle, getPlaylistsWithSong} = ObjectController
     const {setPlaylist} = MusicController
 
+    let page = document.getElementById('home-template').content.firstElementChild.cloneNode(true)
+
     function generatePlaylistCard(playlistName, thumbnailURLPromise, numSongs) {
-        let container = document.getElementsByClassName("playlists-container")[0]
+        let container = page.getElementsByClassName("playlists-container")[0]
 
         container.insertAdjacentHTML('beforeend',
             `<div class="playlist-card">
@@ -34,9 +39,10 @@ function initPage() {
     }
 
     function drawPage() {
-        Array.from(document.querySelectorAll('.playlist-card')).forEach(v => {
+        Array.from(page.querySelectorAll('.playlist-card')).forEach(v => {
             v.remove()
         })
+
         getPlaylistArray().forEach(v => {
             generatePlaylistCard(v.getTitle(), v.getThumb(), v.getLength())
         })
@@ -45,7 +51,7 @@ function initPage() {
     function highlightPlayingSongPlaylists(info) {
         let song = info.currentSong
         if (song) {
-            let playlistCards = document.querySelectorAll('.playlists-container > .playlist-card')
+            let playlistCards = page.querySelectorAll('.playlists-container > .playlist-card')
             let playlistsToSelect = getPlaylistsWithSong(song)
 
             playlistCards.forEach(card => {
@@ -55,9 +61,23 @@ function initPage() {
         }
     }
 
-    drawPage()
+    document.querySelector('main').insertAdjacentElement(position, page)
+    pageEntry(page)
+
     subscribe('playlist', drawPage)
     subscribe('playing', highlightPlayingSongPlaylists)
+
+    drawPage()
+
+    return function unInitPage() {
+        unSubscribe('playlist', drawPage)
+        unSubscribe('playing', highlightPlayingSongPlaylists)
+
+        pageExit(page)
+
+    }
+
+
 }
 
 export default initPage
