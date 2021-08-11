@@ -7,6 +7,7 @@ function initNav() {
 
     navButtons.forEach((v, i, arr) => {
         v.addEventListener("click", e =>{
+            v.classList.toggle("active", true)
             routePageWithNavElement(v)
             arr.forEach(v2 => {
                 if (v2 !== v) {

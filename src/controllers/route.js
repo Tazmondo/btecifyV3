@@ -5,29 +5,21 @@ console.log(pages);
 
 function InitRouteController() {
     let currentRoute = []
-    let count = 0;
 
     function getPageIdFromNavName(navName) {
         return navName.slice(0, -4)
     }
 
     function route(pageName) {
-        let pageInfo = pages[pageName]
-        let func = pageInfo.func
-        let order = pageInfo.order
-        let insertAfter = true;
+        let func = pages[pageName]
 
         if (currentRoute.length > 0) {
-            let prevPage = currentRoute[0]
-            if (prevPage[1] > order) {
-                insertAfter = false
-            }
-            currentRoute.forEach(info => {
-                info[0]()
+            currentRoute.forEach(unInitFunc => {
+                unInitFunc()
             })
             currentRoute = []
         }
-        currentRoute.unshift([func(insertAfter ? 'beforeend' : 'afterbegin'), order])
+        currentRoute.unshift(func())
     }
 
     // function routePageWithNavElement(navButton) {

@@ -3,13 +3,12 @@ import {pageEntry, pageExit} from "../util.js";
 console.log("homePage.js running...")
 import { EventController, ObjectController, MusicController } from '../controller.js'
 
-function initPage(position) {
-    console.log("init page");
+function initPage() {
     const {subscribe, unSubscribe} = EventController
     const {getPlaylistArray,getPlaylistFromTitle, getPlaylistsWithSong} = ObjectController
     const {setPlaylist} = MusicController
 
-    let page = document.getElementById('home-template').content.firstElementChild.cloneNode(true)
+    let page = document.getElementById('home-nav-page')
 
     function generatePlaylistCard(playlistName, thumbnailURLPromise, numSongs) {
         let container = page.getElementsByClassName("playlists-container")[0]
@@ -38,10 +37,14 @@ function initPage(position) {
 
     }
 
-    function drawPage() {
+    function unDrawPage() {
         Array.from(page.querySelectorAll('.playlist-card')).forEach(v => {
             v.remove()
         })
+    }
+
+    function drawPage() {
+        unDrawPage();
 
         getPlaylistArray().forEach(v => {
             generatePlaylistCard(v.getTitle(), v.getThumb(), v.getLength())
@@ -61,7 +64,6 @@ function initPage(position) {
         }
     }
 
-    document.querySelector('main').insertAdjacentElement(position, page)
     pageEntry(page)
 
     subscribe('playlist', drawPage)

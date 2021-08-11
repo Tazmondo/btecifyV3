@@ -2,10 +2,7 @@ import {durationSecondsToMinutes, pageEntry, pageExit} from "../util.js";
 
 import { EventController, ObjectController, MusicController } from '../controller.js'
 
-let state = {
-}
-
-function initPage(position) {
+function initPage() {
 
     const {subscribe, unSubscribe} = EventController
     const {
@@ -229,8 +226,7 @@ function initPage(position) {
         })
     }
 
-    let page = document.getElementById('playlist-template').content.firstElementChild.cloneNode(true)
-    document.querySelector('main').insertAdjacentElement(position, page)
+    let page = document.getElementById('playlist-nav-page')
     pageEntry(page)
 
     subscribe('playlist', drawPage)

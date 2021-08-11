@@ -14,21 +14,25 @@
 <header>
     <h1>btecify <em>V3</em></h1>
     <nav id="nav-bar">
-        <button id="home-nav">HOME</button>
+        <button id="home-nav" class="active">HOME</button>
         <button id="playlist-nav">PLAYLISTS</button>
         <button id="song-nav">SONGS</button>
     </nav>
 </header>
 
-<template id="home-template">
+<template>
+    <div id="song-nav-page" class="hidden">
+        <h2>PLACEHOLDER TEXT</h2>
+    </div>
+</template>
+
+<main>
     <div id="home-nav-page" class="hidden">
         <h2>Your Playlists</h2>
         <div class="playlists-container">
         </div>
     </div>
-</template>
 
-<template id="playlist-template">
     <div id="playlist-nav-page" class="hidden">
 
         <div id="playlist-section-1" class="playlist-section">
@@ -83,16 +87,6 @@
             </div>
         </div>
     </div>
-</template>
-
-<template>
-    <div id="song-nav-page" class="hidden">
-        <h2>PLACEHOLDER TEXT</h2>
-    </div>
-</template>
-
-<main>
-
 </main>
 
 <footer>
