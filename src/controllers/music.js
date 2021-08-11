@@ -84,13 +84,12 @@ function MusicPlayer(dispatch) {
             }
             if (queue.length > 0) {
                 let nextSong = queue.shift();
+                if (currentSong) {
+                    history.push(currentSong)
+                }
                 setSong(nextSong).then(res => {
                     if (!res) {
                         songEnded(depth + 1)
-                    } else {
-                        if (currentSong) {
-                            history.unshift(currentSong)
-                        }
                     }
                 }).catch (e => {
                     songEnded(depth + 1)
@@ -174,7 +173,7 @@ function MusicPlayer(dispatch) {
         },
 
         back() {
-            let nextSong = history.shift()
+            let nextSong = history.pop()
             if (nextSong) {
                 queue.unshift(currentSong)
                 setSong(nextSong).finally(() => {
