@@ -35,7 +35,11 @@ function initController() {
             }
 
             events[eventName].callbacks.forEach(v => {
-                v(events[eventName].e())
+                if (events[eventName].e) {
+                    v(events[eventName].e())
+                } else {
+                    v()
+                }
             })
             return true
         },
