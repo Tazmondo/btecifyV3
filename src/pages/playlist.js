@@ -251,15 +251,20 @@ function initPage() {
                 })
 
                 if (selected[index] === selectedPlaylistTitle) {
-                    let interval = setInterval(() => {
+                    // let interval = setInterval(() => {
+                    //     songList.scrollTop = scroll[index]
+                    //     if (songList.scrollTop === scroll[index] || songList.scrollTop >= songList.scrollHeight - songList.clientHeight) {
+                    //         console.log("scrolled", songList.scrollHeight, songList.clientHeight);
+                    //         clearInterval(interval)
+                    //     } else{
+                    //         console.log(songList.scrollHeight, songList.clientHeight);
+                    //     }
+                    // }, 1)
+
+                    setTimeout(() => {
                         songList.scrollTop = scroll[index]
-                        if (songList.scrollTop === scroll[index]) {
-                            console.log("scrolled");
-                            clearInterval(interval)
-                        }
-                    }, 1)
+                        }, 350)
                 } else {
-                    console.log("no scroll",selectedPlaylistTitle);
                     songList.scrollTop = 0
                 }
             }
