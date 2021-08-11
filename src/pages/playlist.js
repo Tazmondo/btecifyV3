@@ -54,7 +54,6 @@ function initPage() {
     function generateSongElement(song, playlist, superSub, otherPlaylist, isRightSide) {
         let newSongItemContainer = document.createElement('div')
         newSongItemContainer.classList.toggle("song-list-item-container")
-        newSongItemContainer.dataset.uuid = song.getUUID()
         if (superSub) {
             newSongItemContainer.classList.toggle('super')
         }
