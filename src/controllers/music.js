@@ -28,22 +28,26 @@ function MusicPlayer(dispatch) {
         player.pause()
     }
 
-    function setSong(song) {
+    async function setSong(song) {
         if (!settingSong) {
             console.log(`play ${song.getTitle()}`)
             settingSong = true;
-            song.getSource().then(res => {
+            try {
+                let res = await song.getSource()
                 currentSong = song
                 player.src = res
                 play()
                 dispatch('playing')
                 return true
-            }).catch(e => {
+            } catch (e) {
                 console.error("setSong() failed");
                 console.error(e.message);
-                return false
-            }).finally(()=>settingSong = false)
+                throw e
+            } finally {
+                settingSong = false
+            }
         }
+        return false
     }
 
     function getInfo() {
@@ -63,7 +67,11 @@ function MusicPlayer(dispatch) {
         dispatch('songtime')
     })
 
-    function songEnded() {
+    function songEnded(depth = 0) {
+        if (depth > 10) {
+            console.trace()
+            throw new Error("songEnded recursion more than 10 times! has something gone wrong???")
+        }
         if (currentPlaylist && !settingSong) {
             while (queue.length < 50 && queue.length < Math.ceil(currentPlaylist.getLength()/2)) {
                 let randomSong = currentPlaylist.getRandomFilteredSong(queue);
@@ -74,12 +82,22 @@ function MusicPlayer(dispatch) {
                     break
                 }
             }
-            let nextSong = queue.shift();
-            setSong(nextSong)
-            if (currentSong) {
-                history.unshift(currentSong)
+            if (queue.length > 0) {
+                let nextSong = queue.shift();
+                setSong(nextSong).then(res => {
+                    if (!res) {
+                        songEnded(depth + 1)
+                    } else {
+                        if (currentSong) {
+                            history.unshift(currentSong)
+                        }
+                    }
+                }).catch (e => {
+                    songEnded(depth + 1)
+                })
+
+                dispatch('playing')
             }
-            dispatch('playing')
         }
     }
 
@@ -117,7 +135,9 @@ function MusicPlayer(dispatch) {
 
         forceSetSong(song) {
             currentPlaylist = undefined;
-            setSong(song)
+            setSong(song).finally(() => {
+                dispatch('playing')
+            })
         },
 
         setSongFromUrl(urlStream) {
@@ -158,7 +178,9 @@ function MusicPlayer(dispatch) {
             let nextSong = history.shift()
             if (nextSong) {
                 queue.unshift(currentSong)
-                setSong(nextSong)
+                setSong(nextSong).finally(() => {
+                    dispatch('playing')
+                })
             }
         },
         
