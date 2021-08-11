@@ -3,6 +3,7 @@ import {durationSecondsToMinutes, pageEntry, pageExit} from "../util.js";
 import {EventController, MusicController, ObjectController} from '../controller.js'
 
 let scroll = [0, 0]
+let selected = ["", ""]
 
 function initPage() {
 
@@ -54,6 +55,9 @@ function initPage() {
         let newSongItemContainer = document.createElement('div')
         newSongItemContainer.classList.toggle("song-list-item-container")
         newSongItemContainer.dataset.uuid = song.getUUID()
+        if (superSub) {
+            newSongItemContainer.classList.toggle('super')
+        }
 
         let template = document.querySelector('#song-list-item-template')
 
@@ -149,11 +153,11 @@ function initPage() {
         return newSongItemContainer
     }
 
-    function playlistClickCallback(section, playlist, selected=false) {
-        if (selected) {
-            section.dataset.selected = ""
+    function playlistClickCallback(index, playlist, isSelected=false) {
+        if (isSelected) {
+            selected[index] = ""
         } else {
-            section.dataset.selected = playlist.getTitle()
+            selected[index] = playlist.getTitle()
         }
         drawPage()
     }
@@ -162,10 +166,14 @@ function initPage() {
         return songArray.some(v => {return v.getUUID() === song.getUUID()})
     }
     function drawPage() {
-        let prevSelected1 = document.querySelector('#playlist-section-1 .select-dropdown .selected')?.innerText
-        let prevSelected2 = document.querySelector('#playlist-section-2 .select-dropdown .selected')?.innerText
-
-        let prevSelected = [prevSelected1, prevSelected2]
+        let newScroll1 = document.querySelector('#playlist-section-1 .song-list')?.scrollTop
+        let newScroll2 = document.querySelector('#playlist-section-2 .song-list')?.scrollTop
+        if (newScroll1) {
+            scroll[0] = newScroll1
+        }
+        if (newScroll2) {
+            scroll[1] = newScroll2
+        }
 
         document.querySelectorAll('.select-dropdown *, .song-list *').forEach(v => {
             v.remove()
@@ -174,8 +182,8 @@ function initPage() {
         let playlists = getPlaylistArray()
 
         let playlistSections = document.querySelectorAll('.playlist-section')
-        let selectedPlaylists = Array.from(playlistSections).map(section => {
-            return getPlaylistFromTitle(section.dataset.selected)
+        let selectedPlaylists = Array.from(playlistSections).map((section, index) => {
+            return getPlaylistFromTitle(selected[index])
         })
 
         playlistSections.forEach((section, index) => {
@@ -199,11 +207,11 @@ function initPage() {
 
                 if (!state) {
                     newElement.addEventListener('click', e => {
-                        playlistClickCallback(section, playlist)
+                        playlistClickCallback(index, playlist)
                     })
                 } else if (state === "selected") {
                     newElement.addEventListener('click', e => {
-                        playlistClickCallback(section, playlist, true)
+                        playlistClickCallback(index, playlist, true)
                     })
                 }
                 dropdown.insertAdjacentElement('beforeend', newElement)
@@ -227,9 +235,8 @@ function initPage() {
                     }
                     let newElement = generateSongElement(song, selectedPlaylist, superSong, otherPlaylist,
                         section.id==="playlist-section-2")
-
                     if(superSong) {
-                        let superItems = Array.from(section.querySelectorAll('.song-list-item.super'))
+                        let superItems = Array.from(section.querySelectorAll('.song-list-item-container.super'))
                         if (superItems.length > 0) {
                             superItems.pop().insertAdjacentElement('afterend', newElement)
 
@@ -243,14 +250,16 @@ function initPage() {
 
                 })
 
-                if (prevSelected[index] === selectedPlaylist.getTitle()) {
+                if (selected[index] === selectedPlaylistTitle) {
                     let interval = setInterval(() => {
                         songList.scrollTop = scroll[index]
                         if (songList.scrollTop === scroll[index]) {
+                            console.log("scrolled");
                             clearInterval(interval)
                         }
                     }, 1)
                 } else {
+                    console.log("no scroll",selectedPlaylistTitle);
                     songList.scrollTop = 0
                 }
             }
