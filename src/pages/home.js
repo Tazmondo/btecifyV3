@@ -27,8 +27,10 @@ function initPage() {
 
         let card = container.lastElementChild
         thumbnailURLPromise.then( res => {
-            let img = card.querySelector('.img-div');
-            img.style.backgroundImage = `url(${res})`
+            if (res) {
+                let img = card.querySelector('.img-div');
+                img.style.backgroundImage = `url(${res})`
+            }
         })
 
         card.querySelector('.svg-button').addEventListener('click', e=>{
