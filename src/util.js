@@ -39,7 +39,6 @@ export function randomIndex(maxIndex) {
 }
 
 export function pageEntry(page) {
-    console.log("entering", page)
     page.classList.toggle("switching", true)
     // page.classList.toggle("hidden",false)
     page.dataset.exit = "false"
@@ -61,7 +60,6 @@ export function pageExit(page, remove=false) {
     page.classList.toggle("hidden", true)
     setTimeout(() => {
         if (remove) {
-            console.log("Deleting", page)
             page.remove()
         } else if (page.dataset.exit === "true") {
             page.classList.toggle("switching", false)
