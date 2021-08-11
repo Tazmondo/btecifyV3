@@ -1,5 +1,5 @@
 console.log("homePage.js running...")
-import { EventController, ObjectController, MusicController } from './controller.js'
+import { EventController, ObjectController, MusicController } from '../controller.js'
 
 function initPage() {
     const {subscribe} = EventController

@@ -1,6 +1,6 @@
-import {durationSecondsToMinutes} from "./util.js";
+import {durationSecondsToMinutes} from "../util.js";
 
-import { EventController, ObjectController, MusicController } from './controller.js'
+import { EventController, ObjectController, MusicController } from '../controller.js'
 function initPage() {
 
     const {subscribe} = EventController

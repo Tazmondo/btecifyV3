@@ -1,5 +1,6 @@
-import {Playlist, Song} from "./objects.js";
-import {copyArray} from "./util.js";
+import {Playlist} from "./objects/playlist.js";
+import {Song} from './objects/song.js'
+import {copyArray} from "../util.js";
 
 function initController(dispatch, save) {
     function updatedSongCallback(redraw) {

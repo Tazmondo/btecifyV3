@@ -1,5 +1,11 @@
 console.log("utils.js running")
 
+export const placeholderURL = "./assets/thumbplaceholder.png"
+
+export function validSong(song) {
+    return Boolean(song?.getUUID && song?.getTitle && song?.getURL)
+}
+
 export function copyArray(array) {
     if (Array.isArray(array)) {
         return array.slice(0)

@@ -2,7 +2,8 @@ console.log("controller.js running...")
 
 // IMPORTING AND SETTING UP
 
-import {Playlist, Song} from "./objects.js";
+import {Playlist} from "./controllers/objects/playlist.js";
+import {Song} from './controllers/objects/song.js'
 import {copyArray, durationMinutesToSeconds} from "./util.js";
 
 
@@ -13,16 +14,16 @@ function saveData() {
 
 // CONTROLLER IMPORTS
 
-import InitEventController from './eventController.js'
+import InitEventController from './controllers/event.js'
 const EventController = InitEventController()
 
-import InitObjectController from './objectController.js'
+import InitObjectController from './controllers/object.js'
 const ObjectController = InitObjectController(EventController.dispatch, saveData)
 
-import InitMusicController from './musicController.js'
+import InitMusicController from './controllers/music.js'
 const MusicController = InitMusicController(EventController.dispatch)
 
-import InitRouteController from './routeController.js'
+import InitRouteController from './controllers/route.js'
 const RouteController = InitRouteController()
 
 export {EventController, ObjectController, MusicController, RouteController}
@@ -34,8 +35,8 @@ import navInit from './headerNav.js'
 
 import footerPlayerInit from './footerPlayer.js'
 
-import homePageInit from './homePage.js'
-import playlistPageInit from './playlistPage.js'
+import homePageInit from './pages/home.js'
+import playlistPageInit from './pages/playlist.js'
 
 
 
