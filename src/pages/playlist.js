@@ -1,6 +1,8 @@
 import {durationSecondsToMinutes, pageEntry, pageExit} from "../util.js";
 
-import { EventController, ObjectController, MusicController } from '../controller.js'
+import {EventController, MusicController, ObjectController} from '../controller.js'
+
+let scroll = [0, 0]
 
 function initPage() {
 
@@ -51,6 +53,7 @@ function initPage() {
     function generateSongElement(song, playlist, superSub, otherPlaylist, isRightSide) {
         let newSongItemContainer = document.createElement('div')
         newSongItemContainer.classList.toggle("song-list-item-container")
+        newSongItemContainer.dataset.uuid = song.getUUID()
 
         let template = document.querySelector('#song-list-item-template')
 
@@ -159,12 +162,9 @@ function initPage() {
         return songArray.some(v => {return v.getUUID() === song.getUUID()})
     }
     function drawPage() {
-        let prevScroll1 = document.querySelector('#playlist-section-1 .song-list')?.scrollTop
-        let prevScroll2 = document.querySelector('#playlist-section-2 .song-list')?.scrollTop
         let prevSelected1 = document.querySelector('#playlist-section-1 .select-dropdown .selected')?.innerText
         let prevSelected2 = document.querySelector('#playlist-section-2 .select-dropdown .selected')?.innerText
 
-        let prevScroll = [prevScroll1, prevScroll2]
         let prevSelected = [prevSelected1, prevSelected2]
 
         document.querySelectorAll('.select-dropdown *, .song-list *').forEach(v => {
@@ -244,7 +244,12 @@ function initPage() {
                 })
 
                 if (prevSelected[index] === selectedPlaylist.getTitle()) {
-                    songList.scrollTop = prevScroll[index]
+                    let interval = setInterval(() => {
+                        songList.scrollTop = scroll[index]
+                        if (songList.scrollTop === scroll[index]) {
+                            clearInterval(interval)
+                        }
+                    }, 1)
                 } else {
                     songList.scrollTop = 0
                 }
@@ -259,6 +264,9 @@ function initPage() {
 
     drawPage()
     return function unInitPage() {
+        scroll = [document.querySelector('#playlist-section-1 .song-list').scrollTop,
+            document.querySelector('#playlist-section-2 .song-list').scrollTop]
+
         unSubscribe('playlist', drawPage)
         pageExit(page)
     }
