@@ -134,7 +134,6 @@ function MusicPlayer(dispatch) {
         },
 
         forceSetSong(song) {
-            currentPlaylist = undefined;
             setSong(song).finally(() => {
                 dispatch('playing')
             })
