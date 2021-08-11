@@ -1,11 +1,12 @@
 import {pageEntry, pageExit} from "../util.js";
-import {EventController, MusicController, RouteController} from "../controller.js";
+import {EventController, MusicController, RouteController, util} from "../controller.js";
 
 function initPage(posAfter=true) {
-    let x = Date.now()
-    console.log("init", x);
     const {subscribe, unSubscribe} = EventController
     const {back} = RouteController
+    const {getInfo} = MusicController
+    const {generateSongElement} = util
+
     let page = document.querySelector('#queue-view-template').content.firstElementChild.cloneNode(true)
     let main = document.querySelector('main');
 
@@ -15,10 +16,42 @@ function initPage(posAfter=true) {
         main.insertBefore(page, Array.from(main.children).find(v => v.id.includes('-view')))
     }
 
-    function drawPage(info) {
+    function drawPage(info, initial) {
+        let queue = info.queue
+        let history = info.history
+        let currentSong = info.currentSong
+
+        let currentArray = []
+        if (currentSong) {
+            currentArray = [currentSong]
+        }
+
+        let currentElement;
+
+        let songList = page.querySelector('.song-list')
+
+        Array.from(songList.childNodes).forEach(v => v.remove())
+
+        function addSong(song, playing, past) {
+            let insertedElement = generateSongElement(song, undefined, undefined, undefined, undefined, playing, past);
+            songList.insertAdjacentElement('beforeend', insertedElement)
+            if (playing) {
+                currentElement = insertedElement
+            }
+        }
+
+        history.forEach(song => addSong(song, false, true))
+        currentArray.forEach(song => addSong(song, true, false))
+        queue.forEach(song => addSong(song, false, false))
+
+        if (currentElement && initial) {
+            currentElement.scrollIntoView()
+            songList.scrollBy(0, -songList.clientHeight/2)
+        }
 
     }
 
+    drawPage(getInfo(), true)
     pageEntry(page)
 
     page.querySelector('.view-back').addEventListener('click', e=>{
@@ -27,8 +60,6 @@ function initPage(posAfter=true) {
 
     subscribe('playing', drawPage)
     return function unInitPage() {
-        console.log("uninit", x);
-
         unSubscribe('playing', drawPage)
         pageExit(page, true)
 

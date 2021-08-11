@@ -31,7 +31,7 @@ function initPage() {
         back()
     })
 
-    document.getElementById('view-queue').addEventListener('click', e=>{
+    document.getElementById('view-history-queue').addEventListener('click', e=>{
         addView('queue')
     })
 

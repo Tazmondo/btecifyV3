@@ -11,6 +11,31 @@
 
 <body>
 
+<template id="song-list-item-template">
+    <div class="song-list-item">
+        <div class="thumb-title-artist">
+            <div class="thumb"></div>
+            <div class="title-artist">
+                <p class="title">a title</p>
+                <p class="artist">an artist</p>
+            </div>
+        </div>
+        <div class="album">an album</div>
+        <div class="duration">5:00</div>
+        <div class="song-item-buttons">
+            <svg class="svg-button playlist-page-remove-from-playlist" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
+                <title>Remove from Playlist</title>
+            </svg>
+            <svg class="svg-button playlist-page-add-to-playlist-east inactive" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><rect fill="none" height="24" width="24"/><path d="M15,5l-1.41,1.41L18.17,11H2V13h16.17l-4.59,4.59L15,19l7-7L15,5z"/>
+                <title>Add to other playlist</title>
+            </svg>
+            <svg class="svg-button playlist-page-add-to-playlist-west inactive" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><rect fill="none" height="24" width="24"/><path d="M9,19l1.41-1.41L5.83,13H22V11H5.83l4.59-4.59L9,5l-7,7L9,19z"/>
+                <title>Add to other playlist</title>
+            </svg>
+        </div>
+    </div>
+</template>
+
 <header>
     <h1>btecify <em>V3</em></h1>
     <nav id="nav-bar">
@@ -28,30 +53,6 @@
     </div>
 
     <div id="playlist-nav-page" class="hidden">
-        <template id="song-list-item-template">
-            <div class="song-list-item">
-                <div class="thumb-title-artist">
-                    <div class="thumb"></div>
-                    <div class="title-artist">
-                        <p class="title">a title</p>
-                        <p class="artist">an artist</p>
-                    </div>
-                </div>
-                <div class="album">an album</div>
-                <div class="duration">5:00</div>
-                <div class="song-item-buttons">
-                    <svg class="svg-button playlist-page-remove-from-playlist" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
-                        <title>Remove from Playlist</title>
-                    </svg>
-                    <svg class="svg-button playlist-page-add-to-playlist-east hidden" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><rect fill="none" height="24" width="24"/><path d="M15,5l-1.41,1.41L18.17,11H2V13h16.17l-4.59,4.59L15,19l7-7L15,5z"/>
-                        <title>Add to other playlist</title>
-                    </svg>
-                    <svg class="svg-button playlist-page-add-to-playlist-west hidden" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><rect fill="none" height="24" width="24"/><path d="M9,19l1.41-1.41L5.83,13H22V11H5.83l4.59-4.59L9,5l-7,7L9,19z"/>
-                        <title>Add to other playlist</title>
-                    </svg>
-                </div>
-            </div>
-        </template>
         <div id="playlist-section-1" class="playlist-section">
 
             <div class="playlist-select">
@@ -91,7 +92,7 @@
                 <svg class="svg-button view-back" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><rect fill="none" height="24" width="24"/><path d="M9,19l1.41-1.41L5.83,13H22V11H5.83l4.59-4.59L9,5l-7,7L9,19z"/>
                     <title>Back</title>
                 </svg>
-                <h2>Queue</h2>
+                <h2>History and Queue</h2>
             </div>
             <div class="song-list"></div>
         </div>
@@ -151,13 +152,13 @@
     </div>
 
     <div class="footer-side-buttons">
-        <svg id="view-history" class="svg-button" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z"/>
-            <title>View History</title>
+        <svg id="view-history-queue" class="svg-button" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.25 2.52.77-1.28-3.52-2.09V8z"/>
+            <title>View song queue and history</title>
         </svg>
 
-        <svg id="view-queue" class="svg-button" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zm-7-1h2v-4h4V9h-4V5h-2v4H9v2h4z"/>
-            <title>View Queue</title>
-        </svg>
+<!--        <svg id="view-queue" class="svg-button" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12zm-7-1h2v-4h4V9h-4V5h-2v4H9v2h4z"/>-->
+<!--            <title>View Queue</title>-->
+<!--        </svg>-->
 
         <svg id="footer-volume-control" class="svg-button" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M3 9v6h4l5 5V4L7 9H3zm7-.17v6.34L7.83 13H5v-2h2.83L10 8.83zM16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77z"/>
             <title>Volume</title>

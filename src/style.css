@@ -564,6 +564,19 @@ main > *.hidden {
     margin-right: 10px;
 }
 
+#queue-view {
+    display: flex;
+    flex-direction: column;
+}
+
+#queue-view .song-list {
+    flex: 1;
+    min-width: 300px;
+    max-width: 600px;
+    width: 80%;
+    margin: auto;
+}
+
 /* FOOTER PLAYER  */
 footer {
     background-color: rgb(25 25 25);

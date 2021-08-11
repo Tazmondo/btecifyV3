@@ -26,7 +26,10 @@ const MusicController = InitMusicController(EventController.dispatch)
 import InitRouteController from './controllers/route.js'
 const RouteController = InitRouteController()
 
-export {EventController, ObjectController, MusicController, RouteController}
+import Initutil from './impureUtil.js'
+const util = Initutil()
+
+export {EventController, ObjectController, MusicController, RouteController, util}
 
 
 // PAGE IMPORTS
@@ -60,6 +63,10 @@ const events = {
     'songtime': {
         callbacks: [],
         e: () => {return MusicController.getTime()}
+    },
+    'switchpage': {
+        callbacks: [],
+
     }
 }
 

@@ -1,6 +1,6 @@
-import {durationSecondsToMinutes, pageEntry, pageExit, generateSongElement} from "../util.js";
+import {durationSecondsToMinutes, pageEntry, pageExit} from "../util.js";
 
-import {EventController, MusicController, ObjectController} from '../controller.js'
+import {EventController, MusicController, ObjectController, util} from '../controller.js'
 
 let scroll = [0, 0]
 let selected = ["", ""]
@@ -15,6 +15,7 @@ function initPage() {
         addToPlaylist
     } = ObjectController
     const {forceSetSong} = MusicController
+    const {generateSongElement} = util
 
     Array.from(document.querySelectorAll('.playlist-section')).forEach(v => {
         let selector = v.querySelector('.playlist-select')
