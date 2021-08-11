@@ -24,7 +24,7 @@ import InitMusicController from './controllers/music.js'
 const MusicController = InitMusicController(EventController.dispatch)
 
 import InitRouteController from './controllers/route.js'
-const RouteController = InitRouteController()
+const RouteController = InitRouteController(EventController.dispatch)
 
 import Initutil from './impureUtil.js'
 const util = Initutil()
@@ -46,27 +46,27 @@ import playlistPageInit from './pages/playlist.js'
 const events = {
     'save': {
         callbacks: [saveData],
-        e: () => {return true}
+        e: () => true
     },
     'playlist': {
         callbacks: [saveData],
-        e: () => {return copyArray(ObjectController.playlistArray)}
+        e: () => copyArray(ObjectController.playlistArray)
     },
     'song': {
         callbacks: [saveData],
-        e: () => {return copyArray(ObjectController.allSongPlaylist)}
+        e: () => copyArray(ObjectController.allSongPlaylist)
     },
     'playing': {
         callbacks: [],
-        e: () => {return MusicController.getInfo()}
+        e: () => MusicController.getInfo()
     },
     'songtime': {
         callbacks: [],
-        e: () => {return MusicController.getTime()}
+        e: () => MusicController.getTime()
     },
-    'switchpage': {
+    'currentpage': {
         callbacks: [],
-
+        e: () => RouteController.getCurrentRoute()
     }
 }
 

@@ -9,7 +9,7 @@ function Route(construct, deconstruct, name) {
     }
 }
 
-function InitRouteController() {
+function InitRouteController(dispatch) {
     let currentRoute = []
 
     function getPageIdFromNavName(navName) {
@@ -30,6 +30,8 @@ function InitRouteController() {
 
         let newRoute = Route(func, func(), pageName)
         currentRoute.unshift(newRoute)
+
+        dispatch('currentpage')
     }
 
     function addView(viewName) {
@@ -38,12 +40,16 @@ function InitRouteController() {
 
         let newRoute = Route(func, func(), viewName)
         currentRoute.unshift(newRoute)
+
+        dispatch('currentpage')
     }
 
     function back() {
         if (currentRoute.length > 1) {
             currentRoute.shift().deconstruct()
             currentRoute[0].deconstruct = currentRoute[0].construct(false)
+
+            dispatch('currentpage')
         }
     }
 
@@ -59,6 +65,9 @@ function InitRouteController() {
             let navId = pageName + "-nav"
             let navElement = document.getElementById(navId)
             routePageWithNavElement(navElement)
+        },
+        getCurrentRoute() {
+            return currentRoute[0]?.name
         }
     }
 }

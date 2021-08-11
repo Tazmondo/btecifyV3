@@ -2,19 +2,26 @@ import {RouteController, EventController} from "./controller.js";
 
 function initNav() {
     const {routePageWithNavElement} = RouteController
+    const {subscribe} = EventController
 
     let navButtons = Array.from(document.getElementById("nav-bar").childNodes).filter(v => {return v.nodeName === "BUTTON"})
 
-    navButtons.forEach((v, i, arr) => {
+    function getNavFromName(name) {
+        return navButtons.find(v => v.id === name + "-nav")
+    }
+
+    navButtons.forEach(v => {
         v.addEventListener("click", e =>{
-            v.classList.toggle("active", true)
             routePageWithNavElement(v)
-            arr.forEach(v2 => {
-                if (v2 !== v) {
-                    v2.classList.toggle("active", false)
-                }
-            })
         })
+    })
+
+    subscribe('currentpage', (routeName) => {
+        let navFromName = getNavFromName(routeName);
+        navButtons.forEach(button => button.classList.toggle('active', false))
+        if (navFromName) {
+            navFromName.classList.toggle('active', true)
+        }
     })
 
 }
