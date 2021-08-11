@@ -5,7 +5,7 @@ function InitRouteController() {
         return navName.slice(0, -4)
     }
 
-    function routeWithNavElement(navButton) {
+    function routePageWithNavElement(navButton) {
         navButton.classList.toggle("active", true)
 
         let pageName = getPageIdFromNavName(navButton.id)
@@ -26,11 +26,11 @@ function InitRouteController() {
     }
 
     return {
-        routeWithNavElement,
+        routePageWithNavElement,
         routeWithPageName(pageName) {
             let navId = pageName + "-nav"
             let navElement = document.getElementById(navId)
-            routeWithNavElement(navElement)
+            routePageWithNavElement(navElement)
         },
     }
 }
