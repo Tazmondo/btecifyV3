@@ -68,6 +68,7 @@ for (let eventName in events) {
 }
 
 RouteController.routeWithPageName('home')
+RouteController.addView('queue')
 
 navInit()
 footerPlayerInit()

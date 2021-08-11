@@ -1,10 +1,11 @@
 console.log("footerPlayer.js running")
 import {durationSecondsToMinutes} from "./util.js";
-import {EventController, MusicController} from "./controller.js";
+import {EventController, MusicController, RouteController} from "./controller.js";
 
 function initPage() {
     const {subscribe} = EventController
     const {setTime, setVolume, forward, back, setRepeat} = MusicController
+    const {addView} = RouteController
 
     let songLength = undefined;
     let currentSong;
@@ -28,6 +29,10 @@ function initPage() {
 
     document.getElementById('skip-back').addEventListener('click', e=>{
         back()
+    })
+
+    document.getElementById('view-queue').addEventListener('click', e=>{
+        addView('queue')
     })
 
 

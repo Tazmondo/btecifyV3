@@ -175,7 +175,7 @@ function initPage() {
             scroll[1] = newScroll2
         }
 
-        document.querySelectorAll('.select-dropdown *, .song-list *').forEach(v => {
+        page.querySelectorAll('.select-dropdown *, .song-list *').forEach(v => {
             v.remove()
         })
 

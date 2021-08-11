@@ -40,14 +40,15 @@ export function randomIndex(maxIndex) {
 
 export function pageEntry(page) {
     page.classList.toggle("switching", true)
+    page.classList.toggle("hidden",false)
     page.dataset.exit = "false"
 
-    setTimeout(() => {
-        page.classList.toggle("hidden",false)
-    }, 1) // Without this delay, the animation is sometimes skipped.
+    // setTimeout(() => {
+    //     page.classList.toggle("hidden",false)
+    // }, 1) // Without this delay, the animation is sometimes skipped.
 
     setTimeout(() => {
-        if (!page.dataset.exit === "true") {
+        if (!(page.dataset.exit === "true")) {
             page.classList.toggle("switching", false)
         }
     }, 800) // Transition length + a bit

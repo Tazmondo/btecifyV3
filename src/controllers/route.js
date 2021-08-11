@@ -1,7 +1,5 @@
-import pages from '../pages/pages.js'
+import {pages, views} from '../pages/pages.js'
 import {copyArray} from "../util.js";
-
-console.log(pages);
 
 function InitRouteController() {
     let currentRoute = []
@@ -10,16 +8,38 @@ function InitRouteController() {
         return navName.slice(0, -4)
     }
 
-    function route(pageName) {
+    function getViewIdFromName(viewName) {
+        return viewName + "-view"
+    }
+
+    function baseRoute(pageName) {
         let func = pages[pageName]
 
         if (currentRoute.length > 0) {
-            currentRoute.forEach(unInitFunc => {
-                unInitFunc()
-            })
+            currentRoute[0][1]()
             currentRoute = []
         }
-        currentRoute.unshift(func())
+        currentRoute.unshift([func, func()])
+    }
+
+    function addView(viewName) {
+        let func = views[viewName]
+
+        currentRoute[0][1]()
+
+        currentRoute.unshift([func, func()])
+
+        let viewPage = document.getElementById(getViewIdFromName(viewName))
+        viewPage.querySelector('.view-back').addEventListener('click', e=>{
+            back()
+        }, {once: true})
+    }
+
+    function back() {
+        if (currentRoute.length > 1) {
+            currentRoute.shift()[1]()
+            currentRoute[0][0]()
+        }
     }
 
     // function routePageWithNavElement(navButton) {
@@ -43,16 +63,18 @@ function InitRouteController() {
     // }
 
     function routePageWithNavElement(navButton) {
-        route(getPageIdFromNavName(navButton.id))
+        baseRoute(getPageIdFromNavName(navButton.id))
     }
 
     return {
         routePageWithNavElement,
+        addView,
+        back,
         routeWithPageName(pageName) {
             let navId = pageName + "-nav"
             let navElement = document.getElementById(navId)
             routePageWithNavElement(navElement)
-        },
+        }
     }
 }
 
