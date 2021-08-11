@@ -448,6 +448,14 @@ main > *.hidden {
 /*    There might be a better way of doing this*/
 }
 
+.song-list-item-container {
+    height: 84px;
+}
+
+.song-list-item-container.seen {
+    height: auto;
+}
+
 .song-list-item {
     background: #0c0c0c;
     display: flex;
