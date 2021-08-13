@@ -136,9 +136,8 @@ function MusicPlayer(dispatch) {
         },
 
         forceSetSong(song) {
-            setSong(song).finally(() => {
-                dispatch('playing')
-            })
+            queue.unshift(song)
+            songEnded()
         },
 
         setSongFromUrl(urlStream) {
