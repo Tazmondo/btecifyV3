@@ -31,6 +31,10 @@ function initPage() {
         addView('queue')
     })
 
+    document.getElementById('add-new-song-button').addEventListener('click', e=> {
+        addView('newSong')
+    })
+
 
     let thumbImg = document.querySelector('footer .song-thumb');
     let title = document.querySelector('footer .songname > strong');

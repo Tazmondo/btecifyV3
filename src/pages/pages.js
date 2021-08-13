@@ -3,6 +3,7 @@ import playlist from './playlist.js'
 import song from './song.js'
 
 import queue from './queue.js'
+import newSong from './new-song.js'
 
 export const pages = {
     home,
@@ -11,5 +12,6 @@ export const pages = {
 }
 
 export const views = {
-    queue
+    queue,
+    newSong
 }
