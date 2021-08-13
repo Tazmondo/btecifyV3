@@ -6,7 +6,7 @@ import { EventController, ObjectController, MusicController } from '../controlle
 function initPage() {
     const {subscribe, unSubscribe} = EventController
     const {getPlaylistArray,getPlaylistFromTitle, getPlaylistsWithSong} = ObjectController
-    const {setPlaylist} = MusicController
+    const {setPlaylist, getInfo} = MusicController
 
     let page = document.getElementById('home-nav-page')
 
@@ -68,10 +68,12 @@ function initPage() {
 
     pageEntry(page)
 
+    drawPage()
+    highlightPlayingSongPlaylists(getInfo())
+
     subscribe('playlist', drawPage)
     subscribe('playing', highlightPlayingSongPlaylists)
 
-    drawPage()
 
     return function unInitPage() {
         unSubscribe('playlist', drawPage)
