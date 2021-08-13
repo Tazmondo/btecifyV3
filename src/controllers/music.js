@@ -163,6 +163,8 @@ function MusicPlayer(dispatch) {
         },
 
         setVolume(volume) {
+            if (volume < 0) volume = 0
+            if (volume > 1) volume = 1
             player.volume = volume
             localStorage.volume = volume
             dispatch('playing')
