@@ -11,10 +11,13 @@ function MusicPlayer(dispatch) {
     let repeat = false;
     let settingSong = false;
 
+
     let player = new Audio()
     player.autoplay = true
 
     player.volume = localStorage.volume || 0.1
+    let volMod = 2.5;
+    let unModdedVol = player.volume ** (1/volMod)
 
     Object.assign(window, {player}) // for testing
 
@@ -57,9 +60,9 @@ function MusicPlayer(dispatch) {
             history,
             queue,
             repeat,
+            volume: unModdedVol,
             paused: player.paused || player.ended,
             time: player.currentTime,
-            volume: player.volume,
         }
     }
 
@@ -165,7 +168,8 @@ function MusicPlayer(dispatch) {
         setVolume(volume) {
             if (volume < 0) volume = 0
             if (volume > 1) volume = 1
-            player.volume = volume
+            unModdedVol = volume
+            player.volume = unModdedVol ** volMod
             localStorage.volume = volume
             dispatch('playing')
         },

@@ -10,10 +10,6 @@ function initPage() {
     let songLength = undefined;
     let currentSong;
 
-    // Used as the difference between quieter sounds is more audible than louder sounds, so the volume slider
-    // should have a higher range at lower volumes.
-    const volMod = 2.5
-
     document.getElementById("shuffle").addEventListener("click", ev => {
         ev.currentTarget.classList.toggle("active")
     })
@@ -141,7 +137,7 @@ function initPage() {
             if (volume < 0) {volume = 0}
             if  (volume > 1) {volume = 1}
 
-            setVolume(volume ** volMod)
+            setVolume(volume)
         }
 
         moveFunc(e)
@@ -156,7 +152,7 @@ function initPage() {
         let song = info?.currentSong
         let playlist = info?.currentPlaylist
         let paused = info?.paused
-        let volume = info?.volume ** (1/volMod) ?? 0.5
+        let volume = info?.volume
         if (isNaN(volume) || volume === undefined) {
             volume = 0.5
         }
