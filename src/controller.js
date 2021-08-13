@@ -34,6 +34,8 @@ const ClipboardController = InitClipboardController(EventController.dispatch)
 
 export {EventController, ObjectController, MusicController, RouteController, util, ClipboardController}
 
+import InitHotkeyController from './controllers/hotkey.js'
+const HotkeyController = InitHotkeyController(EventController.dispatch)
 
 // PAGE IMPORTS
 

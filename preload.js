@@ -14,6 +14,23 @@ let api = {
     getInputData: () => {
         return ipcRenderer.sendSync('getInputData')
     },
+
+    addListener(eventString, callback) {
+        ipcRenderer.on(eventString, callback)
+    },
+
+    unRegisterAllHotkeys() {
+        ipcRenderer.send('unhotkey')
+    },
+
+    // https://www.electronjs.org/docs/api/accelerator
+    registerHotkey(hotkeyString, callback) {
+        let res = ipcRenderer.sendSync('sethotkey', hotkeyString)
+        if (res) {
+            ipcRenderer.on(hotkeyString, callback)
+        }
+        return res
+    }
 }
 
 // Expose db functions to the renderer.

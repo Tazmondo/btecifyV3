@@ -1,5 +1,5 @@
 const path = require("path");
-const {ipcMain} = require('electron')
+const {ipcMain, globalShortcut, webContents} = require('electron')
 const fs = require("fs");
 
 const dbPath = path.join(__dirname, './db')
@@ -27,6 +27,18 @@ function ipc(main, isPackaged) {
 
         ipcMain.on('isDev', (e) => {
             e.returnValue = isPackaged
+        })
+
+        ipcMain.on('unhotkey', (e) => {
+            globalShortcut.unregisterAll()
+            e.returnValue = undefined
+        })
+
+        ipcMain.on('sethotkey', (e, hotkeyString) => {
+            e.returnValue = globalShortcut.register(hotkeyString, () => {
+                // This is unreliable. todo: make me more reliable
+                webContents.getAllWebContents()[0].send(hotkeyString)
+            })
         })
     }
 
