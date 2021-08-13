@@ -74,6 +74,8 @@ export function Playlist(updatedCallback, title, songs=[], thumb="") {
                     cachedThumb = await getEnabledSongs()[randomIndex(this.getLength())]?.getThumb() || placeholderURL
                     updatedCallback(false)
                     return cachedThumb
+                } else {
+                    return placeholderURL
                 }
             })()
         },
