@@ -8,8 +8,8 @@ import {copyArray, durationMinutesToSeconds} from "./util.js";
 
 
 function saveData() {
-    localStorage['playlist'] = JSON.stringify(ObjectController.playlistArray)
-    localStorage['song'] = JSON.stringify(ObjectController.allSongPlaylist)
+    localStorage['playlist'] = JSON.stringify(ObjectController.getPlaylistArray())
+    localStorage['song'] = JSON.stringify(ObjectController.getAllSongs())
 }
 
 // CONTROLLER IMPORTS
@@ -94,7 +94,6 @@ footerPlayerInit()
 function readInputData() {
     let inputData = api.getInputData()
     let songs = []
-    console.log(inputData)
     for (let playlist of inputData) {
         for (let song of playlist.songs) {
             if (!songs.find(v => {
@@ -107,19 +106,18 @@ function readInputData() {
                 }
                 let thumb = song.thumbnail.replace("hqdefault.jpg", "maxresdefault.jpg")
                 thumb = thumb.replace("sddefault.jpg", "maxresdefault.jpg")
-                let newSong = Song(song.songname, [song.songurl], duration, song.author, "", [thumb])
+                let newSong = Song(ObjectController.updatedSongCallback, song.songname, [song.songurl], duration, song.author, "", [thumb])
                 songs.push(newSong)
             }
         }
     }
-    console.log(songs)
 
     let playlists = []
 
     for (let playlist of inputData) {
         if (playlist.playlistname !== "empty"){
 
-            let newPlaylist = Playlist(playlist.playlistname, songs.filter(v => {
+            let newPlaylist = Playlist(ObjectController.updatedPlaylistCallback, playlist.playlistname, songs.filter(v => {
                 return playlist.songs.find(v2 => {
                     return v.getURL() === v2.songurl
                 })
@@ -128,18 +126,17 @@ function readInputData() {
         }
     }
 
-    console.log(playlists)
 
-    ObjectController.allSongPlaylist = Playlist("Songs", songs);
-    ObjectController.playlistArray = playlists;
-    localStorage['song'] = JSON.stringify(ObjectController.allSongPlaylist)
-    localStorage['playlist'] = JSON.stringify(ObjectController.playlistArray)
+    let newPlaylist = Playlist(ObjectController.updatedPlaylistCallback, "Songs", songs);
+    ObjectController.setData(newPlaylist, playlists)
+    localStorage['song'] = JSON.stringify(ObjectController.getAllSongs())
+    localStorage['playlist'] = JSON.stringify(ObjectController.getPlaylistArray())
     EventController.dispatch('playlist')
     EventController.dispatch('song')
 
 }
-//readInputData()
+// readInputData()
 
-// api.removeUnusedDownloads(ObjectController.allSongPlaylist.getSongs().map(v => {return v.getUUID()}))
+// api.removeUnusedDownloads(ObjectController.getAllSongs().getSongs().map(v => {return v.getUUID()}))
 
 

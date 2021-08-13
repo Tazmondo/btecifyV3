@@ -1,6 +1,7 @@
 import {Playlist} from "./objects/playlist.js";
 import {Song} from './objects/song.js'
 import {copyArray} from "../util.js";
+import {ObjectController} from "../controller.js";
 
 function initController(dispatch, save) {
     function updatedSongCallback(redraw) {
@@ -40,15 +41,26 @@ function initController(dispatch, save) {
 
     let allSongPlaylist = (() => {
         if (localStorage['song'] !== undefined) {
-            return JSON.parse(localStorage['song'], parseObject)
+            try {
+                return JSON.parse(localStorage['song'], parseObject)
+
+            } catch (e) {
+                console.log(e.message);
+            }
         }
-        return Playlist("Songs")
+        console.log("Making new song array");
+        return Playlist(updatedPlaylistCallback, "Songs")
     })()
 
     let playlistArray = (() => {
         if (localStorage['playlist'] !== undefined) {
-            return JSON.parse(localStorage['playlist'], parseObject)
+            try {
+                return JSON.parse(localStorage['playlist'], parseObject)
+            } catch (e) {
+                console.log(e.message);
+            }
         }
+        console.log("Making new playlist array");
         return []
     })()
 
@@ -61,6 +73,8 @@ function initController(dispatch, save) {
     }
 
     return {
+        updatedSongCallback,
+        updatedPlaylistCallback,
         makePlaylist(playlistArgs) {
             let newPlaylist = Playlist(...playlistArgs)
 
@@ -110,7 +124,12 @@ function initController(dispatch, save) {
         },
 
         getAllSongs() {
-            return copyArray(allSongPlaylist)
+            return allSongPlaylist
+        },
+
+        setData(songPlaylist, iPlaylistArray) {
+            allSongPlaylist = songPlaylist
+            playlistArray = iPlaylistArray
         }
     }
 }
