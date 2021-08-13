@@ -81,7 +81,7 @@ function initController(dispatch, save) {
             if (!doesPlaylistExist(newPlaylist)) {
                 playlistArray.push(newPlaylist)
                 dispatch('playlist')
-                return true
+                return newPlaylist
             }
             return false
         },
@@ -105,7 +105,9 @@ function initController(dispatch, save) {
                 playlists.forEach(playlist => {
                     playlist.addSong(newSong)
                 })
+                return newSong
             }
+            return false
         },
 
         // Returns a sorted array of playlists.
