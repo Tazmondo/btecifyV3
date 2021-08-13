@@ -55,11 +55,11 @@ const events = {
     },
     'playlist': {
         callbacks: [saveData],
-        e: () => copyArray(ObjectController.playlistArray)
+        e: () => ObjectController.getPlaylistArray()
     },
     'song': {
         callbacks: [saveData],
-        e: () => copyArray(ObjectController.allSongPlaylist)
+        e: () => ObjectController.getAllSongs()
     },
     'playing': {
         callbacks: [],

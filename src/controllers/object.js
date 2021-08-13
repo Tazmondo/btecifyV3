@@ -61,10 +61,6 @@ function initController(dispatch, save) {
     }
 
     return {
-        allSongPlaylist,
-
-        playlistArray,
-
         makePlaylist(playlistArgs) {
             let newPlaylist = Playlist(...playlistArgs)
 
@@ -112,6 +108,10 @@ function initController(dispatch, save) {
         getPlaylistsWithSong(song) {
             return playlistArray.filter(playlist => playlist.doesContainSong(song))
         },
+
+        getAllSongs() {
+            return copyArray(allSongPlaylist)
+        }
     }
 }
 
