@@ -2,9 +2,10 @@ const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
 const ytdl = require('youtube-dl-exec');
+const clipboardy = require('clipboardy')
 
 let test = (() => {
-    ytdl("https://www.youtube.com/watch?v=_xHW4wBKOYY", {
+    ytdl("https://home96.bandcdamp.com/track/head-first", {
         format: 'worstaudio',
         dumpSingleJson: true,
         noPlaylist: true,
@@ -14,6 +15,8 @@ let test = (() => {
     }).then(res => {
         console.log("one")
         console.log(res)
+    }).catch(e => {
+        console.log(e.message)
     })
 })
 
@@ -210,6 +213,30 @@ function db(dbPath) {
                 return await getRemoteSongStream(url)
             }
         },
+
+        async getClipboard() {
+            try {
+                return await clipboardy.read()
+            } catch (e) {
+                console.log("Failed to copy from clipboard.", e.message)
+                return undefined
+            }
+        },
+
+        async getSongData(url) {
+            try {
+                return await  ytdl(url, {
+                    format: 'worstaudio',
+                    dumpSingleJson: true,
+                    noPlaylist: true,
+                    progress: false,
+                    quiet: true,
+                })
+            } catch (e) {
+                console.log(e);
+                return undefined
+            }
+        }
     }
 }
 

@@ -29,7 +29,10 @@ const RouteController = InitRouteController(EventController.dispatch)
 import Initutil from './impureUtil.js'
 const util = Initutil()
 
-export {EventController, ObjectController, MusicController, RouteController, util}
+import InitClipboardController from './controllers/clipboard.js'
+const ClipboardController = InitClipboardController(EventController.dispatch)
+
+export {EventController, ObjectController, MusicController, RouteController, util, ClipboardController}
 
 
 // PAGE IMPORTS
@@ -67,6 +70,10 @@ const events = {
     'currentpage': {
         callbacks: [],
         e: () => RouteController.getCurrentRoute()
+    },
+    'clipbaord': {
+        callbacks: [],
+        e: () => ClipboardController.getClipboardData()
     }
 }
 
