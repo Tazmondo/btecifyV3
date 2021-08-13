@@ -1,13 +1,18 @@
 import {MusicController} from '../controller.js'
 
-function init(dispatch) {
-    // dispatch may not be needed as this object interfaces with other controllers, which all call dispatch themselves.
-
-    const hotkeys = {
+function init() {
+    const globalHotkeys = {
         Pause:  ['F13', pause, false],
         Skip: ['F14', skip, false],
         'Increase Volume': ['F18', increaseVolume, false],
         'Decrease Volume': ['F15', decreaseVolume, false]
+    }
+
+    const localHotkeys = { // obviously unfinished todo: finish local hotkeys
+        Pause:  ['space', pause, false],
+        Skip: ['right arrow', skip, false],
+        'Increase Volume': ['up arrow', increaseVolume, false],
+        'Decrease Volume': ['down arrow', decreaseVolume, false]
     }
 
     registerHotkeys()
@@ -30,21 +35,21 @@ function init(dispatch) {
 
     function registerHotkeys() {
         api.unRegisterAllHotkeys()
-        for (let hotkey in hotkeys) {
-            hotkeys[hotkey][2] = api.registerHotkey(hotkeys[hotkey][0], hotkeys[hotkey][1])
+        for (let hotkey in globalHotkeys) {
+            globalHotkeys[hotkey][2] = api.registerHotkey(globalHotkeys[hotkey][0], globalHotkeys[hotkey][1])
         }
     }
 
     return {
         getHotKeys() {
-            return hotkeys
+            return globalHotkeys
         },
 
         setHotkey(hotkeyName, hotkeyString) {
-            if (hotkeyName in hotkeys) {
-                hotkeys[hotkeyName][0] = hotkeyString
+            if (hotkeyName in globalHotkeys) {
+                globalHotkeys[hotkeyName][0] = hotkeyString
                 registerHotkeys()
-                return hotkeys[hotkeyName][2]
+                return globalHotkeys[hotkeyName][2]
             }
             throw new Error("Tried to set an invalid hotkey!")
         }
