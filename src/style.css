@@ -305,9 +305,9 @@ main > *.hidden {
     box-shadow: #173d13 0 0 10px 3px;
 }
 
-.playlist-card:hover > div > svg{
-    fill: rgba(0, 255, 0, 0.65);
-}
+/*.playlist-card:hover > div > svg{*/
+/*    fill: rgba(0, 255, 0, 0.65);*/
+/*}*/
 
 .playlist-card > .img-div {
     width: 50%;
