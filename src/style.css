@@ -158,6 +158,7 @@ h3 {
 nav {
     display: flex;
     justify-content: flex-start;
+    overflow: auto;
 }
 button {
     border: 0;
@@ -444,8 +445,10 @@ main > *.hidden {
     margin-top: 1em;
     background-color: rgba(255, 255, 255, 0.1);
     overflow-y: scroll;
+    border: 3px #212121 solid;
+
+    /*    There might be a better way of doing this*/
     flex-shrink: 100;
-/*    There might be a better way of doing this*/
 }
 
 .song-list-item-container {
@@ -548,6 +551,12 @@ main > *.hidden {
 
 .song-list-item .svg-button.hidden {
     display: none;
+}
+
+/* SONG PAGE */
+#song-nav-page {
+    display: flex;
+    flex-direction: column;
 }
 
 /* VIEWS */

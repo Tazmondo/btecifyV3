@@ -39,9 +39,9 @@
 <header>
     <h1>btecify <em>V3</em></h1>
     <nav id="nav-bar">
-        <button id="home-nav" class="active">HOME</button>
-        <button id="playlist-nav">PLAYLISTS</button>
-        <button id="song-nav">SONGS</button>
+        <button id="home-nav" class="active" tabindex="-1">HOME</button>
+        <button id="playlist-nav" tabindex="-1">PLAYLISTS</button>
+        <button id="song-nav" tabindex="-1">SONGS</button>
     </nav>
 </header>
 
@@ -83,7 +83,8 @@
     </div>
 
     <div id="song-nav-page" class="hidden">
-        <h2>PLACEHOLDER TEXT</h2>
+        <h2>Songs</h2>
+        <div class="song-list"></div>
     </div>
 
     <template id="queue-view-template">
