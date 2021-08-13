@@ -233,7 +233,6 @@ function db(dbPath) {
                     quiet: true,
                 })
             } catch (e) {
-                console.log("Failed to get song data for", url);
                 return undefined
             }
         }
