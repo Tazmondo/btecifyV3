@@ -461,20 +461,12 @@ main > *.hidden {
     display: flex;
     align-items: flex-start;
     padding: 10px;
-    gap: 1em;
     transition: all 0.3s ease;
     text-decoration-line: line-through;
 }
 
 .song-list-item.enabled {
-    background: #0c0c0c;
-    display: flex;
-    align-items: flex-start;
-    padding: 10px;
-    gap: 1em;
-    transition: all 0.3s ease;
     text-decoration-line: none;
-
 }
 
 .song-list-item.super {
@@ -521,6 +513,7 @@ main > *.hidden {
 }
 
 .song-list-item .duration {
+    margin-top: 4px;
     color: #dedede;
 }
 
@@ -531,6 +524,10 @@ main > *.hidden {
     background-size: cover;
     background-color: #2b2b2b;
     background-position: center;
+}
+
+.song-list .song-item-buttons {
+    margin-left: 5px;
 }
 
 .song-list-item:hover {

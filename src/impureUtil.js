@@ -60,6 +60,7 @@ function init() {
                 duration.innerText = durationSecondsToMinutes(song.getDurationSeconds())
 
                 if (playlist) {
+                    removeButton.classList.toggle("inactive")
                     removeButton.querySelector('title').textContent = `Remove from ${playlist.getTitle()}`
                     removeButton.addEventListener('click', e => {
                         removeFromPlaylist(playlist, song)
