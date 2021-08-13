@@ -4,7 +4,7 @@ import {EventController, MusicController, RouteController} from "./controller.js
 
 function initPage() {
     const {subscribe} = EventController
-    const {setTime, setVolume, forward, back, setRepeat} = MusicController
+    const {setTime, setVolume, forward, back, setRepeat, getInfo} = MusicController
     const {addView} = RouteController
 
     let songLength = undefined;
@@ -12,7 +12,7 @@ function initPage() {
 
     // Used as the difference between quieter sounds is more audible than louder sounds, so the volume slider
     // should have a higher range at lower volumes.
-    let volMod = 2.5
+    const volMod = 2.5
 
     document.getElementById("shuffle").addEventListener("click", ev => {
         ev.currentTarget.classList.toggle("active")
@@ -150,12 +150,16 @@ function initPage() {
             document.removeEventListener("mousemove", moveFunc)
         }, {once: true})
     }
+    volumeSeeker.addEventListener('mousedown', volumeClick)
 
     function drawPage(info) {
         let song = info?.currentSong
         let playlist = info?.currentPlaylist
         let paused = info?.paused
         let volume = info?.volume ** (1/volMod) ?? 0.5
+        if (isNaN(volume) || volume === undefined) {
+            volume = 0.5
+        }
 
         playlistTitle.innerText = playlist?.getTitle() || " \n " // Take up same amount of height as if it had text.
 
@@ -201,7 +205,6 @@ function initPage() {
         }
 
         volumeFront.style.width = `${volume * 100}%`
-        volumeSeeker.addEventListener('mousedown', volumeClick)
         if (volume === 0) {
             volumeButton.classList.toggle('inactive', true)
             volumeButtonMuted.classList.toggle('inactive', false)
@@ -217,7 +220,7 @@ function initPage() {
         updateSeeker(time)
     }
 
-    drawPage()
+    drawPage(getInfo())
     subscribe('playing', drawPage)
     subscribe('songtime', updateSongTime)
 }
