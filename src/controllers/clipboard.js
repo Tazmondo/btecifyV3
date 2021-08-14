@@ -12,6 +12,7 @@ function init(dispatch) {
                 api.getSongData(contents).then(res => {
                     if (res) {
                         if (validExtractors.includes(res.extractor)) {
+                            console.log(res);
                             prevClipData = res
                             dispatch('clipboard')
                         }

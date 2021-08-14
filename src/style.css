@@ -593,7 +593,7 @@ main > *.hidden {
 }
 
 #new-song-view .view-contents {
-    margin-top: 15px;
+    padding: 15px;
     display: flex;
     gap: 25px;
     justify-content: space-between;
@@ -624,13 +624,10 @@ main > *.hidden {
     justify-content: space-between;
 }
 
-img.hidden {
-    visibility: hidden;
-}
-
 #new-song-view .thumb-and-submit img {
     width: 256px;
     height: 256px;
+    object-fit: cover;
 }
 
 /* FOOTER PLAYER  */
