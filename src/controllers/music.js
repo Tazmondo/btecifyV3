@@ -75,14 +75,16 @@ function MusicPlayer(dispatch) {
             console.trace()
             throw new Error("songEnded recursion more than 10 times! has something gone wrong???")
         }
-        if (currentPlaylist && !settingSong) {
-            while (queue.length < 50 && queue.length < Math.ceil(currentPlaylist.getLength()/2)) {
-                let randomSong = currentPlaylist.getRandomFilteredSong(queue);
-                if (randomSong) {
-                    queue.push(randomSong)
-                } else {
-                    console.error("QUEUE FAILED!?!?!?!?")
-                    break
+        if (!settingSong) {
+            if (currentPlaylist) {
+                while (queue.length < 50 && queue.length < Math.ceil(currentPlaylist.getLength()/2)) {
+                    let randomSong = currentPlaylist.getRandomFilteredSong(queue);
+                    if (randomSong) {
+                        queue.push(randomSong)
+                    } else {
+                        console.error("QUEUE FAILED!?!?!?!?")
+                        break
+                    }
                 }
             }
             if (queue.length > 0) {
