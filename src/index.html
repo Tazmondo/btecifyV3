@@ -88,7 +88,7 @@
     </div>
 
     <template id="queue-view-template">
-        <div id="queue-view" class="hidden">
+        <div id="queue-view" class="view hidden">
             <div class="view-header">
                 <svg class="svg-button view-back" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><rect fill="none" height="24" width="24"/><path d="M9,19l1.41-1.41L5.83,13H22V11H5.83l4.59-4.59L9,5l-7,7L9,19z"/>
                     <title>Back</title>
@@ -100,12 +100,28 @@
     </template>
 
     <template id="new-song-template">
-        <div id="new-song-view" class="hidden">
+        <div id="new-song-view" class="view hidden">
             <div class="view-header">
                 <svg class="svg-button view-back" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><rect fill="none" height="24" width="24"/><path d="M9,19l1.41-1.41L5.83,13H22V11H5.83l4.59-4.59L9,5l-7,7L9,19z"/>
                     <title>Back</title>
                 </svg>
                 <h2>Create New Song...</h2>
+            </div>
+            <div class="view-contents">
+                <div class="inputs">
+                    <label>URL: <input id="new-song-url" type="text" autofocus></label>
+                    <label>Title: <input id="new-song-title" type="text"></label>
+                    <label>Album: <input id="new-song-album" type="text"></label>
+                    <label>Artist: <input id="new-song-artist" type="text"></label>
+                    <label>Thumbnail: <input id="new-song-thumbnail" type="text"></label>
+                </div>
+                <div class="playlist-list-select">
+
+                </div>
+                <div class="thumb-and-submit">
+                    <img src="">
+                        <button>Create Song</button>
+                </div>
             </div>
         </div>
     </template>
@@ -164,7 +180,7 @@
     </div>
 
     <div class="footer-side-buttons">
-        <svg id="add-new-song-button" class="svg-button active" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        <svg id="add-new-song-button" class="svg-button" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#FFFFFF"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
             <title>Add Song</title>
         </svg>
 

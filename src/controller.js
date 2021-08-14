@@ -73,7 +73,7 @@ const events = {
         callbacks: [],
         e: () => RouteController.getCurrentRoute()
     },
-    'clipbaord': {
+    'clipboard': {
         callbacks: [],
         e: () => ClipboardController.getClipboardData()
     }
@@ -138,5 +138,6 @@ function readInputData() {
 // readInputData()
 
 // api.removeUnusedDownloads(ObjectController.getAllSongs().getSongs().map(v => {return v.getUUID()}))
+// todo: uncomment me
 
 

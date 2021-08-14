@@ -159,8 +159,9 @@ nav {
     display: flex;
     justify-content: flex-start;
     overflow: auto;
+    height: 30px;
 }
-button {
+nav button {
     border: 0;
     padding: 4px 0 0 0;
     margin: 0;
@@ -178,14 +179,14 @@ button {
 }
 
 
-button:hover,
-button.active {
+nav button:hover,
+nav button.active {
     background-color: rgba(255, 255, 255, 0.15);
     height: 2em;
     transition: all 0.2s ease-in-out;
 }
 
-button::after {
+nav button::after {
     content: "";
     display: block;
     width: 0;
@@ -197,7 +198,7 @@ button::after {
     transition: all 0.1s linear;
 }
 
-button.active::after {
+nav button.active::after {
     background-color: rgb(0,255,0);
     width: 100%;
 }
@@ -441,14 +442,11 @@ main > *.hidden {
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.song-list {
+.song-list, .playlist-list-select {
     margin-top: 1em;
     background-color: rgba(255, 255, 255, 0.1);
     overflow-y: scroll;
     border: 3px #212121 solid;
-
-    /*    There might be a better way of doing this*/
-    flex-shrink: 100;
 }
 
 .song-list-item-container {
@@ -560,14 +558,25 @@ main > *.hidden {
 }
 
 /* VIEWS */
+.view {
+    display: flex;
+    flex-direction: column;
+}
+
 .view-header {
     display: flex;
     align-items: center;
+    background: #0c0c0c;
 }
 
 .view-back {
     margin-left: 5px;
     margin-right: 10px;
+}
+
+.view-contents {
+    width: 100%;
+    flex: 1;
 }
 
 #queue-view {
@@ -581,6 +590,47 @@ main > *.hidden {
     max-width: 600px;
     width: 80%;
     margin: auto;
+}
+
+#new-song-view .view-contents {
+    margin-top: 15px;
+    display: flex;
+    gap: 25px;
+    justify-content: space-between;
+}
+
+#new-song-view .inputs {
+    display: grid;
+    grid-template-columns: max-content;
+    grid-gap: 20px;
+}
+
+#new-song-view label {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 1em;
+}
+
+#new-song-view .playlist-list-select {
+    margin-top: 0;
+    flex: 1;
+}
+
+#new-song-view .thumb-and-submit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+img.hidden {
+    visibility: hidden;
+}
+
+#new-song-view .thumb-and-submit img {
+    width: 256px;
+    height: 256px;
 }
 
 /* FOOTER PLAYER  */

@@ -220,9 +220,22 @@ function initPage() {
         updateSeeker(time)
     }
 
+    function updateAddButton(data) {
+        let addButton = document.querySelector('#add-new-song-button');
+        let title = addButton.querySelector('title')
+        if (data) {
+            addButton.classList.toggle('active', true)
+            title.textContent = `Add ${data.title}`
+        } else {
+            addButton.classList.toggle('active', true)
+            title.textContent = "Add Song"
+        }
+    }
+
     drawPage(getInfo())
     subscribe('playing', drawPage)
     subscribe('songtime', updateSongTime)
+    subscribe('clipboard', updateAddButton)
 }
 
 export default initPage
