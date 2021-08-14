@@ -237,7 +237,6 @@ main > * {
     max-width: 100vw;
     flex: 1;
     overflow: hidden;
-
 }
 
 main.switching > *{
@@ -447,6 +446,7 @@ main > *.hidden {
     background-color: rgba(255, 255, 255, 0.1);
     overflow-y: scroll;
     border: 3px #212121 solid;
+    flex-shrink: 100;
 }
 
 .song-list-item-container {
@@ -511,6 +511,7 @@ main > *.hidden {
 
 .song-list-item .album {
     text-align: center;
+    margin-right: 1em;
 }
 
 .song-list-item .duration {
@@ -584,25 +585,20 @@ main > *.hidden {
     flex-direction: column;
 }
 
-#queue-view .song-list {
-    flex: 1;
-    min-width: 300px;
-    max-width: 600px;
-    width: 80%;
-    margin: auto;
-}
-
 #new-song-view .view-contents {
     padding: 15px;
     display: flex;
     gap: 25px;
     justify-content: space-between;
+
+    /*Not sure why this works but it stops overflow.*/
+    height: 0;
 }
 
 #new-song-view .inputs {
-    display: grid;
-    grid-template-columns: max-content;
-    grid-gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 #new-song-view label {
@@ -615,6 +611,30 @@ main > *.hidden {
 #new-song-view .playlist-list-select {
     margin-top: 0;
     flex: 1;
+    height: fit-content;
+    max-height: 100%;
+}
+
+.playlist-list-select .playlist-list-item {
+    background: #131313;
+    font-size: 1.5em;
+    height: 2.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+}
+
+.playlist-list-select .playlist-list-item.selected {
+    background: #232920;
+}
+
+.playlist-list-select .playlist-list-item:hover {
+    background: #1d1d1d;
+}
+
+.playlist-list-select .playlist-list-item.selected:hover {
+    background: #2a3428;
 }
 
 #new-song-view .thumb-and-submit {

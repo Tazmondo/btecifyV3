@@ -99,7 +99,7 @@ function initController(dispatch, save) {
         },
 
         makeSong(songArgs, playlists=[]) {
-            let newSong = Song(...songArgs)
+            let newSong = Song(updatedSongCallback, ...songArgs)
             if (!doesSongExist(newSong)) {
                 allSongPlaylist.addSong(newSong)
                 playlists.forEach(playlist => {
