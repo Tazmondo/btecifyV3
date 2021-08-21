@@ -1,13 +1,16 @@
 console.log("impureUtil.js running");
 
 import {MusicController, ObjectController} from "./controller.js";
-import {durationSecondsToMinutes} from "./util.js";
+import {durationSecondsToMinutes, copyArray} from "./util.js";
 
 function init() {
     const {addToPlaylist, removeFromPlaylist} = ObjectController
     const {forceSetSong} = MusicController
     return {
-        generateSongElement(song, playlist, superSub, otherPlaylist, isRightSide, isPlayingSong, isHistorySong) {
+        generateSongElement(song, playlist, superSub, otherPlaylist, isRightSide, isPlayingSong, isHistorySong, iobservedArray) {
+            let observedArray = iobservedArray ?? []
+            let originalObserved = copyArray(observedArray)
+
             let newSongItemContainer = document.createElement('div')
             newSongItemContainer.classList.toggle("song-list-item-container")
             if (superSub) {
@@ -16,18 +19,25 @@ function init() {
 
             let template = document.querySelector('#song-list-item-template')
 
+            if (observedArray.includes(song)) {
+                newSongItemContainer.classList.toggle('seen', true)
+                populateSongItem()
+            }
+
             new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
-                    if (entry.target.classList.contains('song-list-item-container')) {
-                        if (entry.isIntersecting) {
+                    if (entry.target === newSongItemContainer) {
+                        if (entry.isIntersecting || originalObserved.includes(song)) {
                             if (!newSongItemContainer.classList.contains('seen')) {
                                 newSongItemContainer.classList.toggle("seen")
                                 populateSongItem()
+                                observedArray.push(song)
                             }
                         } else {
                             if (newSongItemContainer.classList.contains('seen')) {
                                 depopulateSongItem()
                                 newSongItemContainer.classList.toggle("seen")
+                                observedArray.splice(observedArray.findIndex(v => v === song), 1)
                             }
                         }
                     }

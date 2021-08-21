@@ -17,6 +17,8 @@ function initPage() {
     const {forceSetSong} = MusicController
     const {generateSongElement} = util
 
+    let observed = []
+
     Array.from(document.querySelectorAll('.playlist-section')).forEach(v => {
         let selector = v.querySelector('.playlist-select')
         let dropdown = v.querySelector('.select-dropdown')
@@ -133,7 +135,7 @@ function initPage() {
                         superSong = true
                     }
                     let newElement = generateSongElement(song, selectedPlaylist, superSong, otherPlaylist,
-                        section.id==="playlist-section-2")
+                        section.id==="playlist-section-2", undefined, undefined, observed)
                     if(superSong) {
                         let superItems = Array.from(section.querySelectorAll('.song-list-item-container.super'))
                         if (superItems.length > 0) {
