@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 const fs = require('fs')
-require('./ipc.js')(true, app.isPackaged)
+let ipcLoad = require('./ipc.js')
 
 app.commandLine.appendSwitch('remote-debugging-port', '8315')
 
@@ -25,6 +25,7 @@ function createWindow () {
         frame: false
     })
     // win.webContents.openDevTools()
+    ipcLoad(true, app.isPackaged, win.webContents)
     win.loadFile('src/index.html')
 
 }
