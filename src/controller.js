@@ -37,6 +37,9 @@ export {EventController, ObjectController, MusicController, RouteController, uti
 import InitHotkeyController from './controllers/hotkey.js'
 const HotkeyController = InitHotkeyController(EventController.dispatch)
 
+import InitContextMenuController from './controllers/context-menu.js'
+const ContextMenuController = InitContextMenuController()
+
 // PAGE IMPORTS
 
 import navInit from './headerNav.js'
