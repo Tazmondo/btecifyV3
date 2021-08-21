@@ -174,7 +174,6 @@ function db(dbPath) {
             let imageName = await getThumb(uuid) || await downloadThumbnail(uuid, url)
 
             if (imageName) {
-                console.log(imageName);
                 return imageName.replaceAll('\\', '/')
             } else {
                 let replacedUrl = url.replace("maxresdefault", "hqdefault");
