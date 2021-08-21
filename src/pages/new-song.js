@@ -104,11 +104,11 @@ function init(posAfter=true) {
         if (e.target === createButton) {
             makeSong([
                 title.value,
-                [url.value],
+                url.value,
                 durationMinutesToSeconds(duration.value),
                 artist.value,
                 album.value,
-                [thumbnail.value],
+                thumbnail.value,
             ] ,selectedPlaylists)
             drawPage(undefined)
         }
