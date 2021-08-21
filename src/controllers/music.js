@@ -40,7 +40,6 @@ function MusicPlayer(dispatch) {
                 currentSong = song
                 player.src = res
                 play()
-                dispatch('playing')
                 return true
             } catch (e) {
                 console.error("setSong() failed");
@@ -98,9 +97,9 @@ function MusicPlayer(dispatch) {
                     }
                 }).catch (e => {
                     songEnded(depth + 1)
+                }).finally(() => {
+                    dispatch('playing')
                 })
-
-                dispatch('playing')
             }
         }
     }
