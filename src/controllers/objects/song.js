@@ -1,38 +1,10 @@
 import {placeholderURL} from '../../util.js'
 
-export function Song(updatedCallback, title, urls, duration, artist = "", album = "", thumbnails = [], uuid = "", disabled=false) {
-    if (urls.length === 0 || urls.length > 2) {
-        throw new Error(`Number of song urls is ${urls.length}`)
-    }
-    if (thumbnails.length > 2) {
-        throw new Error(`Number of thumbnails is ${urls.thumbnails}`)
-    }
-
+export function Song(updatedCallback, title, remoteUrl, duration, artist = "", album = "", remoteThumb = "", uuid = "", disabled=false) {
     uuid = uuid || api.getUUID()
 
-    let localUrl = "";
-    let remoteUrl = "";
-
-    let localThumb = "";
-    let remoteThumb = "";
-
     let cachedThumb;
-
-    urls.forEach(url => {
-        if (url.startsWith('http://') || url.startsWith('https://') || url.includes("www.")) {
-            remoteUrl = url
-        } else { // todo: actually add a check for file music
-            localUrl = url
-        }
-    })
-
-    thumbnails.forEach(thumbnail => {
-        if (thumbnail.startsWith('http://') || thumbnail.startsWith('https://') || thumbnail.includes("www.") ) {
-            remoteThumb = thumbnail
-        } else { // todo: actually add a check for file thumb
-            localThumb = thumbnail
-        }
-    })
+    let cachedSong;
 
     return {
         // Returns string title
@@ -55,7 +27,7 @@ export function Song(updatedCallback, title, urls, duration, artist = "", album 
 
         // Returns localurl or the remoteurl if local does not exist.
         getURL() {
-            return localUrl || remoteUrl;
+            return remoteUrl;
         },
 
         isDisabled() {
@@ -63,11 +35,29 @@ export function Song(updatedCallback, title, urls, duration, artist = "", album 
         },
 
         async getSource() {
-            console.group(title)
-            console.log(`Fetching `);
-            let source = await api.fetchSong(uuid, remoteUrl) || ""
-            console.log(`Fetched `)
-            console.groupEnd()
+            let source;
+            if (cachedSong){
+                console.log(`Fetched from cache: ${title}`)
+                source = cachedSong
+            } else {
+                console.group(title)
+                console.log(`Fetching `);
+
+                let path = await api.getSongPath(uuid)
+                if (path) {
+                    source = cachedSong = path
+                } else {
+                    try {
+                        api.downloadSong(uuid, remoteUrl)
+                        source = await api.getRemoteSongStream(remoteUrl) || ""
+                    } catch (e) {
+
+                    }
+                }
+                console.log(`Fetched `)
+                console.groupEnd()
+
+            }
             if (source) {
                 updatedCallback(false)
                 return source
@@ -101,7 +91,7 @@ export function Song(updatedCallback, title, urls, duration, artist = "", album 
 
         // Used by JSON.stringify
         toJSON() {
-            return ['song', title, [remoteUrl, localUrl], duration, artist, album, [remoteThumb, localThumb], uuid, disabled]
+            return ['song', title, remoteUrl, duration, artist, album, remoteThumb, uuid, disabled]
         }
     }
 }

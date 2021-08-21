@@ -2,7 +2,7 @@ const path = require("path");
 const {ipcMain, globalShortcut, webContents} = require('electron')
 const fs = require("fs");
 
-const dbPath = path.join(__dirname, './db')
+const dbPath = './db'
 fs.promises.mkdir(dbPath).then(res => {console.log("Made db path")}).catch(e => {console.log("db path already exists")})
 const db = require('./db.js')(dbPath) // Initialise db in the database director
 

@@ -5,7 +5,7 @@ const ytdl = require('youtube-dl-exec');
 const clipboardy = require('clipboardy')
 
 let test = (() => {
-    ytdl("https://home96.bandcdamp.com/track/head-first", {
+    ytdl("https://www.youtube.com/watch?v=oA1OkYxBIZo", {
         format: 'worstaudio',
         dumpSingleJson: true,
         noPlaylist: true,
@@ -61,12 +61,16 @@ function db(dbPath) {
 
     // Calls getFile with the thumbnail path and the given uuid.
     async function getThumb(uuid) {
-        return await getFile(uuid, thumbPath)
+        let newPath = await getFile(uuid, thumbPath);
+        if (newPath) return path.resolve(thumbPath, newPath)
+        return false
     }
 
     // Calls getFile with the thumbnail path and the given uuid.
     async function getSong(uuid) {
-        return await getFile(uuid, musicPath)
+        let newPath = await getFile(uuid, musicPath);
+        if (newPath) return path.resolve(musicPath, newPath)
+        return false
     }
 
     // Takes a uuid and url and downloads a thumbnail to the thumbnail path with the uuid as the name. Returns the name
@@ -92,7 +96,7 @@ function db(dbPath) {
             // return a promise and resolve when download finishes
             return new Promise((resolve, reject) => {
                 response.data.on('end', () => {
-                    resolve(imageName)
+                    resolve(imagePath)
                 })
 
                 response.data.on('error', () => {
@@ -126,12 +130,13 @@ function db(dbPath) {
     // Returns a url to a streaming link for the song. (Or false if it errors)
     async function getRemoteSongStream(url) {
         try {
-            return await ytdl(url, {
-                format: 'worstaudio',
+            let res = await ytdl(url, {
+                format: 'worstaudio[protocol!=http_dash_segments]', // Dash cannot be streamed.
                 noPlaylist: true,
                 progress: false,
                 getUrl: true,
             })
+            return res
         } catch (e) {
             console.log("getRemoteSongStream() failed")
             console.error(e.message)
@@ -155,7 +160,6 @@ function db(dbPath) {
     }
 
     return {
-
         // Takes a uuid and returns a boolean as to whether a thumbnail is downloaded for that uuid.
         async thumbExists(args) {
             let uuid = args[0]
@@ -170,7 +174,8 @@ function db(dbPath) {
             let imageName = await getThumb(uuid) || await downloadThumbnail(uuid, url)
 
             if (imageName) {
-                return `../db/thumbnails/${imageName}`
+                console.log(imageName);
+                return imageName.replaceAll('\\', '/')
             } else {
                 let replacedUrl = url.replace("maxresdefault", "hqdefault");
                 return replacedUrl
@@ -201,6 +206,16 @@ function db(dbPath) {
             return Boolean(await getSong(uuid))
         },
 
+        async getSongPath(args) {
+            let uuid = args[0]
+
+            let songPath = await getSong(uuid);
+            if (songPath) {
+                return songPath.replaceAll('\\', '/')
+            }
+            return false
+        },
+
         // Returns a song's source stream, downloading it if possible.
         async fetchSong(args) {
             let uuid = args[0]
@@ -208,10 +223,18 @@ function db(dbPath) {
 
             let songUrl = await getSong(uuid) || await downloadSong(uuid, url)
             if (songUrl) {
-                return (path.join(musicPath, songUrl))
+                return songUrl
             } else {
                 return await getRemoteSongStream(url)
             }
+        },
+
+        async downloadSong(args) {
+            return await downloadSong(args[0], args[1])
+        },
+
+        async getRemoteSongStream(args) {
+            return await getRemoteSongStream(args[0])
         },
 
         async getClipboard() {

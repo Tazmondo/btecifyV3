@@ -106,7 +106,7 @@ function readInputData() {
                 }
                 let thumb = song.thumbnail.replace("hqdefault.jpg", "maxresdefault.jpg")
                 thumb = thumb.replace("sddefault.jpg", "maxresdefault.jpg")
-                let newSong = Song(ObjectController.updatedSongCallback, song.songname, [song.songurl], duration, song.author, "", [thumb])
+                let newSong = Song(ObjectController.updatedSongCallback, song.songname, song.songurl, duration, song.author, "", thumb)
                 songs.push(newSong)
             }
         }
