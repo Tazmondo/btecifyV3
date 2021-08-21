@@ -1,7 +1,7 @@
 console.log("musicController.js running")
 
 
-function MusicPlayer(dispatch) {
+function MusicPlayer(dispatch, getRandomSong) {
     let history = [];
     let queue = [];
     
@@ -86,6 +86,7 @@ function MusicPlayer(dispatch) {
                     }
                 }
             }
+            if (queue.length === 0 && currentPlaylist === undefined) queue.push(getRandomSong())
             if (queue.length > 0) {
                 let nextSong = queue.shift();
                 if (currentSong) {
@@ -137,6 +138,8 @@ function MusicPlayer(dispatch) {
         },
 
         forceSetSong(song) {
+            currentPlaylist = undefined
+            queue = []
             queue.unshift(song)
             songEnded()
         },

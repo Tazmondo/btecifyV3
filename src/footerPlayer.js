@@ -19,10 +19,6 @@ function initPage() {
         setRepeat(ev.currentTarget.classList.contains('active'))
     })
 
-    document.getElementById('skip-forward').addEventListener('click', e=>{
-        forward()
-    })
-
     document.getElementById('skip-back').addEventListener('click', e=>{
         back()
     })
@@ -44,6 +40,8 @@ function initPage() {
     let playlistTitle = document.querySelector('#player-playlist-header')
     let playButton = document.getElementById("play")
     let pauseButton = document.getElementById("pause")
+    let skipForward = document.getElementById('skip-forward');
+    let playRandom = document.getElementById('play-random');
 
     let seekerDiv = document.querySelector(".player .seeker")
     let seekerBackBar = seekerDiv.querySelector('.seeker-background')
@@ -73,6 +71,8 @@ function initPage() {
     playButton.addEventListener("click", play)
     pauseButton.addEventListener("click", pause)
 
+    playRandom.addEventListener('click', e => forward())
+    skipForward.addEventListener('click', e => forward())
 
 
     function getMousePosition(e, target) {
@@ -157,6 +157,7 @@ function initPage() {
         let playlist = info?.currentPlaylist
         let paused = info?.paused
         let volume = info?.volume
+        let queue = info?.queue
         if (isNaN(volume) || volume === undefined) {
             volume = 0.5
         }
@@ -203,6 +204,9 @@ function initPage() {
             playButton.classList.toggle("inactive", true)
             pauseButton.classList.toggle("inactive", false)
         }
+
+        skipForward.classList.toggle('inactive', !(queue?.length > 0))
+        playRandom.classList.toggle('inactive', queue?.length > 0)
 
         volumeFront.style.width = `${volume * 100}%`
         if (volume === 0) {

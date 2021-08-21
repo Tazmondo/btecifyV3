@@ -21,7 +21,7 @@ import InitObjectController from './controllers/object.js'
 const ObjectController = InitObjectController(EventController.dispatch, saveData)
 
 import InitMusicController from './controllers/music.js'
-const MusicController = InitMusicController(EventController.dispatch)
+const MusicController = InitMusicController(EventController.dispatch, ObjectController.getRandomSong)
 
 import InitRouteController from './controllers/route.js'
 const RouteController = InitRouteController(EventController.dispatch)
