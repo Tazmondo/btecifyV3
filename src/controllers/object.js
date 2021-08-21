@@ -1,6 +1,6 @@
 import {Playlist} from "./objects/playlist.js";
 import {Song} from './objects/song.js'
-import {copyArray} from "../util.js";
+import {copyArray, randomIndex} from "../util.js";
 import {ObjectController} from "../controller.js";
 
 function initController(dispatch, save) {
@@ -127,6 +127,10 @@ function initController(dispatch, save) {
 
         getAllSongs() {
             return allSongPlaylist
+        },
+
+        getRandomSong() {
+            return allSongPlaylist.getSongs()[randomIndex(allSongPlaylist.getLength())]
         },
 
         setData(songPlaylist, iPlaylistArray) {
