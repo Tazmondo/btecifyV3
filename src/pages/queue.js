@@ -45,8 +45,10 @@ function initPage(posAfter=true) {
         queue.forEach(song => addSong(song, false, false))
 
         if (currentElement && initial) {
-            currentElement.scrollIntoView()
-            songList.scrollBy(0, -songList.clientHeight/2)
+            setTimeout(() => {
+                currentElement.scrollIntoView()
+                songList.scrollBy(0, -songList.clientHeight/2)
+            }, 50)
         }
 
     }
