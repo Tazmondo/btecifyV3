@@ -10,7 +10,7 @@ export function Playlist(updatedCallback, title, songs=[], thumb="") {
     function sortSongs() {
         songs.sort((a, b) => {
             //console.log(a.getTitle(), b.getTitle(), a.getTitle() > b.getTitle())
-            return a.getTitle() > b.getTitle() ? 1 : -1
+            return a.getTitle().toLowerCase() > b.getTitle().toLowerCase() ? 1 : -1
         })
     }
     sortSongs()
