@@ -134,9 +134,10 @@ function db(dbPath) {
                 format: 'worstaudio[protocol!=http_dash_segments]', // Dash cannot be streamed.
                 noPlaylist: true,
                 progress: false,
-                getUrl: true,
+                dumpSingleJson: true,
             })
-            return res
+            console.log(res);
+            return res.url
         } catch (e) {
             console.log("getRemoteSongStream() failed")
             console.error(e.message)

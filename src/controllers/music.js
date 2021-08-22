@@ -36,10 +36,24 @@ function MusicPlayer(dispatch, getRandomSong) {
             console.log(`play ${song.getTitle()}`)
             settingSong = true;
             try {
+                const promisePlay = async (res) => {
+                    return new Promise((resolve, reject) =>  {
+                        player.src = res
+                        player.onplaying = e => resolve(e)
+                        player.onerror = e => reject(e)
+                        play()
+                    })
+                }
+
                 let res = await song.getSource()
+                try {
+                    await promisePlay(res)
+                } catch (e) {
+                    throw new Error("Failed to play song")
+                }
+                // Won't set currentsong if it fails to play.
                 currentSong = song
-                player.src = res
-                play()
+
                 return true
             } catch (e) {
                 console.error("setSong() failed");
