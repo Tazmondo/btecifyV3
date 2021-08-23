@@ -14,7 +14,7 @@ function initPage() {
         let container = page.getElementsByClassName("playlists-container")[0]
 
         container.insertAdjacentHTML('beforeend',
-            `<div class="playlist-card">
+            `<div class="playlist-card" data-context="playlist">
             <div class="img-div"></div>
             <div>
                 <h3>${playlistName}</h3>
