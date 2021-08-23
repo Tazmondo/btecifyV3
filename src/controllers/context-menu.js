@@ -8,6 +8,7 @@ function init() {
         playlist: [
             {
                 name: 'Play',
+                type: 'button',
                 action: (context) => {
                     // Not sure if context should just be the element or whether it
                     // should just pass the relevant details, like playlist title
@@ -18,6 +19,43 @@ function init() {
                     )
                 }
             },
+            {
+                name: 'Compare with...',
+                type: 'extend',
+                action: (context, extensionSelection) => {
+                    console.log(`compare ${context.querySelector('h3').textContent} with ${extensionSelection}`);
+                }
+            },
+        ],
+
+        song: [
+
+        ],
+
+        image: [
+            {
+                name: 'Copy image',
+                type: 'button',
+                action: (context) => {
+                    let newImg = new Image() // Since the og image object may be cropped or resized etc
+                    newImg.src = context.src
+
+                    let canvas = document.createElement('canvas');
+                    let canvasContext = canvas.getContext('2d');
+                    canvas.width = newImg.width;
+                    canvas.height = newImg.height;
+                    canvasContext.drawImage(newImg, 0, 0 );
+                    canvas.toBlob(blob => {
+                        navigator.clipboard.write(
+                            [
+                                new ClipboardItem({
+                                    [blob.type]: blob
+                                })
+                            ]
+                        )
+                    })
+                }
+            }
         ],
     }
 
@@ -30,12 +68,14 @@ function init() {
                 let newItem = document.createElement('div')
                 newItem.classList.toggle('context-menu-item')
                 newItem.textContent = menuAction.name
-                if (menuAction.action) {
+
+                if (menuAction.type === 'button') {
                     newItem.addEventListener('click', () => {
                         menuAction.action(contextDefinition.context)
                         clearContextMenu()
                     })
                 }
+
                 menu.insertAdjacentElement('beforeend', newItem)
             })
             if (itemIndex !== items.length - 1) {
@@ -57,9 +97,9 @@ function init() {
         clearContextMenu()
 
         let items = []
-        let target = e.target;
+        let target;
 
-        while ((target = (target.parentElement))) {         // Loop through all parents until reach html element
+        while ((target = (target === undefined ? e.target : target.parentElement))) {         // Loop through all parents until reach html element
             let actions = contexts[target.dataset.context]  // where parent = null, ending the loop
             if (actions) {
                 items.push({context: target, actions})
