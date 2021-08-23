@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP    -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; img-src *; media-src *">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; img-src *; media-src *">
     <link rel="stylesheet" href="style.css">
 
     <title>btecify</title>
 </head>
 
-<body data-context="body">
+<body>
+<!--<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>-->
+<script src="https://unpkg.com/@popperjs/core@2"></script>
 
 <template id="song-list-item-template">
     <div class="song-list-item">

@@ -1,4 +1,5 @@
 import {MusicController, ObjectController} from "../controller.js";
+import {isDescended} from "../util.js";
 
 function init() {
     let currentMenu;
@@ -10,38 +11,37 @@ function init() {
                 action: (context) => {
                     // Not sure if context should just be the element or whether it
                     // should just pass the relevant details, like playlist title
-                    MusicController.setPlaylist(ObjectController.getPlaylistFromTitle(context.querySelector('h3').textContent))
+                    MusicController.setPlaylist(
+                        ObjectController.getPlaylistFromTitle(
+                            context.querySelector('h3').textContent
+                        )
+                    )
                 }
-            }
+            },
         ],
-        body: [
-            {
-                name: 'Test',
-            }
-        ]
     }
 
-    function generateMenu(items, posX, posY) {
+    function generateMenu(items) {
         let menu = document.createElement('div')
         menu.classList.toggle('context-menu')
 
-        items.forEach((v,i) => {
-            v.actions.forEach(v2 => {
+        items.forEach((contextDefinition,itemIndex) => {
+            contextDefinition.actions.forEach(menuAction => {
                 let newItem = document.createElement('div')
                 newItem.classList.toggle('context-menu-item')
-                newItem.textContent = v2.name
-                if (v2.action) {
-                    newItem.addEventListener('click', () => v2.action(v.context))
+                newItem.textContent = menuAction.name
+                if (menuAction.action) {
+                    newItem.addEventListener('click', () => {
+                        menuAction.action(contextDefinition.context)
+                        clearContextMenu()
+                    })
                 }
                 menu.insertAdjacentElement('beforeend', newItem)
             })
-            if (i !== items.length - 1) {
+            if (itemIndex !== items.length - 1) {
                 menu.insertAdjacentElement('beforeend', document.createElement('hr'))
             }
         })
-
-        menu.style.left = `${posX}px`
-        menu.style.top = `${posY}px`
 
         return menu
     }
@@ -66,13 +66,46 @@ function init() {
             }
         }
         if (items.length > 0) {
-            let newMenu = generateMenu(items, e.clientX, e.clientY)
+            let newMenu = generateMenu(items)
+
+            function generateGetBoundingClientRect(x = 0, y = 0) {
+                return () => ({
+                    width: 0,
+                    height: 0,
+                    top: y,
+                    right: x,
+                    bottom: y,
+                    left: x,
+                })
+            }
+
+            const virtualElement = {
+                getBoundingClientRect: generateGetBoundingClientRect(e.clientX, e.clientY)
+            }
+
 
             currentMenu = newMenu
             document.body.insertAdjacentElement('beforeend', newMenu)
+            Popper.createPopper(virtualElement, newMenu, {
+                placement: 'bottom-start',
+                modifiers: [
+                    {
+                        name: 'flip',
+                        enabled: false
+                    }
+                ]
+            })
         }
 
         e.preventDefault() // Probably not needed, but just in case
+    })
+
+    document.addEventListener('click', e => {
+        if (currentMenu) {
+            if (!isDescended(e.target, currentMenu)) {
+                clearContextMenu()
+            }
+        }
     })
 }
 

@@ -70,3 +70,15 @@ export function pageExit(page, remove=false) {
         }
     }, 800) // Transition length + a bit
 }
+
+// Checks if one element is a descendant of another.
+export function isDescended(child, parent) {
+    let element = child;
+    while ((element = element.parentElement)) {
+        console.log(element);
+        if (element === parent) {
+            return true
+        }
+    }
+    return child === parent
+}
