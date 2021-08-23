@@ -223,6 +223,34 @@ nav button.active::after {
     background: #555;
 }
 
+.context-menu {
+    position: fixed;
+    background-color: #484848;
+    border-radius: 5px;
+    min-width: 100px;
+    padding: 5px;
+    z-index: 100;
+}
+
+.context-menu hr {
+    border: #d3d3d3 solid 2px;
+}
+
+.context-menu-item {
+    padding: 5px 0;
+    justify-content: center;
+    align-items: center ;
+    display: flex;
+}
+
+.context-menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.context-menu-item:active {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
 main {
     display: flex;
     flex-direction: row;
