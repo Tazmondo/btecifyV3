@@ -186,8 +186,8 @@ function MusicPlayer(dispatch, getRandomSong) {
             if (volume < 0) volume = 0
             if (volume > 1) volume = 1
             unModdedVol = volume
-            player.volume = unModdedVol ** volMod
-            localStorage.volume = volume
+            player.volume = volume ** volMod
+            localStorage.volume = volume ** volMod
             dispatch('playing')
         },
 
