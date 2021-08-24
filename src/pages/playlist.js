@@ -178,13 +178,13 @@ function initPage() {
     subscribe('playlist', drawPage)
 
     drawPage()
-    return function unInitPage() {
+    return [function unInitPage() {
         scroll = [document.querySelector('#playlist-section-1 .song-list').scrollTop,
             document.querySelector('#playlist-section-2 .song-list').scrollTop]
 
         unSubscribe('playlist', drawPage)
         pageExit(page)
-    }
+    }, page]
 }
 
 export default initPage

@@ -30,9 +30,9 @@ function init() {
     subscribe('song', drawPage)
 
     pageEntry(page)
-    return function unInitPage() {
+    return [function unInitPage() {
         pageExit(page)
-    }
+    }, page]
 }
 
 export default init

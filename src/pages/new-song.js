@@ -123,10 +123,10 @@ function init(posAfter=true) {
         back()
     }, {once: true})
 
-    return function unInitPage() {
+    return [() => {
         pageExit(page, true)
         unSubscribe('clipboard', drawPage)
-    }
+    }, page]
 }
 
 export default init

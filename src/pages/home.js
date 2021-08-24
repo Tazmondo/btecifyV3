@@ -75,13 +75,13 @@ function initPage() {
     subscribe('playing', highlightPlayingSongPlaylists)
 
 
-    return function unInitPage() {
+    return [() => {
         unSubscribe('playlist', drawPage)
         unSubscribe('playing', highlightPlayingSongPlaylists)
 
         pageExit(page)
 
-    }
+    }, page]
 
 
 }

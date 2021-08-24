@@ -70,11 +70,11 @@ function initPage(posAfter=true) {
     }, {once: true})
 
     subscribe('playing', drawPage)
-    return function unInitPage() {
+    return [function unInitPage() {
         unSubscribe('playing', drawPage)
         pageExit(page, true)
 
-    }
+    }, page]
 }
 
 export default initPage

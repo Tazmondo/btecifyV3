@@ -20,9 +20,9 @@ function init(posAfter = true) {
 
     pageEntry(page)
 
-    return function unInitPage() {
+    return [() => {
         pageExit(page, true)
-    }
+    }, page]
 }
 
 export default init
