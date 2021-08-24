@@ -117,6 +117,8 @@ function init() {
     }
 
     function generateMenu(items) {
+        let subMenu;
+
         let menu = document.createElement('div')
         menu.classList.toggle('context-menu')
 
@@ -125,6 +127,14 @@ function init() {
                 let newItem = document.createElement('div')
                 newItem.classList.toggle('context-menu-item')
                 newItem.textContent = menuAction.name
+
+                newItem.onmouseenter = e => {
+                    setTimeout(() => {
+                        if (newItem.matches(':hover')) {
+                            if (subMenu) subMenu.remove()
+                        }
+                    }, 100)
+                }
 
                 if (menuAction.disabled === undefined || !menuAction.disabled(contextDefinition.context)) {
                     switch (menuAction.type) {
@@ -138,30 +148,36 @@ function init() {
                         }
                         case 'extend': {
                             newItem.classList.toggle('extend')
-                            let subMenu = generateMenu(menuAction.extensionItems(contextDefinition.context, menuAction.action))
-                            subMenu.classList.toggle('disabled')
-                            popperDiv.insertAdjacentElement('afterbegin', subMenu)
-                            Popper.createPopper(newItem, subMenu, {
-                                placement: 'right-start',
-                                modifiers: [
-                                    {
-                                        name: 'flip',
-                                        enabled: true,
-                                    },
-                                    {
-                                        name: 'offset',
-                                        enabled: false,
-                                        options: {
-                                            offset: [0, 5]
-                                        }
+                            newItem.onmouseenter = e => {
+                                setTimeout(() => {
+                                    if (newItem.matches(':hover')) {
+                                        if (subMenu) subMenu.remove()
+                                        subMenu = generateMenu(
+                                            menuAction.extensionItems(
+                                                contextDefinition.context, menuAction.action
+                                            )
+                                        )
+                                        subMenu.classList.toggle('submenu')
+                                        popperDiv.insertAdjacentElement('afterbegin', subMenu)
+                                        Popper.createPopper(newItem, subMenu, {
+                                            placement: 'right-start',
+                                            modifiers: [
+                                                {
+                                                    name: 'flip',
+                                                    enabled: true,
+                                                },
+                                                {
+                                                    name: 'offset',
+                                                    enabled: true,
+                                                    options: {
+                                                        offset: [0, 5]
+                                                    }
+                                                }
+                                            ]
+                                        })
                                     }
-                                ]
-                            })
-
-                            newItem.addEventListener('mouseenter', e => {
-                                subMenu.classList.toggle('disabled', false)
-                            })
-
+                                }, 100)
+                            }
                             break
                         }
 
@@ -218,7 +234,7 @@ function init() {
             }
 
             const virtualElement = {
-                getBoundingClientRect: generateGetBoundingClientRect(e.clientX - 2, e.clientY - 2)
+                getBoundingClientRect: generateGetBoundingClientRect(e.clientX - 1, e.clientY - 1)
             }
 
 
