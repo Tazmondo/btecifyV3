@@ -1,4 +1,4 @@
-import {pageEntry, pageExit, durationSecondsToMinutes, durationMinutesToSeconds} from "../util.js";
+import {durationSecondsToMinutes, durationMinutesToSeconds} from "../util.js";
 import {RouteController, ObjectController, ClipboardController, EventController} from "../controller.js";
 
 function init() {
@@ -12,7 +12,6 @@ function init() {
     let dragging = false;
 
     let page = document.querySelector('#new-song-template').content.firstElementChild.cloneNode(true)
-    let main = document.querySelector('main');
 
     let url = page.querySelector('#new-song-url')
     let title = page.querySelector('#new-song-title')

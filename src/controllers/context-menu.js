@@ -2,7 +2,6 @@ import {MusicController, ObjectController, RouteController} from "../controller.
 import {isDescended} from "../util.js";
 
 function init() {
-    let currentMenu;
     const popperDiv = document.querySelector('#poppers')
 
     const contexts = {
@@ -31,6 +30,16 @@ function init() {
                 }
             },
             {
+                name: 'View songs',
+                type: 'button',
+                action: context => {
+                    let title = context.querySelector('h3').textContent;
+                    let playlist = ObjectController.getPlaylistFromTitle(title)
+
+                    RouteController.baseRoute('playlistView', [playlist])
+                }
+            },
+            {
                 name: 'Compare with...',
                 type: 'extend',
                 action: (context, extensionSelection) => {
@@ -53,6 +62,20 @@ function init() {
                 }
             },
             {
+                name: 'Rename Playlist',
+                type: 'button',
+                action: context => {
+                    // rename playlist
+                }
+            },
+            {
+                name: 'Set Thumbnail',
+                type: 'button',
+                action: context => {
+                    // set new thumbnail
+                }
+            },
+            {
                 name: 'Delete Playlist',
                 type: 'button',
                 action: (context) => {
@@ -61,7 +84,7 @@ function init() {
             }
         ],
 
-        '#playlist-nav-page .song-list-item': [
+        '#playlist-nav-page .song-list-item, #playlist-view .song-list-item': [
             {
                 name: 'Remove from this playlist',
                 type: 'button',
@@ -69,6 +92,9 @@ function init() {
                     context.querySelector('.playlist-page-remove-from-playlist').dispatchEvent(new Event('click'))
                 }
             },
+        ],
+
+        '#playlist-nav-page .song-list-item': [
             {
                 name: 'Add to other playlist',
                 type: 'button',
@@ -199,24 +225,42 @@ function init() {
         return menu
     }
 
+    let currentMenu;
+    let currentPopper;
+
     function clearContextMenu() {
         if (currentMenu) {
             Array.from(popperDiv.childNodes).forEach(node => {
                 node.remove()
             })
+            currentPopper.destroy()
+            currentPopper = undefined
             currentMenu = undefined
         }
     }
 
 
-
+    let pX = -1;
+    let pY = -1;
 
     document.addEventListener('contextmenu', e => {
+        let y = e.clientY;
+        let x = e.clientX;
+
+        if (currentMenu && pX === x && pY === y) {
+            pX = -1
+            pY = -1
+            clearContextMenu()
+            return
+        }
         clearContextMenu()
 
-        let items = []
-        let target;
+        pX = x
+        pY = y
 
+        let items = []
+
+        let target;
         while ((target = (target === undefined ? e.target : target.parentElement))) {         // Loop through all parents until reach html element
             for (let selector in contexts) {
                 if (target.matches(selector)) {
@@ -226,8 +270,8 @@ function init() {
             }
         }
         if (items.length > 0) {
-            let newMenu = generateMenu(items)
 
+            let newMenu = generateMenu(items)
             function generateGetBoundingClientRect(x = 0, y = 0) {
                 return () => ({
                     width: 0,
@@ -237,24 +281,25 @@ function init() {
                     bottom: y,
                     left: x,
                 })
+
             }
 
             const virtualElement = {
-                getBoundingClientRect: generateGetBoundingClientRect(e.clientX - 1, e.clientY - 1)
+                getBoundingClientRect: generateGetBoundingClientRect(x, y)
             }
 
 
             currentMenu = newMenu
-            popperDiv.insertAdjacentElement('afterbegin', newMenu)
-            Popper.createPopper(virtualElement, popperDiv, {
+            currentPopper = Popper.createPopper(virtualElement, popperDiv, {
                 placement: 'bottom-start',
                 modifiers: [
                     {
                         name: 'flip',
-                        enabled: false
+                        enabled: true,
                     }
                 ]
             })
+            popperDiv.insertAdjacentElement('afterbegin', newMenu)
         }
 
         e.preventDefault() // Probably not needed, but just in case

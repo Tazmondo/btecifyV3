@@ -1,4 +1,3 @@
-import {pageEntry, pageExit} from "../util.js";
 import {EventController, ObjectController, util} from "../controller.js";
 
 function init() {
@@ -15,8 +14,8 @@ function init() {
     }
 
     function drawPage(songPlaylist) {
-        undrawPage()
         if (songPlaylist) {
+            undrawPage()
             let songList = page.querySelector('.song-list')
 
             let songArray = songPlaylist.getSongs()
