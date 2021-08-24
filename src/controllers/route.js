@@ -2,13 +2,14 @@ import {pages, views} from '../pages/pages.js'
 import {copyArray, pageExit, pageEntry} from "../util.js";
 
 function InitRouteController(dispatch) {
-    function Route(construct, name, view) {
+    function Route(construct, name, view, args) {
         let deconstructFunc;
         let element;
 
         function constructAndParse(posAfter = true) {
             let main = document.querySelector('main');
-            let res = construct()
+            let res = construct(args)
+
             let element;
             let deconstruct;
             if (Array.isArray(res)) {
@@ -55,14 +56,14 @@ function InitRouteController(dispatch) {
         return viewName + "-view"
     }
 
-    function route(func, pageName, view) {
-        let newRoute = Route(func, pageName, view)
+    function route(func, pageName, view, args) {
+        let newRoute = Route(func, pageName, view, args)
         currentRoute.unshift(newRoute)
 
         dispatch('currentpage')
     }
 
-    function pageRoute(pageName) {
+    function pageRoute(pageName, args) {
         let func;
         func = pages[pageName]
 
@@ -71,20 +72,20 @@ function InitRouteController(dispatch) {
             currentRoute = []
         }
 
-        route(func, pageName, false)
+        route(func, pageName, false, args)
     }
 
-    function viewRoute(pageName) {
+    function viewRoute(pageName, args) {
         let func = views[pageName]
         currentRoute[0].deconstruct()
-        route(func, pageName, true)
+        route(func, pageName, true, args)
     }
 
-    function baseRoute(pageName) {
+    function baseRoute(pageName, args) {
         if (pages[pageName]) {
-            pageRoute(pageName)
+            pageRoute(pageName, args)
         } else if (views[pageName]) {
-            viewRoute(pageName)
+            viewRoute(pageName, args)
         }
     }
 
