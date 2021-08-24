@@ -29,7 +29,6 @@ function init() {
     drawPage(getAllSongs())
     subscribe('song', drawPage)
 
-    pageEntry(page)
     return [function unInitPage() {
     }, page]
 }

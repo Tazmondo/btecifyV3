@@ -66,8 +66,6 @@ function initPage() {
         }
     }
 
-    pageEntry(page)
-
     drawPage()
     highlightPlayingSongPlaylists(getInfo())
 

@@ -1,7 +1,7 @@
 import {pageEntry, pageExit, durationSecondsToMinutes, durationMinutesToSeconds} from "../util.js";
 import {RouteController, ObjectController, ClipboardController, EventController} from "../controller.js";
 
-function init(posAfter=true) {
+function init() {
     const {back} = RouteController
     const {subscribe, unSubscribe} = EventController
     const {makeSong, getPlaylistArray, getPlaylistFromTitle} = ObjectController
@@ -61,12 +61,6 @@ function init(posAfter=true) {
         })
     }
 
-    if (posAfter) {
-        main.insertAdjacentElement('beforeend', page)
-    } else {
-        main.insertBefore(page, Array.from(main.children).find(v => v.id.includes('-view')))
-    }
-
     function drawPage(data) {
         Array.from(playlistListElement.children).forEach(child => child.remove())
 
@@ -116,8 +110,6 @@ function init(posAfter=true) {
 
     drawPage(getClipboardData())
     subscribe('clipboard', drawPage)
-
-    pageEntry(page)
 
     page.querySelector('.view-back').addEventListener('click', e=>{
         back()

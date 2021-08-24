@@ -6,8 +6,9 @@ function InitRouteController(dispatch) {
         let deconstructFunc;
         let element;
 
-        function constructAndParse(posAfter) {
-            let res = construct(posAfter)
+        function constructAndParse(posAfter = true) {
+            let main = document.querySelector('main');
+            let res = construct()
             let element;
             let deconstruct;
             if (Array.isArray(res)) {
@@ -16,6 +17,15 @@ function InitRouteController(dispatch) {
             } else {
                 deconstruct = res
             }
+            if (view) {
+                if (posAfter) {
+                    main.insertAdjacentElement('beforeend', element)
+                } else {
+                    main.insertBefore(element, Array.from(main.children).find(v => v.id.includes('-view')))
+                }
+            }
+            pageEntry(element)
+
             return [deconstruct, element]
         }
         let res = constructAndParse()
@@ -46,7 +56,7 @@ function InitRouteController(dispatch) {
     }
 
     function route(func, pageName, view) {
-        let newRoute = Route(func, pageName)
+        let newRoute = Route(func, pageName, view)
         currentRoute.unshift(newRoute)
 
         dispatch('currentpage')

@@ -173,7 +173,6 @@ function initPage() {
     }
 
     let page = document.getElementById('playlist-nav-page')
-    pageEntry(page)
 
     subscribe('playlist', drawPage)
 

@@ -1,7 +1,7 @@
 import {copyArray, pageEntry, pageExit} from "../util.js";
 import {EventController, MusicController, RouteController, util} from "../controller.js";
 
-function initPage(posAfter=true) {
+function initPage() {
     const {subscribe, unSubscribe} = EventController
     const {back} = RouteController
     const {getInfo} = MusicController
@@ -11,12 +11,6 @@ function initPage(posAfter=true) {
 
     let page = document.querySelector('#queue-view-template').content.firstElementChild.cloneNode(true)
     let main = document.querySelector('main');
-
-    if (posAfter) {
-        main.insertAdjacentElement('beforeend', page)
-    } else {
-        main.insertBefore(page, Array.from(main.children).find(v => v.id.includes('-view')))
-    }
 
     function drawPage(info, initial) {
         let queue = info.queue
@@ -63,7 +57,6 @@ function initPage(posAfter=true) {
     }
 
     drawPage(getInfo(), true)
-    pageEntry(page)
 
     page.querySelector('.view-back').addEventListener('click', e=>{
         back()
