@@ -31,7 +31,6 @@ function init() {
 
     pageEntry(page)
     return [function unInitPage() {
-        pageExit(page)
     }, page]
 }
 

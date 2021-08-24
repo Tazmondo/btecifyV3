@@ -183,7 +183,6 @@ function initPage() {
             document.querySelector('#playlist-section-2 .song-list').scrollTop]
 
         unSubscribe('playlist', drawPage)
-        pageExit(page)
     }, page]
 }
 

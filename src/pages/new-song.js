@@ -124,7 +124,6 @@ function init(posAfter=true) {
     }, {once: true})
 
     return [() => {
-        pageExit(page, true)
         unSubscribe('clipboard', drawPage)
     }, page]
 }

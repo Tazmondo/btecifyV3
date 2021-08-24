@@ -72,7 +72,6 @@ function initPage(posAfter=true) {
     subscribe('playing', drawPage)
     return [function unInitPage() {
         unSubscribe('playing', drawPage)
-        pageExit(page, true)
 
     }, page]
 }

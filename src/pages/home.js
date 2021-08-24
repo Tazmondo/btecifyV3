@@ -79,8 +79,6 @@ function initPage() {
         unSubscribe('playlist', drawPage)
         unSubscribe('playing', highlightPlayingSongPlaylists)
 
-        pageExit(page)
-
     }, page]
 
 

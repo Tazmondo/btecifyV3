@@ -1,8 +1,11 @@
 import {pages, views} from '../pages/pages.js'
-import {copyArray} from "../util.js";
+import {copyArray, pageExit, pageEntry} from "../util.js";
 
 function InitRouteController(dispatch) {
-    function Route(construct, name) {
+    function Route(construct, name, view) {
+        let deconstructFunc;
+        let element;
+
         function constructAndParse(posAfter) {
             let res = construct(posAfter)
             let element;
@@ -16,15 +19,19 @@ function InitRouteController(dispatch) {
             return [deconstruct, element]
         }
         let res = constructAndParse()
+        deconstructFunc = res[0]
+        element = res[1]
         return {
             name,
             construct: function(posAfter) { // Can't use anonymous function otherwise this would not work
                 let res = constructAndParse(posAfter)
-                this.deconstruct = res[0]
-                this.element = res[1]
+                deconstructFunc = res[0]
+                element = res[1]
             },
-            deconstruct: res[0],
-            element: res[1]
+            deconstruct: function() {
+                deconstructFunc()
+                pageExit(element, view)
+            },
         }
     }
 
@@ -38,7 +45,7 @@ function InitRouteController(dispatch) {
         return viewName + "-view"
     }
 
-    function route(func, pageName) {
+    function route(func, pageName, view) {
         let newRoute = Route(func, pageName)
         currentRoute.unshift(newRoute)
 
@@ -54,13 +61,13 @@ function InitRouteController(dispatch) {
             currentRoute = []
         }
 
-        route(func, pageName)
+        route(func, pageName, false)
     }
 
     function viewRoute(pageName) {
         let func = views[pageName]
         currentRoute[0].deconstruct()
-        route(func, pageName)
+        route(func, pageName, true)
     }
 
     function baseRoute(pageName) {

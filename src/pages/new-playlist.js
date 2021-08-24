@@ -21,7 +21,6 @@ function init(posAfter = true) {
     pageEntry(page)
 
     return [() => {
-        pageExit(page, true)
     }, page]
 }
 
