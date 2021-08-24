@@ -141,6 +141,7 @@ function init() {
                 if (menuAction.disabled === undefined || !menuAction.disabled(contextDefinition.context)) {
                     switch (menuAction.type) {
                         case 'button': {
+                            newItem.classList.toggle('button')
                             newItem.addEventListener('click', () => {
                                 menuAction.action(contextDefinition.context)
                                 clearContextMenu()
