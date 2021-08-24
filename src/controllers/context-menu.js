@@ -226,7 +226,7 @@ function init() {
     }
 
     let currentMenu;
-    let currentPopper;
+    let currentPopper; // Must save this as creating a new popper without deleting old one can cause issues
 
     function clearContextMenu() {
         if (currentMenu) {
