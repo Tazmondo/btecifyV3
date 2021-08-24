@@ -223,13 +223,22 @@ nav button.active::after {
     background: #555;
 }
 
+#poppers {
+    z-index: 100;
+}
+
 .context-menu {
-    position: fixed;
     background-color: #484848;
     border-radius: 5px;
     min-width: 100px;
     padding: 5px;
     z-index: 100;
+    border: 1px white solid;
+    height: auto;
+}
+
+.context-menu.disabled {
+    visibility: hidden;
 }
 
 .context-menu hr {
@@ -332,7 +341,6 @@ main > *.hidden {
 .playlist-card:hover {
     /*transform: scale(1.05);*/
 
-    z-index: 1;
     border: solid 1px rgb(119, 119, 119);
 }
 

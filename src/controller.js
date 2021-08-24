@@ -74,7 +74,7 @@ const events = {
     },
     'currentpage': {
         callbacks: [],
-        e: () => RouteController.getCurrentRoute()
+        e: () => RouteController.getCurrentRouteName()
     },
     'clipboard': {
         callbacks: [],

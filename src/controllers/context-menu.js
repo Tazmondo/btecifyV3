@@ -3,6 +3,7 @@ import {isDescended} from "../util.js";
 
 function init() {
     let currentMenu;
+    const popperDiv = document.querySelector('#poppers')
 
     const contexts = {
         '#home-nav-page': [
@@ -33,7 +34,20 @@ function init() {
                 name: 'Compare with...',
                 type: 'extend',
                 action: (context, extensionSelection) => {
-                    console.log(`compare ${context.querySelector('h3').textContent} with ${extensionSelection}`);
+                    console.log(`compare ${context.querySelector('h3').textContent} with ${extensionSelection?.getTitle()}`);
+                },
+                extensionItems: (context, callback) => {
+                    let newItems = []
+                    ObjectController.getPlaylistArray().filter(v => v.getTitle() !== context.querySelector('h3').textContent).forEach(playlist => {
+                        newItems.push({
+                            name: playlist.getTitle(),
+                            type: 'button',
+                            action: () => {
+                                callback(context, playlist)
+                            }
+                        })
+                    })
+                    return [{context, actions: newItems}]
                 }
             },
             {
@@ -113,11 +127,44 @@ function init() {
                 newItem.textContent = menuAction.name
 
                 if (menuAction.disabled === undefined || !menuAction.disabled(contextDefinition.context)) {
-                    if (menuAction.type === 'button') {
-                        newItem.addEventListener('click', () => {
-                            menuAction.action(contextDefinition.context)
-                            clearContextMenu()
-                        })
+                    switch (menuAction.type) {
+                        case 'button': {
+                            newItem.addEventListener('click', () => {
+                                menuAction.action(contextDefinition.context)
+                                clearContextMenu()
+                            })
+
+                            break
+                        }
+                        case 'extend': {
+                            newItem.classList.toggle('extend')
+                            let subMenu = generateMenu(menuAction.extensionItems(contextDefinition.context, menuAction.action))
+                            subMenu.classList.toggle('disabled')
+                            popperDiv.insertAdjacentElement('afterbegin', subMenu)
+                            Popper.createPopper(newItem, subMenu, {
+                                placement: 'right-start',
+                                modifiers: [
+                                    {
+                                        name: 'flip',
+                                        enabled: true,
+                                    },
+                                    {
+                                        name: 'offset',
+                                        enabled: false,
+                                        options: {
+                                            offset: [0, 5]
+                                        }
+                                    }
+                                ]
+                            })
+
+                            newItem.addEventListener('mouseenter', e => {
+                                subMenu.classList.toggle('disabled', false)
+                            })
+
+                            break
+                        }
+
                     }
                 } else {
                     newItem.classList.toggle('disabled')
@@ -135,7 +182,9 @@ function init() {
 
     function clearContextMenu() {
         if (currentMenu) {
-            currentMenu.remove()
+            Array.from(popperDiv.childNodes).forEach(node => {
+                node.remove()
+            })
             currentMenu = undefined
         }
     }
@@ -174,8 +223,8 @@ function init() {
 
 
             currentMenu = newMenu
-            document.body.insertAdjacentElement('beforeend', newMenu)
-            Popper.createPopper(virtualElement, newMenu, {
+            popperDiv.insertAdjacentElement('afterbegin', newMenu)
+            Popper.createPopper(virtualElement, popperDiv, {
                 placement: 'bottom-start',
                 modifiers: [
                     {
@@ -191,7 +240,7 @@ function init() {
 
     document.addEventListener('click', e => {
         if (currentMenu) {
-            if (!isDescended(e.target, currentMenu)) {
+            if (!isDescended(e.target, popperDiv)) {
                 clearContextMenu()
             }
         }

@@ -66,9 +66,9 @@ function InitRouteController(dispatch) {
             let navElement = document.getElementById(navId)
             routePageWithNavElement(navElement)
         },
-        getCurrentRoute() {
+        getCurrentRouteName() {
             return currentRoute[0]?.name
-        }
+        },
     }
 }
 
