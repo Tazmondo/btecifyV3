@@ -111,10 +111,6 @@ function init() {
     drawPage(getClipboardData())
     subscribe('clipboard', drawPage)
 
-    page.querySelector('.view-back').addEventListener('click', e=>{
-        back()
-    }, {once: true})
-
     return [() => {
         unSubscribe('clipboard', drawPage)
     }, page]

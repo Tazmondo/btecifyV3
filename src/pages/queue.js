@@ -58,10 +58,6 @@ function initPage() {
 
     drawPage(getInfo(), true)
 
-    page.querySelector('.view-back').addEventListener('click', e=>{
-        back()
-    }, {once: true})
-
     subscribe('playing', drawPage)
     return [function unInitPage() {
         unSubscribe('playing', drawPage)

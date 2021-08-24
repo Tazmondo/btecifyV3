@@ -19,6 +19,10 @@ function InitRouteController(dispatch) {
                 deconstruct = res
             }
             if (view) {
+                element.querySelector('.view-back').addEventListener('click', e=>{
+                    back()
+                }, {once: true})
+
                 if (posAfter) {
                     main.insertAdjacentElement('beforeend', element)
                 } else {
