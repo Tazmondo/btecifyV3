@@ -86,7 +86,7 @@ for (let eventName in events) {
     EventController.setupEvent(eventName, events[eventName].callbacks, events[eventName].e)
 }
 
-RouteController.routeWithPageName('home')
+RouteController.baseRoute('home')
 
 navInit()
 footerPlayerInit()

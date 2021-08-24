@@ -21,27 +21,27 @@ function InitRouteController(dispatch) {
     }
 
     function baseRoute(pageName) {
-        let func = pages[pageName]
+        let func;
 
-        if (currentRoute.length > 0) {
+        if (pages[pageName]) {
+            func = pages[pageName]
+
+            if (currentRoute.length > 0) {
+                currentRoute[0].deconstruct()
+                currentRoute = []
+            }
+
+        } else if (views[pageName]) {
+            func = views[pageName]
             currentRoute[0].deconstruct()
-            currentRoute = []
         }
 
-        let newRoute = Route(func, func(), pageName)
-        currentRoute.unshift(newRoute)
+        if (func) {
+            let newRoute = Route(func, func(), pageName)
+            currentRoute.unshift(newRoute)
 
-        dispatch('currentpage')
-    }
-
-    function addView(viewName) {
-        let func = views[viewName]
-        currentRoute[0].deconstruct()
-
-        let newRoute = Route(func, func(), viewName)
-        currentRoute.unshift(newRoute)
-
-        dispatch('currentpage')
+            dispatch('currentpage')
+        }
     }
 
     function back() {
@@ -59,13 +59,8 @@ function InitRouteController(dispatch) {
 
     return {
         routePageWithNavElement,
-        addView,
+        baseRoute,
         back,
-        routeWithPageName(pageName) {
-            let navId = pageName + "-nav"
-            let navElement = document.getElementById(navId)
-            routePageWithNavElement(navElement)
-        },
         getCurrentRouteName() {
             return currentRoute[0]?.name
         },

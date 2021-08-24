@@ -5,7 +5,7 @@ import {EventController, MusicController, RouteController} from "./controller.js
 function initPage() {
     const {subscribe} = EventController
     const {setTime, setVolume, forward, back, setRepeat, getInfo} = MusicController
-    const {addView} = RouteController
+    const {baseRoute} = RouteController
 
     let songLength = undefined;
     let currentSong;
@@ -24,11 +24,11 @@ function initPage() {
     })
 
     document.getElementById('view-history-queue').addEventListener('click', e=>{
-        addView('queue')
+        baseRoute('queue')
     })
 
     document.getElementById('add-new-song-button').addEventListener('click', e=> {
-        addView('newSong')
+        baseRoute('newSong')
     })
 
 
