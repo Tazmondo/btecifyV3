@@ -3,7 +3,11 @@ import {EventController, MusicController, ObjectController, util} from '../contr
 let scroll = [0, 0]
 let selected = ["", ""]
 
-function initPage() {
+function initPage(args) {
+    if (args) {
+        selected[0] = args[0] ?? selected[0]
+        selected[1] = args[1] ?? selected[1]
+    }
 
     const {subscribe, unSubscribe} = EventController
     const {

@@ -1,4 +1,4 @@
-import {MusicController, ObjectController} from "../controller.js";
+import {MusicController, ObjectController, RouteController} from "../controller.js";
 import {isDescended} from "../util.js";
 
 function init() {
@@ -34,7 +34,9 @@ function init() {
                 name: 'Compare with...',
                 type: 'extend',
                 action: (context, extensionSelection) => {
-                    console.log(`compare ${context.querySelector('h3').textContent} with ${extensionSelection?.getTitle()}`);
+                    let title1 = context.querySelector('h3').textContent;
+                    let title2 = extensionSelection?.getTitle();
+                    RouteController.baseRoute('playlist', [title1, title2])
                 },
                 extensionItems: (context, callback) => {
                     let newItems = []
