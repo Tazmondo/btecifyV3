@@ -127,6 +127,24 @@
             </div>
         </div>
     </template>
+
+    <template id="new-playlist-template">
+        <div id="new-playlist-view" class="view hidden">
+            <div class="view-header">
+                <svg class="svg-button view-back" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><rect fill="none" height="24" width="24"/><path d="M9,19l1.41-1.41L5.83,13H22V11H5.83l4.59-4.59L9,5l-7,7L9,19z"/>
+                    <title>Back</title>
+                </svg>
+                <h2>Create New Playlist</h2>
+            </div>
+            <div class="view-contents">
+                <div class="inputs">
+                    <label>Title: <input id="new-playlist-title" type="text" required></label>
+                    <label>URL: <input id="new-playlist-url" type="text"></label>
+                </div>
+                <button>Create Song</button>
+            </div>
+        </div>
+    </template>
 </main>
 
 <footer>
