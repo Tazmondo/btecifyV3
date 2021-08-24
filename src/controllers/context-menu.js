@@ -5,7 +5,17 @@ function init() {
     let currentMenu;
 
     const contexts = {
-        playlist: [
+        '#home-nav-page': [
+            {
+                name: 'New Playlist',
+                type: 'button',
+                action: (context) => {
+                    // Switch page to new playlist page, or bring up an input dialog box.
+                }
+            }
+        ],
+
+        '.playlist-card': [
             {
                 name: 'Play',
                 type: 'button',
@@ -26,20 +36,55 @@ function init() {
                     console.log(`compare ${context.querySelector('h3').textContent} with ${extensionSelection}`);
                 }
             },
+            {
+                name: 'Delete Playlist',
+                type: 'button',
+                action: (context) => {
+                    // Delete the playlist
+                }
+            }
         ],
 
-        song: [
-
+        '#playlist-nav-page .song-list-item': [
+            {
+                name: 'Remove from this playlist',
+                type: 'button',
+                action: (context) => {
+                    context.querySelector('.playlist-page-remove-from-playlist').dispatchEvent(new Event('click'))
+                }
+            },
+            {
+                name: 'Add to other playlist',
+                type: 'button',
+                disabled: (context) => {
+                    return context.querySelectorAll('.playlist-page-add-to-playlist.inactive').length === 2
+                },
+                action: (context) => {
+                    context.querySelector('.playlist-page-add-to-playlist').dispatchEvent(new Event('click'))
+                }
+            }
         ],
 
-        image: [
+        '.song-list-item': [
+            {
+                name: 'Play',
+                type: 'button',
+                action: (context) => {
+                    context.dispatchEvent(new Event('dblclick'))
+                }
+            }
+        ],
+
+        'img, .thumb, .img-div': [
             {
                 name: 'Copy image',
                 type: 'button',
                 action: (context) => {
                     let newImg = new Image() // Since the og image object may be cropped or resized etc
-                    newImg.src = context.src
+                    let backgroundImage = context.style.backgroundImage;
 
+                    // Image is either a src or a background image.
+                    newImg.src = context.src || (backgroundImage.substring(5, backgroundImage.length - 2))
                     let canvas = document.createElement('canvas');
                     let canvasContext = canvas.getContext('2d');
                     canvas.width = newImg.width;
@@ -47,11 +92,9 @@ function init() {
                     canvasContext.drawImage(newImg, 0, 0 );
                     canvas.toBlob(blob => {
                         navigator.clipboard.write(
-                            [
-                                new ClipboardItem({
-                                    [blob.type]: blob
-                                })
-                            ]
+                            [new ClipboardItem({
+                                [blob.type]: blob
+                            })]
                         )
                     })
                 }
@@ -69,11 +112,15 @@ function init() {
                 newItem.classList.toggle('context-menu-item')
                 newItem.textContent = menuAction.name
 
-                if (menuAction.type === 'button') {
-                    newItem.addEventListener('click', () => {
-                        menuAction.action(contextDefinition.context)
-                        clearContextMenu()
-                    })
+                if (menuAction.disabled === undefined || !menuAction.disabled(contextDefinition.context)) {
+                    if (menuAction.type === 'button') {
+                        newItem.addEventListener('click', () => {
+                            menuAction.action(contextDefinition.context)
+                            clearContextMenu()
+                        })
+                    }
+                } else {
+                    newItem.classList.toggle('disabled')
                 }
 
                 menu.insertAdjacentElement('beforeend', newItem)
@@ -100,9 +147,11 @@ function init() {
         let target;
 
         while ((target = (target === undefined ? e.target : target.parentElement))) {         // Loop through all parents until reach html element
-            let actions = contexts[target.dataset.context]  // where parent = null, ending the loop
-            if (actions) {
-                items.push({context: target, actions})
+            for (let selector in contexts) {
+                if (target.matches(selector)) {
+                    let actions = contexts[selector]
+                    items.push({context: target, actions})
+                }
             }
         }
         if (items.length > 0) {
@@ -120,7 +169,7 @@ function init() {
             }
 
             const virtualElement = {
-                getBoundingClientRect: generateGetBoundingClientRect(e.clientX, e.clientY)
+                getBoundingClientRect: generateGetBoundingClientRect(e.clientX - 2, e.clientY - 2)
             }
 
 

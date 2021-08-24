@@ -75,7 +75,6 @@ export function pageExit(page, remove=false) {
 export function isDescended(child, parent) {
     let element = child;
     while ((element = element.parentElement)) {
-        console.log(element);
         if (element === parent) {
             return true
         }
