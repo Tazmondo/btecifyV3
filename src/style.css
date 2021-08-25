@@ -237,6 +237,18 @@ nav button.active::after {
     height: auto;
 }
 
+.submenu.closed {
+    min-width: 0;
+    max-width: 0;
+}
+
+.submenu {
+    max-width: 100vw;
+    min-width: 100px;
+    overflow: hidden;
+    transition: max-width ease 0.5s 0.5s, min-width ease 0.5s;
+}
+
 .context-menu.disabled {
     visibility: hidden;
 }
@@ -270,6 +282,15 @@ nav button.active::after {
 
 .context-menu-item.disabled:active {
     background-color: unset;
+}
+
+@keyframes submenu-open {
+    from {
+        max-width: 0;
+    }
+    to {
+        max-width: 1px;
+    }
 }
 
 main {

@@ -186,8 +186,10 @@ function init() {
                                                 contextDefinition.context, menuAction.action
                                             )
                                         )
-                                        subMenu.classList.toggle('submenu')
                                         popperDiv.insertAdjacentElement('afterbegin', subMenu)
+                                        subMenu.classList.toggle('closed')
+                                        subMenu.classList.toggle('submenu')
+
                                         Popper.createPopper(newItem, subMenu, {
                                             placement: 'right-start',
                                             modifiers: [
@@ -203,6 +205,9 @@ function init() {
                                                     }
                                                 }
                                             ]
+                                        })
+                                        requestAnimationFrame(() => {
+                                            subMenu.classList.toggle('closed')
                                         })
                                     }
                                 }, 100)
