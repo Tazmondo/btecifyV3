@@ -47,9 +47,9 @@ export function pageEntry(page) {
     // page.classList.toggle("hidden",false)
     page.dataset.exit = "false"
 
-    setTimeout(() => {
+    requestAnimationFrame(() => {
         page.classList.toggle("hidden",false)
-    }, 1) // Without this delay, the animation is sometimes skipped.
+    }) // Without this delay, the animation is sometimes skipped.
 
     setTimeout(() => {
         if (page.dataset.exit === "false") {
