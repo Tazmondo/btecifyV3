@@ -264,6 +264,21 @@ nav button.active::after {
     display: flex;
 }
 
+.context-menu-item.extend {
+    padding-right: 12px;
+    padding-left: 12px;
+}
+
+.context-menu-item.extend::after {
+    content: url("./assets/svg/arrow_drop_down_white_24dp.svg");
+    width: 12px;
+    height: 12px;
+    transform: rotate(270deg);
+    position: relative;
+    left: 5px;
+    top: 5px;
+}
+
 .context-menu-item:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
