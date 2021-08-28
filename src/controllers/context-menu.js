@@ -5,7 +5,7 @@ function init() {
     const popperDiv = document.querySelector('#poppers')
 
     const contexts = {
-        '#home-nav-page': [
+        '#home-nav-page': [ // todo
             {
                 name: 'New Playlist',
                 type: 'button',
@@ -61,21 +61,21 @@ function init() {
                     return [{context, actions: newItems}]
                 }
             },
-            {
+            { // todo
                 name: 'Rename Playlist',
                 type: 'button',
                 action: context => {
                     // rename playlist
                 }
             },
-            {
+            { // todo
                 name: 'Set Thumbnail',
                 type: 'button',
                 action: context => {
                     // set new thumbnail
                 }
             },
-            {
+            { // todo
                 name: 'Delete Playlist',
                 type: 'button',
                 action: (context) => {
