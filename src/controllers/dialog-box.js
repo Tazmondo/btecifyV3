@@ -5,7 +5,10 @@ import {makeDraggable} from "../util.js";
  * @param title {string}
  * @param mainText {string}
  * @param options {{
- *     [inputs]: ["text"],
+ *     [inputs]: [{
+ *         type: "text",
+ *         label: string
+ *     }],
  *     [type]: "default"|"error"
  * }}
  * @return {Array|false} Returns an array of the user inputs, or false if they cancelled.
@@ -25,11 +28,29 @@ function generateInputDialog(title, mainText, options) {
     foreDiv.classList.toggle('dialog-foreground')
     backDiv.insertAdjacentElement('beforeend', foreDiv)
 
-    let titleHeader = document.createElement('h1')
-    titleHeader.textContent = title
-    foreDiv.insertAdjacentElement('beforeend', titleHeader)
+    let titleElement = document.createElement('h1')
+    titleElement.textContent = title
+    foreDiv.insertAdjacentElement('beforeend', titleElement)
 
-    makeDraggable(titleHeader, foreDiv)
+    let mainTextElement = document.createElement('h3')
+    mainTextElement.textContent = mainText
+    foreDiv.insertAdjacentElement('beforeend', mainTextElement)
+
+    let inputDiv = document.createElement('div')
+    inputDiv.classList.toggle('inputs')
+    foreDiv.insertAdjacentElement('beforeend', inputDiv)
+
+    inputs.forEach(v => {
+        let label = document.createElement('label')
+        label.textContent = v.label
+        inputDiv.insertAdjacentElement('beforeend', label)
+
+        let newInput = document.createElement('input')
+        newInput.type = v.type
+        label.insertAdjacentElement('beforeend', newInput)
+    })
+
+    makeDraggable(titleElement, foreDiv)
 
     backDiv.addEventListener('mousedown', e => {
         if (e.target === backDiv){

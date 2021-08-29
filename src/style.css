@@ -706,7 +706,7 @@ main > *.hidden {
     height: 0;
 }
 
-#new-song-view .inputs {
+.inputs {
     display: flex;
     flex-direction: column;
     gap: 20px;
