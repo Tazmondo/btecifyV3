@@ -81,3 +81,55 @@ export function isDescended(child, parent) {
     }
     return child === parent
 }
+
+/**
+ * Makes an element draggable.
+ * @param dragger {HTMLElement|Node}
+ * @param container {HTMLElement|Node}
+ */
+export function makeDraggable(dragger, container) {
+
+    let rect = container.getBoundingClientRect()
+
+    let left = rect.x
+    let top = rect.y
+
+    function updateContainerPosition() {
+        let constrainedLeft, constrainedTop
+        ({left: constrainedLeft, top: constrainedTop} = constrain(left, top))
+
+        container.style.left = `${constrainedLeft}px`
+        container.style.top = `${constrainedTop}px`
+    }
+
+    function constrain(left, top) {
+        let maxLeft = window.innerWidth - container.clientWidth;
+        let maxTop = window.innerHeight - container.clientHeight
+
+        if (left < 0) left = 0
+        else if (left > maxLeft) left = maxLeft
+
+        if (top < 0) top = 0
+        else if (top > maxTop) top = maxTop
+
+        return {left, top}
+    }
+
+    container.style.position = "fixed"
+    updateContainerPosition()
+
+    dragger.addEventListener('mousedown', e => {
+        function moved(e) {
+            left += e.movementX
+            top += e.movementY
+
+            updateContainerPosition()
+        }
+        window.addEventListener('mousemove', moved)
+
+        window.addEventListener('mouseup', e => {
+            ({left, top} = constrain(left, top))
+            window.removeEventListener('mousemove', moved)
+        }, {once: true})
+    })
+}
