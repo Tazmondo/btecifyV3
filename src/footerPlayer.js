@@ -4,7 +4,7 @@ import {EventController, MusicController, RouteController} from "./controller.js
 
 function initPage() {
     const {subscribe} = EventController
-    const {setTime, setVolume, forward, back, setRepeat, getInfo} = MusicController
+    const {setTime, setVolume, forward, back, setRepeat, getInfo, toggleMute} = MusicController
     const {baseRoute} = RouteController
 
     let songLength = undefined;
@@ -30,6 +30,13 @@ function initPage() {
     document.getElementById('add-new-song-button').addEventListener('click', e=> {
         baseRoute('newSong')
     })
+
+    function toggleMuteEvent(e) {
+        toggleMute()
+    }
+
+    document.getElementById('footer-volume-control').addEventListener('click', toggleMuteEvent)
+    document.getElementById('footer-volume-control-muted').addEventListener('click', toggleMuteEvent)
 
 
     let thumbImg = document.querySelector('footer .song-thumb');
@@ -141,6 +148,7 @@ function initPage() {
             if (volume < 0) {volume = 0}
             if  (volume > 1) {volume = 1}
 
+            toggleMute(false)
             setVolume(volume)
         }
 
@@ -158,6 +166,7 @@ function initPage() {
         let paused = info?.paused
         let volume = info?.volume
         let queue = info?.queue
+        let muted = info?.muted
         if (isNaN(volume) || volume === undefined) {
             volume = 0.5
         }
@@ -208,11 +217,12 @@ function initPage() {
         skipForward.classList.toggle('inactive', !(queue?.length > 0))
         playRandom.classList.toggle('inactive', queue?.length > 0)
 
-        volumeFront.style.width = `${volume * 100}%`
-        if (volume === 0) {
+        if (muted) {
+            volumeFront.style.width = `0%`
             volumeButton.classList.toggle('inactive', true)
             volumeButtonMuted.classList.toggle('inactive', false)
         } else {
+            volumeFront.style.width = `${volume * 100}%`
             volumeButton.classList.toggle('inactive', false)
             volumeButtonMuted.classList.toggle('inactive', true)
         }

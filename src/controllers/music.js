@@ -9,13 +9,13 @@ function MusicPlayer(dispatch, getRandomSong) {
     let currentPlaylist;
     
     let repeat = false;
+    let muted = localStorage.muted ?? false
     let settingSong = false;
-
 
     let player = new Audio()
     player.autoplay = true
 
-    player.volume = localStorage.volume || 0.1
+    player.volume = muted ? 0 : (localStorage.volume || 0.1)
     let volMod = 2.5;
     let unModdedVol = player.volume ** (1/volMod)
 
@@ -73,6 +73,7 @@ function MusicPlayer(dispatch, getRandomSong) {
             history,
             queue,
             repeat,
+            muted,
             volume: unModdedVol,
             paused: player.paused || player.ended,
             time: player.currentTime,
@@ -186,7 +187,7 @@ function MusicPlayer(dispatch, getRandomSong) {
             if (volume < 0) volume = 0
             if (volume > 1) volume = 1
             unModdedVol = volume
-            player.volume = volume ** volMod
+            if (!muted) player.volume = volume ** volMod
             localStorage.volume = volume ** volMod
             dispatch('playing')
         },
@@ -207,6 +208,13 @@ function MusicPlayer(dispatch, getRandomSong) {
         
         setRepeat(bool) {
             repeat = bool
+        },
+
+        toggleMute(force) {
+            muted = force ?? !muted
+            localStorage.muted = muted
+            muted ? player.volume = 0 : player.volume = unModdedVol ** volMod
+            dispatch('playing')
         }
     }
 }
