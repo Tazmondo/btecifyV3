@@ -5,8 +5,8 @@ import {makeDraggable} from "../util.js";
  * @param title {string}
  * @param mainText {string}
  * @param options {{
- *     inputs: ["text"],
- *     type: "default"|"error"
+ *     [inputs]: ["text"],
+ *     [type]: "default"|"error"
  * }}
  * @return {Array|false} Returns an array of the user inputs, or false if they cancelled.
  */
@@ -38,4 +38,6 @@ function generateInputDialog(title, mainText, options) {
     })
 }
 
-generateInputDialog("lol", "question", ["text"])
+export {
+    generateInputDialog
+}

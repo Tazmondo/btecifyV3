@@ -1,10 +1,20 @@
 import {MusicController, ObjectController, RouteController} from "../controller.js";
 import {isDescended} from "../util.js";
+import {generateInputDialog} from "./dialog-box.js";
 
 function init() {
     const popperDiv = document.querySelector('#poppers')
 
     const contexts = {
+        'body' : [
+            {
+                name: 'Dialog Box',
+                type: 'button',
+                action: context => {
+                    generateInputDialog("A test dialog box", "This is a test!", {inputs: ["text"]})
+                }
+            }
+        ],
         '#home-nav-page': [ // todo
             {
                 name: 'New Playlist',
