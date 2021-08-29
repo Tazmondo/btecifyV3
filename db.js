@@ -241,7 +241,6 @@ function db(dbPath) {
             try {
                 return await clipboardy.read()
             } catch (e) {
-                console.log("Failed to copy from clipboard.", e.message)
                 return undefined
             }
         },
