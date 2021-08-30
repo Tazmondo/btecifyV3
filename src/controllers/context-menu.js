@@ -8,7 +8,7 @@ function init() {
     const contexts = {
         'body' : [
             {
-                name: 'Dialog Box',
+                name: 'Test Dialog box',
                 type: 'button',
                 action: context => {
                     generateInputDialog("A test dialog box", "This is a test!", {
