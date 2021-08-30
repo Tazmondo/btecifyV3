@@ -712,10 +712,14 @@ main > *.hidden {
     height: 0;
 }
 
-.inputs {
+.inputs, form {
     display: flex;
     flex-direction: column;
     gap: 20px;
+}
+
+input[type=submit] {
+
 }
 
 #new-song-view label {

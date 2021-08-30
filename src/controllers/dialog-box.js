@@ -35,23 +35,32 @@ async function generateInputDialog(title, mainText, options) {
         let mainTextElement = backDiv.querySelector('h3')
         mainTextElement.textContent = mainText
 
-        let inputDiv = backDiv.querySelector('.inputs')
-        inputs.forEach(v => {
+        let form = backDiv.querySelector('form')
+        inputs.forEach((v, i) => {
             let label = document.createElement('label')
             label.textContent = v.label + ": "
-            inputDiv.insertAdjacentElement('beforeend', label)
+            form.insertAdjacentElement('afterbegin', label)
 
             let newInput = document.createElement('input')
             newInput.type = v.type
             label.insertAdjacentElement('beforeend', newInput)
+
+
+            if (i === 0) newInput.focus()
         })
 
         makeDraggable(titleElement, foreDiv)
 
-        let submitButton = backDiv.querySelector('button')
-        submitButton.addEventListener('click', e => {
-            resolve(Array.from(inputDiv.children).map(v => v.firstElementChild.value))
+        function submit() {
             backDiv.remove()
+            resolve(Array.from(form.elements)
+                .filter(v => v.type !== 'submit')
+                .map(v => v.value))
+        }
+
+        form.addEventListener('submit', e => {
+            submit()
+            e.preventDefault()
         })
 
         function cancel() {
