@@ -716,11 +716,12 @@ main > *.hidden {
 }
 
 .inputs, form {
-    flex: 1 1 100%;
+    flex: 1;
     display: flex;
     flex-direction: column;
     gap: 20px;
     justify-content: flex-start;
+    align-items: flex-end;
 }
 
 input[type=submit] {
@@ -741,11 +742,21 @@ input[type=submit]:active {
     filter: brightness(125%);
 }
 
+input[type=text] {
+    flex: 1;
+
+}
+
 #new-song-view label {
     display: flex;
     justify-content: flex-end;
     align-items: flex-start;
     gap: 1em;
+    width: 100%
+}
+
+label > input {
+    max-width: calc(100% - 12ch);
 }
 
 #new-song-view .playlist-list-select {
@@ -788,6 +799,8 @@ input[type=submit]:active {
     width: 256px;
     height: 256px;
     object-fit: cover;
+    border: 2px solid #414941;
+    box-sizing: content-box;
 }
 
 /* FOOTER PLAYER  */

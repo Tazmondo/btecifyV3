@@ -2,12 +2,10 @@ import {durationSecondsToMinutes, durationMinutesToSeconds} from "../util.js";
 import {RouteController, ObjectController, ClipboardController, EventController} from "../controller.js";
 
 function init() {
-    const {back} = RouteController
     const {subscribe, unSubscribe} = EventController
     const {makeSong, getPlaylistArray, getPlaylistFromTitle} = ObjectController
     const {getClipboardData} = ClipboardController
 
-    let newSong;
     let selectedPlaylists = []
     let dragging = false;
 
@@ -23,7 +21,7 @@ function init() {
     let playlistListElement = page.querySelector('.playlist-list-select')
 
     let thumbImg = page.querySelector('img')
-    let createButton = page.querySelector('button')
+    let createButton = page.querySelector('input[type=submit]')
 
     document.addEventListener('mousedown', (e) => dragging = true)
     document.addEventListener('mouseup', (e) => dragging = false)
