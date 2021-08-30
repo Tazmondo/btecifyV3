@@ -331,7 +331,13 @@ nav button.active::after {
 
 .dialog-foreground h1 {
     -webkit-app-region: none;
+    display: flex;
+    align-items: center;
+    padding: 0.1em;
+}
 
+.dialog-foreground h1 em {
+    flex: 1;
 }
 
 /* MAIN STYLING */
