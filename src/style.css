@@ -326,7 +326,7 @@ nav button.active::after {
     min-height: 200px;
     border-radius: 5px;
     border: 2px solid #818181;
-    background-color: #2c2c2c;
+    background-color: #1f1f1f;
 
     display: flex;
     flex-direction: column;
