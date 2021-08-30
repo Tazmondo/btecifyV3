@@ -44,6 +44,12 @@ export function Playlist(updatedCallback, title, songs=[], thumb="") {
             return title
         },
 
+        // Sets a new title. Must only be called from object controller so it can validate that no other playlists
+        // with the title exist.
+        setTitle(newTitle) {
+            title = newTitle
+        },
+
         // Returns a copy of the song array.
         getSongs() {
             return copyArray(songs)

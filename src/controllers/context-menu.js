@@ -77,6 +77,15 @@ function init() {
                 name: 'Rename Playlist',
                 type: 'button',
                 action: context => {
+                    let playlist = ObjectController.getPlaylistFromTitle(context.querySelector('h3').textContent)
+                    generateInputDialog("Rename", playlist.getTitle(), {
+                        inputs: [{type: 'text', label: 'New Title'}]
+                    }).then(res => {
+                        let newTitle = res[0]
+                        if (newTitle && typeof newTitle === "string" && newTitle !== playlist.getTitle()) {
+                            ObjectController.renamePlaylist(playlist, newTitle)
+                        }
+                    })
                     // rename playlist
                 }
             },

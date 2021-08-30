@@ -68,6 +68,10 @@ function initController(dispatch, save) {
         return playlistArray.map(v => {v.getTitle()}).includes(playlist.getTitle())
     }
 
+    function getPlaylistIndex(playlist) {
+        return playlistArray.findIndex(v => v === playlist)
+    }
+
     function doesSongExist(song) {
         return false // todo: song name searching and stuff to check for potential duplicates
     }
@@ -75,6 +79,7 @@ function initController(dispatch, save) {
     return {
         updatedSongCallback,
         updatedPlaylistCallback,
+
         makePlaylist(playlistArgs) {
             let newPlaylist = Playlist(...playlistArgs)
 
@@ -96,6 +101,13 @@ function initController(dispatch, save) {
             let result = playlist.removeSongWithSong(song)
             dispatch('playlist')
             return result
+        },
+
+        renamePlaylist(playlist, newName) {
+            if (!this.getPlaylistFromTitle(newName)) {
+                playlist.setTitle(newName)
+                dispatch('playlist')
+            }
         },
 
         makeSong(songArgs, playlists=[]) {
