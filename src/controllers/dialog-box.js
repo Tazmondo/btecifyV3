@@ -10,18 +10,17 @@ import {makeDraggable} from "../util.js";
  *         type: "text",
  *         label: string
  *     }],
- *     [type]: "default"|"error"
+ *     [type]: "input"|"confirm"
  * }}
- * @return {Promise<Array|false>} Returns an array of the user inputs, or false if they cancelled.
+ * @return {Promise<Array|boolean>} Returns an array of the user inputs, or false if they cancelled.
  */
 async function generateInputDialog(title, mainText, options) {
     return new Promise((resolve, reject) => {
-
         title = title ?? ""
         mainText = mainText ?? ""
 
         let inputs = options?.inputs ?? []
-        let type = options?.type ?? "default"
+        let type = options?.type ?? "input"
 
         let backDiv = document.getElementById('dialog-box-template')
             .content.firstElementChild.cloneNode(true)
@@ -36,26 +35,37 @@ async function generateInputDialog(title, mainText, options) {
         mainTextElement.textContent = mainText
 
         let form = backDiv.querySelector('form')
-        inputs.forEach((v, i) => {
-            let label = document.createElement('label')
-            label.textContent = v.label + ": "
-            form.insertAdjacentElement('afterbegin', label)
 
-            let newInput = document.createElement('input')
-            newInput.type = v.type
-            label.insertAdjacentElement('beforeend', newInput)
+        switch (type) {
+            case "input":
+                inputs.forEach((v, i) => {
+                    let label = document.createElement('label')
+                    label.textContent = v.label + ": "
+                    form.insertAdjacentElement('afterbegin', label)
+
+                    let newInput = document.createElement('input')
+                    newInput.type = v.type
+                    label.insertAdjacentElement('beforeend', newInput)
 
 
-            if (i === 0) newInput.focus()
-        })
+                    if (i === 0) newInput.focus()
+                })
+                break
+            case "confirm":
 
-        makeDraggable(titleElement, foreDiv)
+                break
+
+        }
 
         function submit() {
+            let inputs = Array.from(form.elements)
+                .filter(v => v.type !== 'submit');
             backDiv.remove()
-            resolve(Array.from(form.elements)
-                .filter(v => v.type !== 'submit')
-                .map(v => v.value))
+            if (inputs.length > 0) {
+                resolve(inputs.map(v => v.value))
+            } else {
+                resolve(true)
+            }
         }
 
         form.addEventListener('submit', e => {
@@ -76,6 +86,7 @@ async function generateInputDialog(title, mainText, options) {
                 cancel()
             }
         })
+        makeDraggable(titleElement, foreDiv)
     })
 
 }

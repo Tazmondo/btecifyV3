@@ -12,7 +12,8 @@ function init() {
                 type: 'button',
                 action: context => {
                     generateInputDialog("A test dialog box", "This is a test!", {
-                        inputs: [{type: 'text', label: 'test input'}]
+                        inputs: [{type: 'text', label: 'test input'}],
+                        type: 'confirm'
                     })
                 }
             }
