@@ -1,12 +1,13 @@
 import {pageEntry, pageExit} from "../util.js";
 
 console.log("homePage.js running...")
-import { EventController, ObjectController, MusicController } from '../controller.js'
+import { EventController, ObjectController, MusicController, RouteController } from '../controller.js'
 
 function initPage() {
     const {subscribe, unSubscribe} = EventController
     const {getPlaylistArray,getPlaylistFromTitle, getPlaylistsWithSong} = ObjectController
     const {setPlaylist, getInfo} = MusicController
+    const {baseRoute} = RouteController
 
     let page = document.getElementById('home-nav-page')
 
@@ -31,6 +32,10 @@ function initPage() {
                 let img = card.querySelector('.img-div');
                 img.style.backgroundImage = `url(${res})`
             }
+        })
+
+        card.addEventListener('dblclick', e => {
+            baseRoute('playlistView', [getPlaylistFromTitle(playlistName)])
         })
 
         card.querySelector('.svg-button').addEventListener('click', e=>{

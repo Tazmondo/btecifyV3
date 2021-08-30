@@ -73,7 +73,7 @@ function init() {
                     return [{context, actions: newItems}]
                 }
             },
-            { // todo
+            {
                 name: 'Rename Playlist',
                 type: 'button',
                 action: context => {
