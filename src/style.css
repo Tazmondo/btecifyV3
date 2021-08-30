@@ -734,8 +734,10 @@ input[type=submit] {
     padding: 2px 5px;
 }
 
-input[type=submit]:hover {
+input[type=submit]:hover, input:focus, input:focus-visible {
     box-shadow: 0 0 5px #056701;
+    border: 1px #308128 solid;
+    outline: none;
 }
 
 input[type=submit]:active {
@@ -744,7 +746,14 @@ input[type=submit]:active {
 
 input[type=text] {
     flex: 1;
+    color: #dedede;
+    background-color: #2d2d2d;
+    border: 1px solid #264926;
+}
 
+input[type=text][disabled] {
+    border: 1px outset #3a3a3a;
+    color: #a2a2a2;
 }
 
 #new-song-view label {
