@@ -46,6 +46,12 @@ function generateInputDialog(title, mainText, options) {
 
     makeDraggable(titleElement, foreDiv)
 
+    let closeButton = backDiv.querySelector('.dialog-box-close')
+
+    closeButton.addEventListener('click', e => {
+        backDiv.remove()
+    })
+
     backDiv.addEventListener('mousedown', e => {
         if (e.target === backDiv){
             backDiv.remove()
