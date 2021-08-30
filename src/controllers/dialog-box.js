@@ -20,29 +20,23 @@ function generateInputDialog(title, mainText, options) {
     let inputs = options?.inputs ?? []
     let type = options?.type ?? "default"
 
-    let backDiv = document.createElement('div')
-    backDiv.classList.toggle('dialog-background')
+    let backDiv = document.getElementById('dialog-box-template')
+        .content.firstElementChild.cloneNode(true)
     document.body.insertAdjacentElement('beforeend', backDiv)
 
-    let foreDiv = document.createElement('div')
-    foreDiv.classList.toggle('dialog-foreground')
-    backDiv.insertAdjacentElement('beforeend', foreDiv)
+    let foreDiv = backDiv.firstElementChild
 
-    let titleElement = document.createElement('h1')
+    let titleElement = backDiv.querySelector('em')
     titleElement.textContent = title
-    foreDiv.insertAdjacentElement('beforeend', titleElement)
 
-    let mainTextElement = document.createElement('h3')
+    let mainTextElement = backDiv.querySelector('h3')
     mainTextElement.textContent = mainText
-    foreDiv.insertAdjacentElement('beforeend', mainTextElement)
 
-    let inputDiv = document.createElement('div')
-    inputDiv.classList.toggle('inputs')
-    foreDiv.insertAdjacentElement('beforeend', inputDiv)
+    let inputDiv = backDiv.querySelector('.inputs')
 
     inputs.forEach(v => {
         let label = document.createElement('label')
-        label.textContent = v.label
+        label.textContent = v.label + ": "
         inputDiv.insertAdjacentElement('beforeend', label)
 
         let newInput = document.createElement('input')
