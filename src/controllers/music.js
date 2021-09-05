@@ -9,7 +9,7 @@ function MusicPlayer(dispatch, getRandomSong) {
     let currentPlaylist;
     
     let repeat = false;
-    let muted = localStorage.muted ?? false
+    let muted = localStorage.muted === "true" || false
     let settingSong = false;
 
     let player = new Audio()
