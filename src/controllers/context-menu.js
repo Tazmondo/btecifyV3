@@ -306,12 +306,14 @@ function init() {
 
         let target;
         while ((target = (target === undefined ? e.target : target.parentElement))) {         // Loop through all parents until reach html element
+            let actions = []
             for (let selector in contexts) {
                 if (target.matches(selector)) {
-                    let actions = contexts[selector]
-                    items.push({context: target, actions})
+                    actions = actions.concat(contexts[selector])
                 }
             }
+            console.log(actions);
+            if (actions.length > 0) items.push({context: target, actions})
         }
         if (items.length > 0) {
 
