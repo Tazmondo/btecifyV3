@@ -65,7 +65,8 @@ function initController(dispatch, save) {
     })()
 
     function doesPlaylistExist(playlist) {
-        return playlistArray.map(v => {v.getTitle()}).includes(playlist.getTitle())
+        let titleArray = playlistArray.map(v => v.getTitle());
+        return titleArray.includes(playlist.getTitle())
     }
 
     function getPlaylistIndex(playlist) {
@@ -80,8 +81,13 @@ function initController(dispatch, save) {
         updatedSongCallback,
         updatedPlaylistCallback,
 
+        /**
+         * Creates a playlist.
+         * @param playlistArgs {[]} [title, song[], thumbUrl]
+         * @return {false | Playlist} Returns false if a playlist with that name already exists, or the new playlist.
+         */
         makePlaylist(playlistArgs) {
-            let newPlaylist = Playlist(...playlistArgs)
+            let newPlaylist = Playlist(updatedPlaylistCallback, ...playlistArgs)
 
             if (!doesPlaylistExist(newPlaylist)) {
                 playlistArray.push(newPlaylist)

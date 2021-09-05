@@ -3,7 +3,7 @@ import {placeholderURL, copyArray, randomIndex, validSong} from "../../util.js";
 
 export function Playlist(updatedCallback, title, songs=[], thumb="") {
     let cachedThumb; // So that when using random thumbnail, it is consistent.
-
+    console.log(songs)
     songs = songs.filter(validSong)
 
     // Sorts song list in place by title.

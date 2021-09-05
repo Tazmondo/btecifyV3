@@ -18,12 +18,27 @@ function init() {
                 }
             }
         ],
-        '#home-nav-page': [ // todo
+        '#home-nav-page': [
             {
                 name: 'New Playlist',
                 type: 'button',
                 action: (context) => {
                     // Switch page to new playlist page, or bring up an input dialog box.
+                    generateInputDialog("New Playlist", "Please enter the name of the playlist", {
+                        type: "input",
+                        inputs: [
+                            {type: "text",
+                            label: "Playlist Name"}
+                        ]
+                    }).then(res => {
+                        let name = res[0]
+                        if (typeof name === "string" && name !== "") {
+                            let newPlaylist = ObjectController.makePlaylist([name])
+                            if (newPlaylist) {
+                                // RouteController.baseRoute('playlistView', [newPlaylist])
+                            }
+                        }
+                    })
                 }
             }
         ],
