@@ -109,8 +109,6 @@ body {
 }
 
 .header-container {
-    position: relative;
-
     display: flex;
     flex-direction: row;
 
@@ -131,12 +129,11 @@ h1 {
 
     transition: all 0.5s;
 
-    z-index: 3;
+
 }
 
 .audio-visualiser {
-    position: absolute;
-    width: 100%;
+    margin-left: 10px;
     height: 28.3px;
     flex: 1;
 }
