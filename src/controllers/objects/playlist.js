@@ -77,9 +77,9 @@ export function Playlist(updatedCallback, title, songs=[], thumb="") {
         async getThumb() {
             return thumb || cachedThumb || await (async () => {
                 if (this.getLength() > 0) {
-                    cachedThumb = await getEnabledSongs()[randomIndex(this.getLength())]?.getThumb() || placeholderURL
+                    cachedThumb = await getEnabledSongs()[randomIndex(this.getLength())]?.getThumb() || undefined
                     updatedCallback(false)
-                    return cachedThumb
+                    return cachedThumb || placeholderURL
                 } else {
                     return placeholderURL
                 }
