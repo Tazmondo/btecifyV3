@@ -123,14 +123,14 @@ function init() {
             }
         ],
 
-        '#playlist-nav-page .song-list-item, #playlist-view .song-list-item': [
+        '.song-list-item': [
             {
-                name: 'Remove from this playlist',
+                name: 'Play',
                 type: 'button',
                 action: (context) => {
-                    context.querySelector('.playlist-page-remove-from-playlist').dispatchEvent(new Event('click'))
+                    context.dispatchEvent(new Event('dblclick'))
                 }
-            },
+            }
         ],
 
         '#playlist-nav-page .song-list-item': [
@@ -146,14 +146,14 @@ function init() {
             }
         ],
 
-        '.song-list-item': [
+        '#playlist-nav-page .song-list-item, #playlist-view .song-list-item': [
             {
-                name: 'Play',
+                name: 'Remove from this playlist',
                 type: 'button',
                 action: (context) => {
-                    context.dispatchEvent(new Event('dblclick'))
+                    context.querySelector('.playlist-page-remove-from-playlist').dispatchEvent(new Event('click'))
                 }
-            }
+            },
         ],
 
         'img, .thumb, .img-div': [
@@ -312,7 +312,6 @@ function init() {
                     actions = actions.concat(contexts[selector])
                 }
             }
-            console.log(actions);
             if (actions.length > 0) items.push({context: target, actions})
         }
         if (items.length > 0) {
