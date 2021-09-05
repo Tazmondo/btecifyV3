@@ -1,5 +1,5 @@
 console.log("musicController.js running")
-
+import initVisualiser from './visualiser.js'
 
 function MusicPlayer(dispatch, getRandomSong) {
     let history = [];
@@ -14,10 +14,15 @@ function MusicPlayer(dispatch, getRandomSong) {
 
     let player = new Audio()
     player.autoplay = true
+    player.crossOrigin = 'anonymous'
+    player.load()
+    player.play()
 
     player.volume = muted ? 0 : (localStorage.volume || 0.1)
     let volMod = 2.5;
     let unModdedVol = player.volume ** (1/volMod)
+
+    initVisualiser(player)
 
     Object.assign(window, {player}) // for testing
 

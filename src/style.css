@@ -117,13 +117,14 @@ body {
     animation-duration: 15s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
+    -webkit-app-region: drag;
+
 }
 
 h1 {
     font-weight: 100;
     font-size: 1.5em;
     margin: 0;
-    -webkit-app-region: drag;
     padding-bottom: 0.3em;
 
     transition: all 0.5s;
@@ -132,6 +133,7 @@ h1 {
 }
 
 .audio-visualiser {
+    margin-left: 10px;
     height: 28.3px;
     flex: 1;
 }
