@@ -112,11 +112,13 @@ function init() {
                     // set new thumbnail
                 }
             },
-            { // todo
+            {
                 name: 'Delete Playlist',
                 type: 'button',
                 action: (context) => {
-                    // Delete the playlist
+                    let playlist = ObjectController.getPlaylistFromTitle(context.querySelector('h3').textContent)
+                    let res = ObjectController.deletePlaylist(playlist)
+                    console.log(playlist, res)
                 }
             }
         ],

@@ -116,6 +116,21 @@ function initController(dispatch, save) {
             }
         },
 
+        /**
+         * Deletes the given playlist.
+         * @param playlist {Playlist}
+         * @returns boolean
+         */
+        deletePlaylist(playlist) {
+            let index = getPlaylistIndex(playlist)
+            if (index) {
+                playlistArray.splice(index, 1)
+                dispatch('playlist')
+                return true
+            }
+            return false
+        },
+
         makeSong(songArgs, playlists=[]) {
             let newSong = Song(updatedSongCallback, ...songArgs)
             if (!doesSongExist(newSong)) {
