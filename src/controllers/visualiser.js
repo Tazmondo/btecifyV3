@@ -8,7 +8,7 @@ function init(audioElement) {
     src.connect(analyser)
     analyser.connect(context.destination)
 
-    analyser.fftSize = 512 // todo: add a setting to change this to reduce lag
+    analyser.fftSize = 256 // todo: any higher results in jankiness
 
     let bufferLength = analyser.frequencyBinCount
 
