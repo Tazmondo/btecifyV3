@@ -487,6 +487,11 @@ main > *.hidden {
     filter: drop-shadow(0 0 5px #090);
 }
 
+.playlist-card > div > svg:active {
+    fill: rgba(0, 255, 0, 0.7);
+    filter: drop-shadow(0 0 5px #000000);
+}
+
 
 /* PLAYLIST PAGE STYLING */
 
@@ -869,6 +874,11 @@ footer img {
     filter: drop-shadow(0 0 5px #fff);
 }
 
+.svg-button:active {
+    fill: rgba(255, 255, 255, 0.7);
+    filter: drop-shadow(0 0 5px #000000);
+}
+
 .svg-button.active {
     fill: rgba(0, 255, 0, 0.8);
 }
@@ -876,6 +886,11 @@ footer img {
 .svg-button.active:hover {
     fill: rgba(0, 255, 0, 1);
     filter: drop-shadow(0 0 5px #0f0);
+}
+
+.svg-button.active:active {
+    fill: rgba(0, 255, 0, 0.7);
+    filter: drop-shadow(0 0 5px #000000);
 }
 
 .player {
@@ -914,10 +929,6 @@ svg.main-button {
     margin-bottom: -6px;
 }
 
-.player-buttons svg:hover {
-    fill: rgba(255, 255, 255, 1);
-}
-
 svg.inactive {
     display: none;
 }
@@ -929,10 +940,13 @@ svg.inactive {
 }
 
 .player-buttons #play:hover, .player-buttons #pause:hover {
-    height: 36px;
-    width: 36px;
     fill: rgba(0, 255, 0, 1);
     filter: drop-shadow(0 0 5px #0f0);
+}
+
+.player-buttons #play:active, .player-buttons #pause:active {
+    fill: rgba(0, 255, 0, 0.7);
+    filter: drop-shadow(0 0 5px #000000);
 }
 
 .seeker {
