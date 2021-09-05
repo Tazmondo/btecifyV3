@@ -108,8 +108,18 @@ body {
     overflow: hidden;
 }
 
+.header-container {
+    display: flex;
+    flex-direction: row;
+
+    background-image: url("./assets/headerbg.png");
+    animation-name: header-animation;
+    animation-duration: 15s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
 h1 {
-    background-color: rgba(255, 255, 255, 0.125);
     font-weight: 100;
     font-size: 1.5em;
     margin: 0;
@@ -118,11 +128,12 @@ h1 {
 
     transition: all 0.5s;
 
-    background-image: url("./assets/headerbg.png");
-    animation-name: header-animation;
-    animation-duration: 15s;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
+
+}
+
+.audio-visualiser {
+    height: 28.3px;
+    flex: 1;
 }
 
 @keyframes header-animation {
