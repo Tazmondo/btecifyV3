@@ -34,7 +34,7 @@ function init(audioElement) {
             let preBarHeight = dataArray[i];
             if (preBarHeight > 0) {
                 let barHeight = ((preBarHeight / 256) ** 1) * 256 // for modulating the bar heights if necessary in future
-                let r = 250 * (i/bufferLength);
+                let r = 150 * (i/bufferLength);
                 let g = barHeight + (25 * (i/bufferLength));
                 let b = 50;
 
