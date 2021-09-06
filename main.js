@@ -25,7 +25,7 @@ function createWindow () {
         frame: false
     })
     // win.webContents.openDevTools()
-    ipcLoad(true, app.isPackaged, win.webContents)
+    ipcLoad(true, app.isPackaged, win)
     win.loadFile('src/index.html')
 
 }

@@ -6,7 +6,8 @@ const dbPath = './db'
 fs.promises.mkdir(dbPath).then(res => {console.log("Made db path")}).catch(e => {console.log("db path already exists")})
 const db = require('./db.js')(dbPath) // Initialise db in the database director
 
-function ipc(main, isPackaged, webContent) {
+function ipc(main, isPackaged, appWindow) {
+    let webContent = appWindow?.webContents
     for (let funcName in db) {
         if (!main) {
             return db
@@ -40,6 +41,10 @@ function ipc(main, isPackaged, webContent) {
                 // 21/08/21 - this might be fixed now?
                 webContent.send(hotkeyString)
             })
+        })
+
+        ipcMain.on('close', e => {
+            e.returnValue = appWindow.close()
         })
     }
 

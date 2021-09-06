@@ -20,6 +20,10 @@ let api = {
         ipcRenderer.on(eventString, callback)
     },
 
+    close: () => {
+        ipcRenderer.sendSync('close')
+    },
+
     unRegisterAllHotkeys() {
         ipcRenderer.send('unhotkey')
     },

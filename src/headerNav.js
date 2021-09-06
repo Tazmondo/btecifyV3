@@ -16,6 +16,11 @@ function initNav() {
         })
     })
 
+    let closeButton = document.querySelector('header .app-close')
+    closeButton.addEventListener('click', e => {
+        api.close()
+    })
+
     subscribe('currentpage', (routeName) => {
         let navFromName = getNavFromName(routeName);
         navButtons.forEach(button => button.classList.toggle('active', false))

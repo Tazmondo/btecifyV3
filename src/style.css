@@ -160,6 +160,10 @@ h1::before {
     top: 0.1em;
 }
 
+.app-close {
+    -webkit-app-region: none;
+}
+
 h2 {
     font-weight: 400;
 }
