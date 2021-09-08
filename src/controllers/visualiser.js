@@ -1,3 +1,7 @@
+// const mode = "left"
+const mode = "centre"
+// const mode = "symmetrical"
+
 function init(audioElement) {
     let context = new AudioContext()
     let src = context.createMediaElementSource(audioElement)
@@ -20,7 +24,15 @@ function init(audioElement) {
     let width = canvas.width
     let height = canvas.height
 
-    let barWidth = (width / bufferLength)
+    let barWidth;
+
+    if (mode === "symmetrical") {
+        barWidth = (width / bufferLength) * 0.5
+    } else if (mode === "left") {
+        barWidth = (width / bufferLength) * 1.5
+    } else if (mode === "centre") {
+        barWidth = (width / bufferLength) * 0.75
+    }
     let curBarPos = 0;
 
     function renderFrame() {
@@ -43,8 +55,22 @@ function init(audioElement) {
                 ctx.fillStyle = "rgb(0, 255, 0)";
                 ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
 
-                let xPos = centre + (curBarPos * (curBarPos % 2 === 0 ? -1 : 1) * barWidth/2)
-                ctx.fillRect(xPos, height - barHeight, barWidth, barHeight);
+                switch (mode){
+                    case "left":
+                        ctx.fillRect(curBarPos * barWidth - 1, height - barHeight, barWidth, barHeight);
+                        break
+                    case "centre":
+                        let xPos = centre + (curBarPos * (curBarPos % 2 === 0 ? -1 : 1) * barWidth / 2)
+                        ctx.fillRect(xPos, height - barHeight, barWidth, barHeight);
+                        break
+                    case "symmetrical":
+                        let frontPos = centre + curBarPos * barWidth
+                        let backPos = centre - curBarPos * barWidth
+                        ctx.fillRect(frontPos, height - barHeight, barWidth, barHeight);
+                        ctx.fillRect(backPos, height - barHeight, barWidth, barHeight);
+                        break
+                }
+
             }
             curBarPos += 1
         }
