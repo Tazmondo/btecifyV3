@@ -31,7 +31,9 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "ignore": "\\/db\\/|\\/db$"
+        "ignore": "\\/db\\/|\\/db$",
+        "icon": "./src/assets/btecify.ico",
+        "overwrite": true
       },
       "makers": [
         {
