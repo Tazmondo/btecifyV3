@@ -6,13 +6,13 @@ const { contextBridge, ipcRenderer } = require('electron')
 const Popper = require('@popperjs/core')
 
 let api = {
-    getUUID: () => {return uuidv4()},
+    getUUID() {return uuidv4()},
 
-    uuidIsValid: (uuid) => {return validate(uuid)},
+    uuidIsValid(uuid) {return validate(uuid)},
 
     isDev: ipcRenderer.sendSync('isDev'),
 
-    getInputData: () => {
+    getInputData() {
         return ipcRenderer.sendSync('getInputData')
     },
 
@@ -20,7 +20,7 @@ let api = {
         ipcRenderer.on(eventString, callback)
     },
 
-    close: () => {
+    close() {
         ipcRenderer.sendSync('close')
     },
 

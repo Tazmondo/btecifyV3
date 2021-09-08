@@ -27,7 +27,7 @@ function ipc(main, isPackaged, appWindow) {
         })
 
         ipcMain.on('isDev', (e) => {
-            e.returnValue = isPackaged
+            e.returnValue = !isPackaged
         })
 
         ipcMain.on('unhotkey', (e) => {
