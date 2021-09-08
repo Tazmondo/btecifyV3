@@ -11,8 +11,26 @@ function initPage() {
 
     let page = document.querySelector('#queue-view-template').content.firstElementChild.cloneNode(true)
     let main = document.querySelector('main');
+    let songList = page.querySelector('.song-list')
 
-    function drawPage(info, initial) {
+    let scroll = true
+    let scrollTimeout;
+
+    function resetScrollTimeout(e) {
+        if (scrollTimeout) clearTimeout(scrollTimeout)
+        console.log("resetting");
+        scroll = false
+        scrollTimeout = setTimeout(() => {
+            scroll = true
+            drawPage(getInfo(), true)
+        }, 15000)
+    }
+
+    songList.addEventListener('mousemove', resetScrollTimeout)
+    // songList.addEventListener('scroll', resetScrollTimeout)
+
+    function drawPage(info, forceScroll) {
+        console.log("cL ", forceScroll, scroll)
         let queue = info.queue
         let history = info.history
         let currentSong = info.currentSong
@@ -23,8 +41,6 @@ function initPage() {
         }
 
         let currentElement;
-
-        let songList = page.querySelector('.song-list')
 
         function addSong(song, playing, past) {
             let insertedElement = generateSongElement(song, undefined, undefined, undefined, undefined, playing, past, observed);
@@ -47,7 +63,7 @@ function initPage() {
 
         old.forEach(v => v.remove())
 
-        if (currentElement && initial) {
+        if (currentElement && (forceScroll || scroll)) {
             setTimeout(() => {
                 currentElement.scrollIntoView()
                 songList.scrollBy(0, -songList.clientHeight/2)
