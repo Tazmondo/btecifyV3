@@ -30,7 +30,9 @@
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "ignore": "\\/db\\/|\\/db$"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
