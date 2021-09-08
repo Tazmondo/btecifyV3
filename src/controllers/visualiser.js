@@ -20,7 +20,7 @@ function init(audioElement) {
     let width = canvas.width
     let height = canvas.height
 
-    let barWidth = (width / bufferLength) * 1.5
+    let barWidth = (width / bufferLength)
     let curBarPos = 0;
 
     function renderFrame() {
@@ -30,6 +30,8 @@ function init(audioElement) {
         analyser.getByteFrequencyData(dataArray)
 
         ctx.clearRect(0, 0, width, height)
+        let centre = width/2 - barWidth/2
+
         for (let i = 0; i < bufferLength; i++) {
             let preBarHeight = dataArray[i];
             if (preBarHeight > 0) {
@@ -40,9 +42,11 @@ function init(audioElement) {
 
                 ctx.fillStyle = "rgb(0, 255, 0)";
                 ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
-                ctx.fillRect(curBarPos, height - barHeight, barWidth, barHeight);
+
+                let xPos = centre + (curBarPos * (curBarPos % 2 === 0 ? -1 : 1) * barWidth/2)
+                ctx.fillRect(xPos, height - barHeight, barWidth, barHeight);
             }
-            curBarPos += barWidth - 1
+            curBarPos += 1
         }
     }
 
