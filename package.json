@@ -1,6 +1,6 @@
 {
   "name": "btecifyv3",
-  "version": "3.0.0",
+  "version": "0.0.1",
   "description": "3rd version of btecify using electron so that the user interface doesnt look like it was made 50 years ago on the first IBM computer",
   "main": "main.js",
   "scripts": {
