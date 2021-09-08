@@ -6,12 +6,9 @@ import {Playlist} from "./controllers/objects/playlist.js";
 import {Song} from './controllers/objects/song.js'
 import {copyArray, durationMinutesToSeconds} from "./util.js";
 
-const PLAYLISTSTORAGE = api.isDev ? "test-playlist" : "playlist"
-const SONGSTORAGE = api.isDev ? "test-song" : "song"
-
 function saveData() {
-    localStorage[PLAYLISTSTORAGE] = JSON.stringify(ObjectController.getPlaylistArray())
-    localStorage[SONGSTORAGE] = JSON.stringify(ObjectController.getAllSongs())
+    localStorage["playlist"] = JSON.stringify(ObjectController.getPlaylistArray())
+    localStorage["song"] = JSON.stringify(ObjectController.getAllSongs())
 }
 
 // CONTROLLER IMPORTS
@@ -136,8 +133,6 @@ function readInputData() {
     ObjectController.setData(newPlaylist, playlists)
     localStorage['song'] = JSON.stringify(ObjectController.getAllSongs())
     localStorage['playlist'] = JSON.stringify(ObjectController.getPlaylistArray())
-    localStorage['test-song'] = JSON.stringify(ObjectController.getAllSongs())
-    localStorage['test-playlist'] = JSON.stringify(ObjectController.getPlaylistArray())
     EventController.dispatch('playlist')
     EventController.dispatch('song')
 

@@ -3,15 +3,18 @@ const path = require('path')
 const fs = require('fs')
 let ipcLoad = require('./ipc.js')
 
-app.commandLine.appendSwitch('remote-debugging-port', '8315')
-
 // if (!app.isPackaged) {
 //     console.log("reload")
 //     require('electron-reload')(__dirname)
 // }
 
-function createWindow () {
+if (!app.isPackaged) {
+    app.setPath('userData', app.getPath('userData')+'-test')
+    console.log(app.getPath('userData'))
+    app.commandLine.appendSwitch('remote-debugging-port', '8315')
+}
 
+function createWindow () {
     const win = new BrowserWindow({
         width: 1200,
         height: 700,
@@ -31,7 +34,6 @@ function createWindow () {
 }
 
 app.whenReady().then(() => {
-
     createWindow()
 
     app.on('activate', function () {
