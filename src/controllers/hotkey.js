@@ -26,11 +26,11 @@ function init() {
     }
 
     function increaseVolume() {
-        MusicController.setVolume(MusicController.getInfo().volume + 0.04)
+        MusicController.setVolume(MusicController.getInfo().volume + 0.02)
     }
 
     function decreaseVolume() {
-        MusicController.setVolume(MusicController.getInfo().volume - 0.04)
+        MusicController.setVolume(MusicController.getInfo().volume - 0.02)
     }
 
     function registerHotkeys() {
