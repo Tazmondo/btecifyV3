@@ -1,4 +1,4 @@
-import {MusicController} from '../controller.js'
+import * as MusicController from './music.js'
 
 function init() {
     const globalHotkeys = {

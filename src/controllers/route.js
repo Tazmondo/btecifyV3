@@ -1,7 +1,6 @@
 import {pages, views} from '../pages/pages.js'
 import {copyArray, pageExit, pageEntry} from "../util.js";
 
-function InitRouteController(dispatch) {
     function Route(construct, name, view, args) {
         let deconstructFunc;
         let element;
@@ -85,7 +84,7 @@ function InitRouteController(dispatch) {
         route(func, pageName, true, args)
     }
 
-    function baseRoute(pageName, args) {
+    export function baseRoute(pageName, args) {
         if (pages[pageName]) {
             pageRoute(pageName, args)
         } else if (views[pageName]) {
@@ -93,7 +92,7 @@ function InitRouteController(dispatch) {
         }
     }
 
-    function back() {
+    export function back() {
         if (currentRoute.length > 1) {
             let topRoute = currentRoute.shift();
             topRoute.deconstruct()
@@ -103,18 +102,10 @@ function InitRouteController(dispatch) {
         }
     }
 
-    function routePageWithNavElement(navButton) {
+    export function routePageWithNavElement(navButton) {
         pageRoute(getPageIdFromNavName(navButton.id))
     }
 
-    return {
-        routePageWithNavElement,
-        baseRoute,
-        back,
-        getCurrentRouteName() {
-            return currentRoute[0]?.name
-        },
+    export function getCurrentRouteName() {
+        return currentRoute[0]?.name
     }
-}
-
-export default InitRouteController
