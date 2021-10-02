@@ -1,227 +1,219 @@
+
 console.log("musicController.js running")
 import initVisualiser from './visualiser.js'
+import {dispatch} from "./event.js";
+import {getRandomSong} from "./object.js";
 
-function MusicPlayer(dispatch, getRandomSong) {
-    let history = [];
-    let queue = [];
-    
-    let currentSong;
-    let currentPlaylist;
-    
-    let repeat = false;
-    let muted = localStorage.muted === "true" || false
-    let settingSong = false;
+let history = [];
+let queue = [];
 
-    let player = new Audio()
-    player.autoplay = true
-    player.crossOrigin = 'anonymous'
-    player.load()
-    player.play()
+let currentSong;
+let currentPlaylist;
 
-    player.volume = muted ? 0 : (localStorage.volume || 0.1)
-    let volMod = 2.5;
-    let unModdedVol = player.volume ** (1/volMod)
+let repeat = false;
+let muted = localStorage.muted === "true" || false
+let settingSong = false;
 
-    initVisualiser(player)
+let player = new Audio()
+player.autoplay = true
+player.crossOrigin = 'anonymous'
+player.load()
+player.play()
 
-    Object.assign(window, {player}) // for testing
+player.volume = muted ? 0 : (localStorage.volume || 0.1)
+let volMod = 2.5;
+let unModdedVol = player.volume ** (1 / volMod)
 
-    function play() {
-        player.autoplay = true
-        player.play()
-    }
+initVisualiser(player)
 
-    function pause() {
-        player.autoplay = false
-        player.pause()
-    }
+Object.assign(window, {player}) // for testing
 
-    async function setSong(song) {
-        if (!settingSong) {
-            console.log(`play ${song.getTitle()}`)
-            settingSong = true;
+async function setSong(song) {
+    if (!settingSong) {
+        console.log(`play ${song.getTitle()}`)
+        settingSong = true;
+        try {
+            const promisePlay = async (res) => {
+                return new Promise((resolve, reject) => {
+                    player.src = res
+                    player.onplaying = e => resolve(e)
+                    player.onerror = e => reject(e)
+                    play()
+                })
+            }
+
+            let res = await song.getSource()
             try {
-                const promisePlay = async (res) => {
-                    return new Promise((resolve, reject) =>  {
-                        player.src = res
-                        player.onplaying = e => resolve(e)
-                        player.onerror = e => reject(e)
-                        play()
-                    })
-                }
-
-                let res = await song.getSource()
-                try {
-                    await promisePlay(res)
-                } catch (e) {
-                    throw new Error("Failed to play song")
-                }
-                // Won't set currentsong if it fails to play.
-                currentSong = song
-
-                return true
+                await promisePlay(res)
             } catch (e) {
-                console.error("setSong() failed");
-                console.error(e.message);
-                throw e
-            } finally {
-                settingSong = false
+                throw new Error("Failed to play song")
             }
-        }
-        return false
-    }
+            // Won't set currentsong if it fails to play.
+            currentSong = song
 
-    function getInfo() {
-        return {
-            currentSong,
-            currentPlaylist,
-            history,
-            queue,
-            repeat,
-            muted,
-            volume: unModdedVol,
-            paused: player.paused || player.ended,
-            time: player.currentTime,
+            return true
+        } catch (e) {
+            console.error("setSong() failed");
+            console.error(e.message);
+            throw e
+        } finally {
+            settingSong = false
         }
     }
+    return false
+}
 
-    player.addEventListener('timeupdate', e=>{
-        dispatch('songtime')
-    })
+player.addEventListener('timeupdate', e => {
+    dispatch('songtime')
+})
 
-    function songEnded(depth = 0) {
-        if (depth > 10) {
-            console.trace()
-            throw new Error("songEnded recursion more than 10 times! has something gone wrong???")
-        }
-        if (!settingSong) {
-            if (currentPlaylist) {
-                while (queue.length < 50 && queue.length < Math.ceil(currentPlaylist.getLength()/2)) {
-                    let randomSong = currentPlaylist.getRandomFilteredSong(queue);
-                    if (randomSong) {
-                        queue.push(randomSong)
-                    } else {
-                        console.error("QUEUE FAILED!?!?!?!?")
-                        break
-                    }
+function songEnded(depth = 0) {
+    if (depth > 10) {
+        console.trace()
+        throw new Error("songEnded recursion more than 10 times! has something gone wrong???")
+    }
+    if (!settingSong) {
+        if (currentPlaylist) {
+            while (queue.length < 50 && queue.length < Math.ceil(currentPlaylist.getLength() / 2)) {
+                let randomSong = currentPlaylist.getRandomFilteredSong(queue);
+                if (randomSong) {
+                    queue.push(randomSong)
+                } else {
+                    console.error("QUEUE FAILED!?!?!?!?")
+                    break
                 }
             }
-            if (queue.length === 0 && currentPlaylist === undefined) queue.push(getRandomSong())
-            if (queue.length > 0) {
-                let nextSong = queue.shift();
-                if (currentSong) {
-                    history.push(currentSong)
-                }
-                setSong(nextSong).then(res => {
-                    if (!res) {
-                        songEnded(depth + 1)
-                    }
-                }).catch (e => {
+        }
+        if (queue.length === 0 && currentPlaylist === undefined) queue.push(getRandomSong())
+        if (queue.length > 0) {
+            let nextSong = queue.shift();
+            if (currentSong) {
+                history.push(currentSong)
+            }
+            setSong(nextSong).then(res => {
+                if (!res) {
                     songEnded(depth + 1)
-                }).finally(() => {
-                    dispatch('playing')
-                })
-            }
-        }
-    }
-
-    player.addEventListener('ended', e=>{
-        if (repeat) {
-            player.play()
-        } else {
-            songEnded()
-        }
-    })
-
-    function dispatchPlaying() {
-        dispatch('playing')
-    }
-
-    player.onplay = dispatchPlaying
-    player.onplaying = dispatchPlaying
-    player.onseeked = dispatchPlaying
-    player.onstalled = dispatchPlaying
-    player.onpause = dispatchPlaying
-
-
-    return {
-        getInfo,
-        pause,
-        play,
-
-        togglePlaying() {
-            if (player.paused) {
-                play()
-            } else {
-                pause()
-            }
-        },
-
-        forceSetSong(song) {
-            currentPlaylist = undefined
-            queue = []
-            queue.unshift(song)
-            songEnded()
-        },
-
-        setSongFromUrl(urlStream) {
-            currentSong = undefined
-            player.src = urlStream
-            play()
-        },
-
-        setPlaylist(playlist) {
-            currentPlaylist = playlist
-            queue = []
-            songEnded()
-            history = []
-            dispatch('playing')
-        },
-
-        getTime() {
-            return player.currentTime
-        },
-
-        setTime(seconds) {
-            player.play() // In case the song has ended and playback has stopped.
-            player.currentTime = seconds
-            return player.currentTime
-        },
-
-        setVolume(volume) {
-            if (volume < 0) volume = 0
-            if (volume > 1) volume = 1
-            unModdedVol = volume
-            if (!muted) player.volume = volume ** volMod
-            localStorage.volume = volume ** volMod
-            dispatch('playing')
-        },
-
-        forward() {
-            songEnded()
-        },
-
-        back() {
-            let nextSong = history.pop()
-            if (nextSong) {
-                queue.unshift(currentSong)
-                setSong(nextSong).finally(() => {
-                    dispatch('playing')
-                })
-            }
-        },
-        
-        setRepeat(bool) {
-            repeat = bool
-        },
-
-        toggleMute(force) {
-            muted = force ?? !muted
-            localStorage.muted = muted
-            muted ? player.volume = 0 : player.volume = unModdedVol ** volMod
-            dispatch('playing')
+                }
+            }).catch(e => {
+                songEnded(depth + 1)
+            }).finally(() => {
+                dispatch('playing')
+            })
         }
     }
 }
 
-export default MusicPlayer
+player.addEventListener('ended', e => {
+    if (repeat) {
+        player.play()
+    } else {
+        songEnded()
+    }
+})
+
+function dispatchPlaying() {
+    dispatch('playing')
+}
+
+player.onplay = dispatchPlaying
+player.onplaying = dispatchPlaying
+player.onseeked = dispatchPlaying
+player.onstalled = dispatchPlaying
+player.onpause = dispatchPlaying
+
+export function play() {
+    player.autoplay = true
+    player.play()
+}
+
+export function pause() {
+    player.autoplay = false
+    player.pause()
+}
+
+export function togglePlaying() {
+    if (player.paused) {
+        play()
+    } else {
+        pause()
+    }
+}
+
+export function getInfo() {
+    return {
+        currentSong,
+        currentPlaylist,
+        history,
+        queue,
+        repeat,
+        muted,
+        volume: unModdedVol,
+        paused: player.paused || player.ended,
+        time: player.currentTime,
+    }
+}
+
+export function forceSetSong(song) {
+    currentPlaylist = undefined
+    queue = []
+    queue.unshift(song)
+    songEnded()
+}
+
+export function setSongFromUrl(urlStream) {
+    currentSong = undefined
+    player.src = urlStream
+    play()
+}
+
+export function setPlaylist(playlist) {
+    currentPlaylist = playlist
+    queue = []
+    songEnded()
+    history = []
+    dispatch('playing')
+}
+
+export function getTime() {
+    return player.currentTime
+}
+
+export function setTime(seconds) {
+    player.play() // In case the song has ended and playback has stopped.
+    player.currentTime = seconds
+    return player.currentTime
+}
+
+export function setVolume(volume) {
+    if (volume < 0) volume = 0
+    if (volume > 1) volume = 1
+    unModdedVol = volume
+    if (!muted) player.volume = volume ** volMod
+    localStorage.volume = volume ** volMod
+    dispatch('playing')
+}
+
+export function forward() {
+    songEnded()
+}
+
+export function back() {
+    let nextSong = history.pop()
+    if (nextSong) {
+        queue.unshift(currentSong)
+        setSong(nextSong).finally(() => {
+            dispatch('playing')
+        })
+    }
+}
+
+export function setRepeat(bool) {
+    repeat = bool
+}
+
+export function toggleMute(force) {
+    muted = force ?? !muted
+    localStorage.muted = muted
+    muted ? player.volume = 0 : player.volume = unModdedVol ** volMod
+    dispatch('playing')
+}

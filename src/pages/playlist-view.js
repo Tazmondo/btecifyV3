@@ -1,4 +1,5 @@
-import {ObjectController, EventController, util} from "../controller.js";
+import  * as EventController from '../controllers/event.js'
+import * as util from '../impureUtil.js'
 
 function init(args) {
     if (args === undefined || args[0] === undefined) {

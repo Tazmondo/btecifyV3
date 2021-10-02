@@ -1,6 +1,8 @@
 console.log("footerPlayer.js running")
 import {durationSecondsToMinutes} from "./util.js";
-import {EventController, MusicController, RouteController} from "./controller.js";
+import  * as EventController from './controllers/event.js'
+import  * as MusicController from './controllers/music.js'
+import  * as RouteController from './controllers/route.js'
 
 function initPage() {
     const {subscribe} = EventController

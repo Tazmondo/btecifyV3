@@ -1,4 +1,6 @@
-import {MusicController, ObjectController, RouteController} from "../controller.js";
+import * as MusicController from './music.js'
+import * as ObjectController from './object.js'
+import * as RouteController from './route.js'
 import {generateInputDialog} from "./dialog-box.js";
 
 const contexts = {

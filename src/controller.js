@@ -5,39 +5,21 @@ console.log("controller.js running...")
 import {Playlist} from "./controllers/objects/playlist.js";
 import {Song} from './controllers/objects/song.js'
 import {copyArray, durationMinutesToSeconds} from "./util.js";
+import * as EventController from './controllers/event.js'
+import * as ObjectController from './controllers/object.js'
+import * as MusicController from './controllers/music.js'
+import * as RouteController from './controllers/route.js'
+import * as ClipboardController from './controllers/clipboard.js'
 
-function saveData() {
+export function saveData() {
     localStorage["playlist"] = JSON.stringify(ObjectController.getPlaylistArray())
     localStorage["song"] = JSON.stringify(ObjectController.getAllSongs())
 }
 
 // CONTROLLER IMPORTS
 
-import InitEventController from './controllers/event.js'
-const EventController = InitEventController()
 
-import InitObjectController from './controllers/object.js'
-const ObjectController = InitObjectController(EventController.dispatch, saveData)
-
-import InitMusicController from './controllers/music.js'
-const MusicController = InitMusicController(EventController.dispatch, ObjectController.getRandomSong)
-
-import InitRouteController from './controllers/route.js'
-const RouteController = InitRouteController(EventController.dispatch)
-
-import Initutil from './impureUtil.js'
-const util = Initutil()
-
-import InitClipboardController from './controllers/clipboard.js'
-const ClipboardController = InitClipboardController(EventController.dispatch)
-
-export {EventController, ObjectController, MusicController, RouteController, util, ClipboardController}
-
-import InitHotkeyController from './controllers/hotkey.js'
-const HotkeyController = InitHotkeyController(EventController.dispatch)
-
-import InitContextMenuController from './controllers/context-menu.js'
-const ContextMenuController = InitContextMenuController()
+import './controllers/context-menu.js'
 
 // PAGE IMPORTS
 
