@@ -41,6 +41,8 @@ function dispatch(eventName) {
     return true
 }
 
+window.dispatch = dispatch // For testing
+
 function subscribe(event, callback) {
     if (invalidEvent(event)) {
         return false
