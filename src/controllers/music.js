@@ -28,16 +28,6 @@ initVisualiser(player)
 
 Object.assign(window, {player}) // for testing
 
-function play() {
-    player.autoplay = true
-    player.play()
-}
-
-function pause() {
-    player.autoplay = false
-    player.pause()
-}
-
 async function setSong(song) {
     if (!settingSong) {
         console.log(`play ${song.getTitle()}`)
@@ -71,20 +61,6 @@ async function setSong(song) {
         }
     }
     return false
-}
-
-export function getInfo() {
-    return {
-        currentSong,
-        currentPlaylist,
-        history,
-        queue,
-        repeat,
-        muted,
-        volume: unModdedVol,
-        paused: player.paused || player.ended,
-        time: player.currentTime,
-    }
 }
 
 player.addEventListener('timeupdate', e => {
@@ -145,11 +121,35 @@ player.onseeked = dispatchPlaying
 player.onstalled = dispatchPlaying
 player.onpause = dispatchPlaying
 
+export function play() {
+    player.autoplay = true
+    player.play()
+}
+
+export function pause() {
+    player.autoplay = false
+    player.pause()
+}
+
 export function togglePlaying() {
     if (player.paused) {
         play()
     } else {
         pause()
+    }
+}
+
+export function getInfo() {
+    return {
+        currentSong,
+        currentPlaylist,
+        history,
+        queue,
+        repeat,
+        muted,
+        volume: unModdedVol,
+        paused: player.paused || player.ended,
+        time: player.currentTime,
     }
 }
 
@@ -160,13 +160,13 @@ export function forceSetSong(song) {
     songEnded()
 }
 
-function setSongFromUrl(urlStream) {
+export function setSongFromUrl(urlStream) {
     currentSong = undefined
     player.src = urlStream
     play()
 }
 
-function setPlaylist(playlist) {
+export function setPlaylist(playlist) {
     currentPlaylist = playlist
     queue = []
     songEnded()
@@ -174,11 +174,11 @@ function setPlaylist(playlist) {
     dispatch('playing')
 }
 
-function getTime() {
+export function getTime() {
     return player.currentTime
 }
 
-function setTime(seconds) {
+export function setTime(seconds) {
     player.play() // In case the song has ended and playback has stopped.
     player.currentTime = seconds
     return player.currentTime

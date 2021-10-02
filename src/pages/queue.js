@@ -1,5 +1,8 @@
 import {copyArray, pageEntry, pageExit} from "../util.js";
-import {EventController, MusicController, RouteController, util} from "../controller.js";
+import  * as EventController from '../controllers/event.js'
+import  * as MusicController from '../controllers/music.js'
+import  * as RouteController from '../controllers/route.js'
+import * as util from '../impureUtil.js'
 
 function initPage() {
     const {subscribe, unSubscribe} = EventController

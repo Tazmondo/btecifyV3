@@ -1,5 +1,7 @@
 import {durationSecondsToMinutes, durationMinutesToSeconds} from "../util.js";
-import {RouteController, ObjectController, ClipboardController, EventController} from "../controller.js";
+import  * as EventController from '../controllers/event.js'
+import  * as ObjectController from '../controllers/object.js'
+import * as ClipboardController from '../controllers/clipboard.js'
 
 function init() {
     const {subscribe, unSubscribe} = EventController

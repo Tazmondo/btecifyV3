@@ -1,7 +1,10 @@
 import {pageEntry, pageExit} from "../util.js";
 
 console.log("homePage.js running...")
-import { EventController, ObjectController, MusicController, RouteController } from '../controller.js'
+import  * as EventController from '../controllers/event.js'
+import  * as ObjectController from '../controllers/object.js'
+import  * as MusicController from '../controllers/music.js'
+import  * as RouteController from '../controllers/route.js'
 
 function initPage() {
     const {subscribe, unSubscribe} = EventController

@@ -1,4 +1,5 @@
-import {RouteController, EventController} from "./controller.js";
+import  * as EventController from './controllers/event.js'
+import  * as RouteController from './controllers/route.js'
 
 function initNav() {
     const {routePageWithNavElement} = RouteController

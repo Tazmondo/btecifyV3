@@ -2,20 +2,21 @@ import {Playlist} from "./objects/playlist.js";
 import {Song} from './objects/song.js'
 import {copyArray, randomIndex} from "../util.js";
 import {dispatch} from "./event.js";
+import {saveData} from "../controller.js";
 
 function updatedSongCallback(redraw) {
     if (redraw) {
         dispatch('song')
         dispatch('playlist')
     }
-    save()
+    saveData()
 }
 
 function updatedPlaylistCallback(redraw) {
     if (redraw) {
         dispatch('playlist')
     }
-    save()
+    saveData()
 }
 
 let parsers = {
@@ -81,7 +82,7 @@ function doesSongExist(song) {
  * @param playlistArgs {[]} [title, song[], thumbUrl]
  * @return {false | Playlist} Returns false if a playlist with that name already exists, or the new playlist.
  */
-function makePlaylist(playlistArgs) {
+export function makePlaylist(playlistArgs) {
     let newPlaylist = Playlist(updatedPlaylistCallback, ...playlistArgs)
 
     if (!doesPlaylistExist(newPlaylist)) {
@@ -104,7 +105,7 @@ export function removeFromPlaylist(playlist, song) {
     return result
 }
 
-function renamePlaylist(playlist, newName) {
+export function renamePlaylist(playlist, newName) {
     if (!getPlaylistFromTitle(newName)) {
         playlist.setTitle(newName)
         dispatch('playlist')
@@ -116,7 +117,7 @@ function renamePlaylist(playlist, newName) {
  * @param playlist {Playlist}
  * @returns boolean
  */
-function deletePlaylist(playlist) {
+export function deletePlaylist(playlist) {
     let index = getPlaylistIndex(playlist)
     if (index) {
         playlistArray.splice(index, 1)
@@ -126,7 +127,7 @@ function deletePlaylist(playlist) {
     return false
 }
 
-function makeSong(songArgs, playlists=[]) {
+export function makeSong(songArgs, playlists=[]) {
     let newSong = Song(updatedSongCallback, ...songArgs)
     if (!doesSongExist(newSong)) {
         allSongPlaylist.addSong(newSong)
@@ -139,21 +140,21 @@ function makeSong(songArgs, playlists=[]) {
 }
 
 // Returns a sorted array of playlists.
-function getPlaylistArray() {
+export function getPlaylistArray() {
     return copyArray(playlistArray).sort((a, b) => {
         return b.getLength() - a.getLength()
     })
 }
 
-function getPlaylistFromTitle(title) {
+export function getPlaylistFromTitle(title) {
     return playlistArray.find(v => {return v.getTitle() === title})
 }
 
-function getPlaylistsWithSong(song) {
+export function getPlaylistsWithSong(song) {
     return playlistArray.filter(playlist => playlist.doesContainSong(song))
 }
 
-function getAllSongs() {
+export function getAllSongs() {
     return allSongPlaylist
 }
 
@@ -161,7 +162,7 @@ export function getRandomSong() {
     return allSongPlaylist.getSongs()[randomIndex(allSongPlaylist.getLength())]
 }
 
-function setData(songPlaylist, iPlaylistArray) {
+export function setData(songPlaylist, iPlaylistArray) {
     allSongPlaylist = songPlaylist
     playlistArray = iPlaylistArray
 }
