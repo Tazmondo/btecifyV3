@@ -1,5 +1,5 @@
 const validExtractors = ['youtube']
-const clipboardPollInterval = 1000
+const clipboardPollInterval = 250
 
 function init(dispatch) {
     let prevClip = ""
