@@ -1,6 +1,7 @@
 import  * as EventController from '../controllers/event.js'
 import  * as ObjectController from '../controllers/object.js'
 import * as util from '../impureUtil.js'
+import {generateList} from "../components/song-list.js";
 
 function init() {
     const {subscribe} = EventController
@@ -8,27 +9,12 @@ function init() {
     const {generateSongElement} = util
 
     let page = document.querySelector('#song-nav-page')
+    let songList = page.querySelector('.song-list')
+    let draw = generateList(songList, getAllSongs())
 
-    function undrawPage() {
-        let songList = page.querySelector('.song-list')
-        Array.from(songList.children).forEach(v => v.remove())
+    draw()
 
-    }
-
-    function drawPage(songPlaylist) {
-        if (songPlaylist) {
-            undrawPage()
-            let songList = page.querySelector('.song-list')
-
-            let songArray = songPlaylist.getSongs()
-
-            songArray.forEach(song => songList.insertAdjacentElement('beforeend', generateSongElement(song)))
-
-        }
-    }
-
-    drawPage(getAllSongs())
-    subscribe('song', drawPage)
+    subscribe('song', draw)
 
     return [function unInitPage() {
     }, page]
