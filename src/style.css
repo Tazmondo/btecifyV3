@@ -126,26 +126,11 @@ h1 {
     font-size: 1.5em;
     margin: 0;
     padding-bottom: 0.3em;
+    flex-grow: 1;
 
     transition: all 0.5s;
 
 
-}
-
-.audio-visualiser {
-    margin-left: 10px;
-    height: 28.3px;
-    flex: 1;
-}
-
-@keyframes header-animation {
-    from {
-        background-position-x: 0;
-    }
-
-    to {
-        background-position-x: 2000px;
-    }
 }
 
 h1::before {
@@ -158,6 +143,22 @@ h1::before {
     content: "";
     position: relative;
     top: 0.1em;
+}
+
+.audio-visualiser {
+    margin-left: 10px;
+    height: 28.3px;
+    flex: 10000;
+}
+
+@keyframes header-animation {
+    from {
+        background-position-x: 0;
+    }
+
+    to {
+        background-position-x: 2000px;
+    }
 }
 
 .app-close {
