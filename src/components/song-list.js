@@ -1,7 +1,7 @@
 import {subscribe, unSubscribe} from '../controllers/event.js'
 import SongElement from './song-element.js'
 import {getInfo} from '../controllers/music.js'
-import {isSongInSongArray} from '../util.js'
+import {copyArray, isSongInSongArray} from '../util.js'
 
 /**
  * @typedef {string} listType
@@ -139,6 +139,66 @@ function generateSongList(type, element, playlist, otherPlaylist, isRightSide) {
                 // } else {
                 //     songList.scrollTop = 0
                 // }
+            }
+        }
+    } else if (type === listType.QUEUE) {
+        let scroll = true
+        let scrollTimeout;
+        let currentElement;
+
+        function scrollToCurElement() {
+        if (currentElement) {
+            currentElement.scrollIntoView()
+            element.scrollBy(0, -element.clientHeight/2)
+        }
+    }
+
+        function resetScrollTimeout(e) {
+            if (scrollTimeout) clearTimeout(scrollTimeout)
+            console.log("resetting");
+            scroll = false
+            scrollTimeout = setTimeout(() => {
+                scroll = true
+                scrollToCurElement()
+            }, 15000)
+        }
+
+        element.addEventListener('mousemove', resetScrollTimeout)
+
+        function addSong(song, playing, past) {
+            let insertedElement = SongElement(song, undefined, undefined, undefined, undefined, playing, past, observed);
+            element.insertAdjacentElement('beforeend', insertedElement)
+            if (playing) {
+                currentElement = insertedElement
+            }
+        }
+
+        draw = () => {
+            let info = getSongs()
+            let queue = info.queue
+            let history = info.history
+            let currentSong = info.currentSong
+
+            let currentArray = []
+            if (currentSong) {
+                currentArray = [currentSong]
+            }
+
+            let temp = copyArray(observed)
+            let old = Array.from(element.childNodes)
+            observed = temp
+
+            history.forEach(song => addSong(song, false, true))
+            currentArray.forEach(song => addSong(song, true, false))
+            queue.forEach(song => addSong(song, false, false))
+
+            old.forEach(v => v.remove())
+
+            console.log(scroll)
+            if (currentElement && scroll) {
+                setTimeout(() => {
+                    scrollToCurElement()
+                }, 50)
             }
         }
     }

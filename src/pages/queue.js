@@ -3,6 +3,8 @@ import  * as EventController from '../controllers/event.js'
 import  * as MusicController from '../controllers/music.js'
 import  * as RouteController from '../controllers/route.js'
 import * as util from '../impureUtil.js'
+import {generateQueue} from "../components/song-list.js";
+import {play} from "../controllers/music.js";
 
 function initPage() {
     const {subscribe, unSubscribe} = EventController
@@ -15,67 +17,13 @@ function initPage() {
     let page = document.querySelector('#queue-view-template').content.firstElementChild.cloneNode(true)
     let main = document.querySelector('main');
     let songList = page.querySelector('.song-list')
+    let playlist = generateQueue(songList)
 
-    let scroll = true
-    let scrollTimeout;
-
-    function resetScrollTimeout(e) {
-        if (scrollTimeout) clearTimeout(scrollTimeout)
-        console.log("resetting");
-        scroll = false
-        scrollTimeout = setTimeout(() => {
-            scroll = true
-            drawPage(getInfo(), true)
-        }, 15000)
+    function drawPage() {
+        playlist.draw()
     }
 
-    songList.addEventListener('mousemove', resetScrollTimeout)
-    // songList.addEventListener('scroll', resetScrollTimeout)
-
-    function drawPage(info, forceScroll) {
-        console.log("cL ", forceScroll, scroll)
-        let queue = info.queue
-        let history = info.history
-        let currentSong = info.currentSong
-
-        let currentArray = []
-        if (currentSong) {
-            currentArray = [currentSong]
-        }
-
-        let currentElement;
-
-        function addSong(song, playing, past) {
-            let insertedElement = generateSongElement(song, undefined, undefined, undefined, undefined, playing, past, observed);
-            songList.insertAdjacentElement('beforeend', insertedElement)
-            if (playing) {
-                currentElement = insertedElement
-            }
-        }
-
-
-        // When they are removed, the intersection observer detects it and they become unobserved.
-        // So this code avoids this.
-        let temp = copyArray(observed)
-        let old = Array.from(songList.childNodes)
-        observed = temp
-
-        history.forEach(song => addSong(song, false, true))
-        currentArray.forEach(song => addSong(song, true, false))
-        queue.forEach(song => addSong(song, false, false))
-
-        old.forEach(v => v.remove())
-
-        if (currentElement && (forceScroll || scroll)) {
-            setTimeout(() => {
-                currentElement.scrollIntoView()
-                songList.scrollBy(0, -songList.clientHeight/2)
-            }, 50)
-        }
-
-    }
-
-    drawPage(getInfo(), true)
+    drawPage()
 
     subscribe('playing', drawPage)
     return [function unInitPage() {
