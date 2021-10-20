@@ -2,6 +2,7 @@ import  * as EventController from '../controllers/event.js'
 import  * as ObjectController from '../controllers/object.js'
 import * as util from '../impureUtil.js'
 import {generateList} from "../components/song-list.js";
+import {unSubscribe} from "../controllers/event.js";
 
 function init() {
     const {subscribe} = EventController
@@ -10,13 +11,14 @@ function init() {
 
     let page = document.querySelector('#song-nav-page')
     let songList = page.querySelector('.song-list')
-    let draw = generateList(songList, getAllSongs())
+    let playlist = generateList(songList, getAllSongs())
 
-    draw()
+    playlist.draw()
 
-    subscribe('song', draw)
+    subscribe('song', playlist.draw)
 
     return [function unInitPage() {
+        unSubscribe('song', playlist.draw)
     }, page]
 }
 

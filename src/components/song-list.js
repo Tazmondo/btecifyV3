@@ -1,5 +1,5 @@
 import {subscribe, unSubscribe} from '../controllers/event.js'
-import {SongElement} from './song-element.js'
+import SongElement from './song-element.js'
 import {getInfo} from '../controllers/music.js'
 import {isSongInSongArray} from '../util.js'
 
@@ -57,20 +57,18 @@ const listType = {
  * Take an element and turn it into a songlist
  * @param type {listType}
  * @param element {HTMLElement|Node} Must have class song-list
- * @param songs {Song[]}
- * @param playlist {Playlist}
+ * @param songs {Song[]?}
+ * @param playlist {Playlist?}
  * @param otherPlaylist {Playlist?}
- * @param isRightSide {boolean}
- * @param isPlayingSong {boolean}
- * @param isHistorySong {boolean}
+ * @param isRightSide {boolean?}
  * @returns {Object} A playlist object
  */
-function generateSongList(type, element, songs, playlist, otherPlaylist, isRightSide) {
-    observed = []
+function generateSongList(type, element, playlist, otherPlaylist, isRightSide) {
+    let observed = []
     function getSongs() {
         switch (type) {
             case listType.NORMAL:
-                return songs
+                return playlist.getSongs()
             case listType.PLAYLIST:
                 return playlist.getSongs()
             case listType.COMPARE:
@@ -88,7 +86,7 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
 
     let draw;
 
-    if (type == listType.NORMAL) {
+    if (type === listType.NORMAL) {
         draw = () => {
             clearSongs()
             getSongs().forEach(song => {
@@ -96,7 +94,7 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
                 element.insertAdjacentElement('beforeend', newElement)
             })
         }
-    } else if(type == listType.PLAYLIST) {
+    } else if(type === listType.PLAYLIST) {
         draw = () => {
             clearSongs()
             getSongs().forEach(song => {
@@ -104,28 +102,58 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
                     SongElement(song, playlist))
             })
         }
-    } else if (type == listType.COMPARE) {
+    } else if (type === listType.COMPARE) {
         draw = () => {
-            let superSongs = []
-            if (otherPlaylist !== undefined) {
-                superSongs = playlist.getSuperSongs(otherPlaylist.getSongs())
-            }
-
             clearSongs()
-            getSongs().forEach(song => {
-                let superSong = isSongInSongArray(superSongs, song)
-                let newElement = generateSongElement(song, selectedPlaylist, superSong, otherPlaylist, isRightSide, undefined, undefined, observed)
-
-                if (superSong) {
-                    let superItems = // todo: finish me
+            if (playlist) {
+                let superSongs = []
+                if (otherPlaylist !== undefined) {
+                    superSongs = playlist.getSuperSongs(otherPlaylist.getSongs())
                 }
-            })
+
+                getSongs().forEach(song => {
+                    let superSong = isSongInSongArray(superSongs, song)
+                    let newElement = SongElement(song, playlist, superSong, otherPlaylist, isRightSide, undefined, undefined, observed)
+
+                    if (superSong) {
+                        let superItems = Array.from(element.querySelectorAll('.song-list-item-container.super'))
+                        if (superItems.length > 0) {
+                            superItems.pop().insertAdjacentElement('afterend', newElement)
+
+                        } else {
+                            element.insertAdjacentElement('afterbegin', newElement)
+                        }
+
+                    } else {
+                        element.insertAdjacentElement('beforeend', newElement)
+                    }
+                })
+
+                // if (selected[index] === selectedPlaylistTitle) {
+                //     setTimeout(() => {
+                //         songList.scrollTop = scroll[index]
+                //     }, 350)
+                // } else {
+                //     songList.scrollTop = 0
+                // }
+            }
         }
+    }
+
+    function setPlaylist(iPlaylist) {
+        playlist = iPlaylist
+        draw()
+    }
+
+    function setOtherPlaylist(iPlaylist) {
+        otherPlaylist = iPlaylist
+        draw()
     }
 
     return {
         draw,
-
+        setPlaylist,
+        setOtherPlaylist
     }
 }
 

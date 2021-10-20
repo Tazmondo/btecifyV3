@@ -2,6 +2,7 @@ import  * as EventController from '../controllers/event.js'
 import  * as ObjectController from '../controllers/object.js'
 import  * as MusicController from '../controllers/music.js'
 import * as util from '../impureUtil.js'
+import {generateCompare} from "../components/song-list.js";
 
 let scroll = [0, 0]
 let selected = ["", ""]
@@ -21,6 +22,14 @@ function initPage(args) {
     } = ObjectController
     const {forceSetSong} = MusicController
     const {generateSongElement} = util
+
+    let playlistSections = document.querySelectorAll('.playlist-section')
+    let selectedPlaylists = Array.from(playlistSections).map((section, index) => {
+        return getPlaylistFromTitle(selected[index])
+    })
+    let playlistObjects = Array.from(playlistSections).map((section, index) => {
+        return generateCompare(section.querySelector('.song-list'), undefined, selectedPlaylists[index], selectedPlaylists[1-index], index === 1)
+    })
 
     let observed = []
 
@@ -81,15 +90,18 @@ function initPage(args) {
             scroll[1] = newScroll2
         }
 
-        page.querySelectorAll('.select-dropdown *, .song-list *').forEach(v => {
+        page.querySelectorAll('.select-dropdown *').forEach(v => {
             v.remove()
         })
 
         let playlists = getPlaylistArray()
 
-        let playlistSections = document.querySelectorAll('.playlist-section')
         let selectedPlaylists = Array.from(playlistSections).map((section, index) => {
             return getPlaylistFromTitle(selected[index])
+        })
+        playlistObjects.forEach((v,i) => {
+            v.setPlaylist(selectedPlaylists[i])
+            v.setOtherPlaylist(selectedPlaylists[1-i])
         })
 
         playlistSections.forEach((section, index) => {
@@ -122,59 +134,8 @@ function initPage(args) {
                 }
                 dropdown.insertAdjacentElement('beforeend', newElement)
             })
-
-            if (selectedPlaylist !== undefined) {
-                let songList = section.querySelector('.song-list')
-
-                let superSongs = []
-
-                if (otherPlaylist !== undefined) {
-                    superSongs = selectedPlaylist.getSuperSongs(otherPlaylist.getSongs())
-                }
-
-                let songs = selectedPlaylist.getSongs()
-
-                songs.forEach(song => {
-                    let superSong = false
-                    if (isSongInSongArray(superSongs, song)) {
-                        superSong = true
-                    }
-                    let newElement = generateSongElement(song, selectedPlaylist, superSong, otherPlaylist,
-                        section.id==="playlist-section-2", undefined, undefined, observed)
-                    if(superSong) {
-                        let superItems = Array.from(section.querySelectorAll('.song-list-item-container.super'))
-                        if (superItems.length > 0) {
-                            superItems.pop().insertAdjacentElement('afterend', newElement)
-
-                        } else {
-                            songList.insertAdjacentElement('afterbegin', newElement)
-                        }
-
-                    } else {
-                        songList.insertAdjacentElement('beforeend', newElement)
-                    }
-
-                })
-
-                if (selected[index] === selectedPlaylistTitle) {
-                    // let interval = setInterval(() => {
-                    //     songList.scrollTop = scroll[index]
-                    //     if (songList.scrollTop === scroll[index] || songList.scrollTop >= songList.scrollHeight - songList.clientHeight) {
-                    //         console.log("scrolled", songList.scrollHeight, songList.clientHeight);
-                    //         clearInterval(interval)
-                    //     } else{
-                    //         console.log(songList.scrollHeight, songList.clientHeight);
-                    //     }
-                    // }, 1)
-
-                    setTimeout(() => {
-                        songList.scrollTop = scroll[index]
-                        }, 350)
-                } else {
-                    songList.scrollTop = 0
-                }
-            }
         })
+        playlistObjects.forEach(v => v.draw())
     }
 
     let page = document.getElementById('playlist-nav-page')
