@@ -65,6 +65,8 @@ const listType = {
  */
 function generateSongList(type, element, playlist, otherPlaylist, isRightSide) {
     let observed = []
+    let drawQueued = false
+
     function getSongs() {
         switch (type) {
             case listType.NORMAL:
@@ -104,6 +106,7 @@ function generateSongList(type, element, playlist, otherPlaylist, isRightSide) {
         }
     } else if (type === listType.COMPARE) {
         draw = () => {
+            console.trace("drawing")
             clearSongs()
             if (playlist) {
                 let superSongs = []
@@ -150,10 +153,23 @@ function generateSongList(type, element, playlist, otherPlaylist, isRightSide) {
         draw()
     }
 
+    function frame() {
+        if (drawQueued) {
+            draw()
+            drawQueued = false
+        }
+        requestAnimationFrame(frame)
+    }
+
+    requestAnimationFrame(frame)
+
     return {
-        draw,
+        draw() {
+            drawQueued = true
+    },
         setPlaylist,
-        setOtherPlaylist
+        setOtherPlaylist,
+        element
     }
 }
 

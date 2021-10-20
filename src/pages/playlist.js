@@ -81,13 +81,11 @@ function initPage(args) {
         return songArray.some(v => {return v.getUUID() === song.getUUID()})
     }
     function drawPage() {
-        let newScroll1 = document.querySelector('#playlist-section-1 .song-list')?.scrollTop
-        let newScroll2 = document.querySelector('#playlist-section-2 .song-list')?.scrollTop
-        if (newScroll1) {
-            scroll[0] = newScroll1
-        }
-        if (newScroll2) {
-            scroll[1] = newScroll2
+        if (playlistObjects[0].element.scrollTop === 0) {
+            setTimeout(() => {
+                playlistObjects[0].element.scrollTop = scroll[0]
+                playlistObjects[1].element.scrollTop = scroll[1]
+            }, 350)
         }
 
         page.querySelectorAll('.select-dropdown *').forEach(v => {
