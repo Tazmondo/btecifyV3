@@ -12,13 +12,19 @@ function init(args) {
     let page = document.querySelector('#playlist-view-template').content.firstElementChild.cloneNode(true)
 
     let header = page.querySelector('h2')
-    let songList = page.querySelector('.song-list')
-    let drawSongList = generateList(songList, playlist)
+    let songListElement = page.querySelector('.song-list')
+    let songList = generateList(songListElement)
 
     header.textContent = playlist.getTitle()
 
     function drawPage() {
-        drawSongList()
+        // Array.from(songList.childNodes).forEach(node => node.remove())
+
+        // let songs = playlist.getSongs()
+        // songs.forEach(song => {
+        //     let newElement = util.generateSongElement(song, playlist)
+        //     songList.insertAdjacentElement('beforeend', newElement)
+        // })
     }
 
     drawPage()

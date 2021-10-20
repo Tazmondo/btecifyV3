@@ -13,6 +13,10 @@ export function copyArray(array) {
     }
 }
 
+export function isSongInSongArray (songArray, song) {
+    return songArray.some(v => {return v.getUUID() === song.getUUID()})
+}
+
 export function durationSecondsToMinutes(iSeconds) {
     let minutes = Math.floor(iSeconds/60)
     let seconds = iSeconds % 60
