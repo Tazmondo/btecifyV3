@@ -2,7 +2,6 @@ import {copyArray, pageEntry, pageExit} from "../util.js";
 import  * as EventController from '../controllers/event.js'
 import  * as MusicController from '../controllers/music.js'
 import  * as RouteController from '../controllers/route.js'
-import * as util from '../impureUtil.js'
 import {generateQueue} from "../components/song-list.js";
 import {play} from "../controllers/music.js";
 
@@ -10,7 +9,6 @@ function initPage() {
     const {subscribe, unSubscribe} = EventController
     const {back} = RouteController
     const {getInfo} = MusicController
-    const {generateSongElement} = util
 
     let observed = []
 

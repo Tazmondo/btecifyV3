@@ -1,7 +1,6 @@
 import  * as EventController from '../controllers/event.js'
 import  * as ObjectController from '../controllers/object.js'
 import  * as MusicController from '../controllers/music.js'
-import * as util from '../impureUtil.js'
 import {generateCompare} from "../components/song-list.js";
 
 let scroll = [0, 0]
@@ -21,7 +20,6 @@ function initPage(args) {
         addToPlaylist
     } = ObjectController
     const {forceSetSong} = MusicController
-    const {generateSongElement} = util
 
     let playlistSections = document.querySelectorAll('.playlist-section')
     let selectedPlaylists = Array.from(playlistSections).map((section, index) => {

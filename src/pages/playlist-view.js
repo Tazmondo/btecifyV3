@@ -1,5 +1,4 @@
 import  * as EventController from '../controllers/event.js'
-import * as util from '../impureUtil.js'
 import {generateList} from '../components/song-list.js'
 
 function init(args) {
@@ -13,7 +12,7 @@ function init(args) {
 
     let header = page.querySelector('h2')
     let songListElement = page.querySelector('.song-list')
-    let songList = generateList(songListElement)
+    let songList = generateList(songListElement, playlist.getSongs())
 
     header.textContent = playlist.getTitle()
 
@@ -25,6 +24,7 @@ function init(args) {
         //     let newElement = util.generateSongElement(song, playlist)
         //     songList.insertAdjacentElement('beforeend', newElement)
         // })
+        songList.draw()
     }
 
     drawPage()
