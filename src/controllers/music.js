@@ -75,8 +75,8 @@ player.addEventListener('timeupdate', e => {
 
 function songEnded(depth = 0) {
     if (depth > 10) {
-        console.trace()
-        throw new Error("songEnded recursion more than 10 times! has something gone wrong???")
+        console.log("maximum songended depth reached");
+        return
     }
     if (!settingSong) {
         if (currentPlaylist) {
@@ -90,7 +90,9 @@ function songEnded(depth = 0) {
                 }
             }
         }
-        if (queue.length === 0 && currentPlaylist === undefined) queue.push(getRandomSong())
+        if (queue.length === 0 && currentPlaylist === undefined) {
+            queue.push(getRandomSong())
+        }
         if (queue.length > 0) {
             let nextSong = queue.shift();
             let oldSong = currentSong
@@ -172,7 +174,7 @@ export function forceSetSong(song) {
     queue = []
     queue.unshift(song)
     sourceBuffer = undefined
-    songEnded()
+    songEnded(10)
 }
 
 export function setSongFromUrl(urlStream) {
