@@ -1,3 +1,39 @@
+import {subscribeToKeydown} from "./hotkey.js";
+
+let searchCallbacks = []
+
+function searchListen(func) {
+    searchCallbacks.push(func)
+    return () => {
+        searchCallbacks = searchCallbacks.filter(v => v !== func)
+    }
+}
+
+let searchBar = document.getElementById('global-search')
+
+function inputChanged() {
+    searchCallbacks.forEach(v => v(searchBar.value))
+}
+
+searchBar.addEventListener('input', inputChanged)
+searchBar.addEventListener('blur', () => {
+    searchBar.value = ""
+    inputChanged()
+    if (keySubscription) keySubscription()
+    keySubscription = subscribeToKeydown(keyDown)
+})
+let keySubscription = undefined
+function keyDown(e) {
+    // if (e.key.length === 1) {
+    //     searchBar.value = e.key
+    // }
+    searchBar.focus()
+    if (keySubscription) keySubscription()
+    keySubscription = undefined
+
+}
+keySubscription = subscribeToKeydown(keyDown)
+
 /**
  * Take a search term and a list of songs, and return all songs linked to the search term.
  * @param term {string} The search term.
@@ -27,4 +63,4 @@ function highlightSearchedTerm(element, text, query) {
     }
 }
 
-export {searchSongs, highlightSearchedTerm}
+export {searchSongs, highlightSearchedTerm, searchListen}

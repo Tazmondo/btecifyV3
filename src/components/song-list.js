@@ -1,8 +1,7 @@
-import {subscribe, unSubscribe} from '../controllers/event.js'
 import SongElement from './song-element.js'
 import {getInfo} from '../controllers/music.js'
 import {copyArray, isSongInSongArray} from '../util.js'
-import {searchSongs} from '../controllers/search.js'
+import {searchListen} from "../controllers/search.js";
 
 /**
  * @typedef {string} listType
@@ -64,6 +63,26 @@ const listType = {
  * @returns {Object} A playlist object
  */
 function generateSongList(type, element, songs, playlist, otherPlaylist, isRightSide) {
+    element.insertAdjacentHTML('beforeend', `<div class="song-list-list">`)
+    let listElement = element.firstElementChild
+
+    element.insertAdjacentHTML('beforeend', `
+        <div class="song-list-search">
+            <span></span>
+        </div>
+    `)
+
+    let searchBar = element.lastElementChild
+    let searchBarText = searchBar.firstElementChild
+    searchListen((text) => {
+        if (text.length > 0) {
+            searchBar.classList.toggle("active", true)
+        } else {
+            searchBar.classList.toggle("active", false)
+        }
+        searchBarText.innerText = text
+    })
+
     let observed = []
     let drawQueued = false
 
@@ -83,7 +102,7 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
     }
 
     function clearSongs() {
-        Array.from(element.childNodes).forEach(node => node.remove())
+        Array.from(listElement.childNodes).forEach(node => node.remove())
     }
 
     let draw;
@@ -93,14 +112,14 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
             clearSongs()
             getSongs().forEach(song => {
                 let newElement = SongElement(song)
-                element.insertAdjacentElement('beforeend', newElement)
+                listElement.insertAdjacentElement('beforeend', newElement)
             })
         }
     } else if(type === listType.PLAYLIST) {
         draw = () => {
             clearSongs()
             getSongs().forEach(song => {
-                element.insertAdjacentElement('beforeend',
+                listElement.insertAdjacentElement('beforeend',
                     SongElement(song, playlist))
             })
         }
@@ -124,11 +143,11 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
                             superItems.pop().insertAdjacentElement('afterend', newElement)
 
                         } else {
-                            element.insertAdjacentElement('afterbegin', newElement)
+                            listElement.insertAdjacentElement('afterbegin', newElement)
                         }
 
                     } else {
-                        element.insertAdjacentElement('beforeend', newElement)
+                        listElement.insertAdjacentElement('beforeend', newElement)
                     }
                 })
 
@@ -149,7 +168,7 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
         function scrollToCurElement() {
         if (currentElement) {
             currentElement.scrollIntoView()
-            element.scrollBy(0, -element.clientHeight/2)
+            listElement.scrollBy(0, -listElement.clientHeight/2)
         }
     }
 
@@ -163,11 +182,11 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
             }, 15000)
         }
 
-        element.addEventListener('mousemove', resetScrollTimeout)
+        listElement.addEventListener('mousemove', resetScrollTimeout)
 
         function addSong(song, playing, past) {
             let insertedElement = SongElement(song, undefined, undefined, undefined, undefined, playing, past, observed);
-            element.insertAdjacentElement('beforeend', insertedElement)
+            listElement.insertAdjacentElement('beforeend', insertedElement)
             if (playing) {
                 currentElement = insertedElement
             }
@@ -185,7 +204,7 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
             }
 
             let temp = copyArray(observed)
-            let old = Array.from(element.childNodes)
+            let old = Array.from(listElement.childNodes)
             observed = temp
 
             history.forEach(song => addSong(song, false, true))

@@ -39,10 +39,6 @@ function registerHotkeys() {
 
 registerHotkeys()
 
-document.addEventListener('keypress', (e) => {
-    console.log(e.key);
-})
-
 function getHotKeys() {
     return globalHotkeys
 }
@@ -58,9 +54,10 @@ function setHotkey(hotkeyName, hotkeyString) {
 
 function subscribeToKeydown(callback) {
     let listener = (e) => {
-        e
+        callback(e)
     }
-    document.addEventListener('keydown', (e) => {
-        console.log(e.key);
-    })
+    document.addEventListener('keydown', listener)
+    return () => document.removeEventListener('keydown', listener)
 }
+
+export {subscribeToKeydown}

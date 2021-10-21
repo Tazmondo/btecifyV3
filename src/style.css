@@ -588,9 +588,57 @@ main > *.hidden {
 .song-list, .playlist-list-select {
     margin-top: 1em;
     background-color: #0c0c0c;
-    overflow-y: scroll;
     border: 3px #212121 solid;
     flex-shrink: 100;
+    overflow-y: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.song-list-list {
+    flex-shrink: 100;
+    overflow-y: scroll;
+}
+
+.song-list .song-list-search {
+    position: absolute;
+    height: 0;
+    overflow: hidden;
+    bottom: 0;
+    right: 0;
+    background-color: #2b2b2b;
+
+    transition: all 0.5s ease;
+}
+
+.song-list .song-list-search span{
+    position: relative;
+    margin-right: 24px;
+    padding-top: 2px;
+    padding-left: 3px;
+}
+
+.song-list .song-list-search.active {
+    height: 19px;
+    border: #059108 solid 1px;
+}
+
+.song-list .song-list-search span::after {
+    content: url('./assets/svg/search_white_24dp.svg');
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    top: 0;
+}
+
+#global-search {
+    position: fixed;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    height: 0;
+    width: 0;
 }
 
 .song-list-item-container {

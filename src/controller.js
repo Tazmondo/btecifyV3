@@ -20,6 +20,8 @@ export function saveData() {
 
 
 import './controllers/context-menu.js'
+import './controllers/hotkey.js'
+import './controllers/search.js'
 
 // PAGE IMPORTS
 
