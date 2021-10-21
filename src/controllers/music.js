@@ -42,8 +42,12 @@ async function setSong(song) {
                     play()
                 })
             }
-
-            let res = sourceBuffer || await song.getSource()
+            let res;
+            if (sourceBuffer?.song === song) {
+                res = sourceBuffer?.source
+            } else {
+                res = await song.getSource()
+            }
             sourceBuffer = undefined
             try {
                 await promisePlay(res)
@@ -103,7 +107,8 @@ function songEnded(depth = 0) {
 
                 // Buffer the next song for seamless play.
                 if (queue.length > 0) {
-                    queue[0].getSource().then(res => sourceBuffer = res)
+                    let bufferSong = queue[0]
+                    bufferSong.getSource().then(res => sourceBuffer = {source: res, song: bufferSong})
                         .catch(reason => sourceBuffer = undefined)
                 }
                 dispatch('playing')
