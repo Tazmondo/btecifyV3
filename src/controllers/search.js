@@ -17,20 +17,24 @@ function inputChanged() {
 
 searchBar.addEventListener('input', inputChanged)
 searchBar.addEventListener('blur', () => {
-    searchBar.value = ""
-    inputChanged()
-    if (keySubscription) keySubscription()
-    keySubscription = subscribeToKeydown(keyDown)
+    // searchBar.value = ""
+    // inputChanged()
+    // if (keySubscription) keySubscription()
+    // keySubscription = subscribeToKeydown(keyDown)
 })
 let keySubscription = undefined
 function keyDown(e) {
     // if (e.key.length === 1) {
     //     searchBar.value = e.key
     // }
+    if (e.key === "Escape") {
+        searchBar.value = ""
+        inputChanged()
+    }
     if (document.activeElement.tagName !== "INPUT") {
         searchBar.focus()
-        if (keySubscription) keySubscription()
-        keySubscription = undefined
+        // if (keySubscription) keySubscription()
+        // keySubscription = undefined
     }
 
 }
