@@ -27,9 +27,11 @@ function keyDown(e) {
     // if (e.key.length === 1) {
     //     searchBar.value = e.key
     // }
-    searchBar.focus()
-    if (keySubscription) keySubscription()
-    keySubscription = undefined
+    if (document.activeElement.tagName !== "INPUT") {
+        searchBar.focus()
+        if (keySubscription) keySubscription()
+        keySubscription = undefined
+    }
 
 }
 keySubscription = subscribeToKeydown(keyDown)
@@ -41,12 +43,15 @@ keySubscription = subscribeToKeydown(keyDown)
  * @returns Song[] List of songs containing the query
  */
 function searchSongs(term, songs) {
-    let containSongs = songs.filter(song => {
-        return [song.getTitle(), song.getArtist(), song.getAlbum()].some(v => {
-            return v.search(new RegExp(term, "i")) !== -1
+    if (typeof term === "string" && term !== "") {
+        return songs.filter(song => {
+            return [song.getTitle(), song.getArtist(), song.getAlbum()].some(v => {
+                return v.search(new RegExp(term, "i")) !== -1
+            })
         })
-    })
-    return containSongs
+    } else {
+        return songs
+    }
 }
 
 function highlightSearchedTerm(element, text, query) {

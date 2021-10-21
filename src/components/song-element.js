@@ -3,7 +3,7 @@ import {addToPlaylist, removeFromPlaylist} from "../controllers/object.js";
 import {forceSetSong} from "../controllers/music.js";
 import {highlightSearchedTerm} from "../controllers/search.js";
 
-function SongElement(song, playlist, superSub, otherPlaylist, isRightSide, isPlayingSong, isHistorySong, iobservedArray, searchQuery) {
+function SongElement(song, searchQuery, playlist, superSub, otherPlaylist, isRightSide, isPlayingSong, isHistorySong, iobservedArray) {
     let observedArray = iobservedArray ?? []
     let originalObserved = copyArray(observedArray)
 

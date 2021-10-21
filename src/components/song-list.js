@@ -1,7 +1,7 @@
 import SongElement from './song-element.js'
 import {getInfo} from '../controllers/music.js'
 import {copyArray, isSongInSongArray} from '../util.js'
-import {searchListen} from "../controllers/search.js";
+import {searchListen, searchSongs} from "../controllers/search.js";
 
 /**
  * @typedef {string} listType
@@ -74,13 +74,20 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
 
     let searchBar = element.lastElementChild
     let searchBarText = searchBar.firstElementChild
+    let searchQuery = ""
     searchListen((text) => {
         if (text.length > 0) {
             searchBar.classList.toggle("active", true)
+            listElement.style.minHeight = "19px"
         } else {
             searchBar.classList.toggle("active", false)
+            listElement.style.minHeight = "unset"
         }
         searchBarText.innerText = text
+        if (searchQuery !== text) {
+            searchQuery = text
+            draw()
+        }
     })
 
     let observed = []
@@ -89,11 +96,11 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
     function getSongs() {
         switch (type) {
             case listType.NORMAL:
-                return songs
+                return searchSongs(searchQuery, songs)
             case listType.PLAYLIST:
-                return playlist.getSongs()
+                return searchSongs(searchQuery, playlist.getSongs())
             case listType.COMPARE:
-                return playlist.getSongs()
+                return searchSongs(searchQuery, playlist.getSongs())
             case listType.QUEUE:
                 let playerInfo = getInfo()
                 return playerInfo
@@ -111,7 +118,7 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
         draw = () => {
             clearSongs()
             getSongs().forEach(song => {
-                let newElement = SongElement(song)
+                let newElement = SongElement(song, searchQuery)
                 listElement.insertAdjacentElement('beforeend', newElement)
             })
         }
@@ -120,7 +127,7 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
             clearSongs()
             getSongs().forEach(song => {
                 listElement.insertAdjacentElement('beforeend',
-                    SongElement(song, playlist))
+                    SongElement(song, searchQuery, playlist))
             })
         }
     } else if (type === listType.COMPARE) {
@@ -132,10 +139,9 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
                 if (otherPlaylist !== undefined) {
                     superSongs = playlist.getSuperSongs(otherPlaylist.getSongs())
                 }
-
                 getSongs().forEach(song => {
                     let superSong = isSongInSongArray(superSongs, song)
-                    let newElement = SongElement(song, playlist, superSong, otherPlaylist, isRightSide, undefined, undefined, observed)
+                    let newElement = SongElement(song, searchQuery, playlist, superSong, otherPlaylist, isRightSide, undefined, undefined, observed)
 
                     if (superSong) {
                         let superItems = Array.from(element.querySelectorAll('.song-list-item-container.super'))
@@ -185,7 +191,7 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
         listElement.addEventListener('mousemove', resetScrollTimeout)
 
         function addSong(song, playing, past) {
-            let insertedElement = SongElement(song, undefined, undefined, undefined, undefined, playing, past, observed);
+            let insertedElement = SongElement(song, searchQuery, undefined, undefined, undefined, undefined, playing, past, observed);
             listElement.insertAdjacentElement('beforeend', insertedElement)
             if (playing) {
                 currentElement = insertedElement
@@ -194,8 +200,8 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
 
         draw = () => {
             let info = getSongs()
-            let queue = info.queue
-            let history = info.history
+            let queue = searchSongs(searchQuery, info.queue)
+            let history = searchSongs(searchQuery, info.history)
             let currentSong = info.currentSong
 
             let currentArray = []
