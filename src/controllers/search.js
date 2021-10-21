@@ -60,16 +60,20 @@ function searchSongs(term, songs) {
 }
 
 function highlightSearchedTerm(element, text, query) {
-    if (typeof query == "string" && query !== "") {
-        // if (element.childNodes.length > 0){
-        //     console.log(element.childNodes);
-        //     throw new Error("Do not call on an element with children.")
-        // }
-        text = text.replaceAll(new RegExp(query, "ig"), `<span class="highlight-text">${query}</span>`)
-        // text = text.replace(query, `<span class="highlight-text">${query}</span>`)
-        element.innerHTML = text
-    } else {
-        element.innerText = text
+    try {
+        if (typeof query == "string" && query !== "") {
+
+            // Use regexp.quote as the query could contain special characters, resulting in an error.
+            text = text.replaceAll(new RegExp(query, "ig"), `<span class="highlight-text">${query}</span>`)
+            element.innerHTML = text
+        } else {
+            element.innerText = text
+        }
+    } catch (e) {
+        if (e instanceof SyntaxError) {
+            element.innerText = text
+        }
+        throw e
     }
 }
 
