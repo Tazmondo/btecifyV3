@@ -154,7 +154,7 @@ export function getPlaylistsWithSong(song) {
     return playlistArray.filter(playlist => playlist.doesContainSong(song))
 }
 
-export function getAllSongs() {
+export function getSongPlaylist() {
     return allSongPlaylist
 }
 

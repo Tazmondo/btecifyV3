@@ -13,7 +13,7 @@ import * as ClipboardController from './controllers/clipboard.js'
 
 export function saveData() {
     localStorage["playlist"] = JSON.stringify(ObjectController.getPlaylistArray())
-    localStorage["song"] = JSON.stringify(ObjectController.getAllSongs())
+    localStorage["song"] = JSON.stringify(ObjectController.getSongPlaylist())
 }
 
 // CONTROLLER IMPORTS
@@ -45,7 +45,7 @@ const events = {
     },
     'song': {
         callbacks: [saveData],
-        e: () => ObjectController.getAllSongs()
+        e: () => ObjectController.getSongPlaylist()
     },
     'playing': {
         callbacks: [],
@@ -115,7 +115,7 @@ function readInputData() {
 
     let newPlaylist = Playlist(ObjectController.updatedPlaylistCallback, "Songs", songs);
     ObjectController.setData(newPlaylist, playlists)
-    localStorage['song'] = JSON.stringify(ObjectController.getAllSongs())
+    localStorage['song'] = JSON.stringify(ObjectController.getSongPlaylist())
     localStorage['playlist'] = JSON.stringify(ObjectController.getPlaylistArray())
     EventController.dispatch('playlist')
     EventController.dispatch('song')
@@ -123,7 +123,7 @@ function readInputData() {
 }
 // readInputData()
 
-api.removeUnusedDownloads(ObjectController.getAllSongs().getSongs().map(v => {return v.getUUID()}))
+api.removeUnusedDownloads(ObjectController.getSongPlaylist().getSongs().map(v => {return v.getUUID()}))
 // todo: uncomment me
 
 

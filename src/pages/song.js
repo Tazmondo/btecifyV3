@@ -5,11 +5,11 @@ import {unSubscribe} from "../controllers/event.js";
 
 function init() {
     const {subscribe} = EventController
-    const {getAllSongs} = ObjectController
+    const {getSongPlaylist} = ObjectController
 
     let page = document.querySelector('#song-nav-page')
     let songList = page.querySelector('.song-list')
-    let playlist = generateList(songList, getAllSongs())
+    let playlist = generateList(songList, getSongPlaylist().getSongs())
 
     playlist.draw()
 
