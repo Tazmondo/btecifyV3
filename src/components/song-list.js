@@ -66,30 +66,6 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
     element.insertAdjacentHTML('beforeend', `<div class="song-list-list">`)
     let listElement = element.firstElementChild
 
-    element.insertAdjacentHTML('beforeend', `
-        <div class="song-list-search">
-            <span></span>
-        </div>
-    `)
-
-    let searchBar = element.lastElementChild
-    let searchBarText = searchBar.firstElementChild
-    let searchQuery = ""
-    searchListen((text) => {
-        if (text.length > 0) {
-            searchBar.classList.toggle("active", true)
-            listElement.style.minHeight = "19px"
-        } else {
-            searchBar.classList.toggle("active", false)
-            listElement.style.minHeight = "unset"
-        }
-        searchBarText.innerText = text
-        if (searchQuery !== text) {
-            searchQuery = text
-            draw()
-        }
-    })
-
     let observed = []
     let drawQueued = false
 
@@ -225,6 +201,30 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
             }
         }
     }
+
+    element.insertAdjacentHTML('beforeend', `
+        <div class="song-list-search">
+            <span></span>
+        </div>
+    `)
+
+    let searchBar = element.lastElementChild
+    let searchBarText = searchBar.firstElementChild
+    let searchQuery = ""
+    searchListen((text) => {
+        if (text.length > 0) {
+            searchBar.classList.toggle("active", true)
+            listElement.style.minHeight = "19px"
+        } else {
+            searchBar.classList.toggle("active", false)
+            listElement.style.minHeight = "unset"
+        }
+        searchBarText.innerText = text
+        if (searchQuery !== text) {
+            searchQuery = text
+            draw()
+        }
+    })
 
     function setPlaylist(iPlaylist) {
         playlist = iPlaylist

@@ -3,6 +3,7 @@ import {subscribeToKeydown} from "./hotkey.js";
 let searchCallbacks = []
 
 function searchListen(func) {
+    func(searchBar.value)
     searchCallbacks.push(func)
     return () => {
         searchCallbacks = searchCallbacks.filter(v => v !== func)
