@@ -137,3 +137,19 @@ export function makeDraggable(dragger, container) {
         }, {once: true})
     })
 }
+
+/**
+ * Adds text to an element and highlights the queried text.
+ * @param {HTMLElement|Node} element 
+ * @param {String} text 
+ * @param {String} query 
+ */
+export function addHighlight(element, text, query) {
+    if (typeof query == "string" && query !== "") {
+        if (element.childNodes.length > 0) throw new Error("Do not call on an element with children.")
+        text = text.replace(query, `<span class="highlight-text">${query}</span>}`)
+        element.innerHTML = text
+    } else {
+        element.innerText = text
+    }
+}

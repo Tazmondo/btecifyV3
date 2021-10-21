@@ -2,6 +2,7 @@ import {subscribe, unSubscribe} from '../controllers/event.js'
 import SongElement from './song-element.js'
 import {getInfo} from '../controllers/music.js'
 import {copyArray, isSongInSongArray} from '../util.js'
+import {} from '../controllers/search.js'
 
 /**
  * @typedef {string} listType
@@ -223,12 +224,20 @@ function generateSongList(type, element, playlist, otherPlaylist, isRightSide) {
 
     requestAnimationFrame(frame)
 
+    /**
+     * @param {String} queryString 
+     */
+    function filterSongs(queryString) {
+        
+    }
+
     return {
         draw() {
             drawQueued = true
     },
         setPlaylist,
         setOtherPlaylist,
+        filterSongs,
         element
     }
 }

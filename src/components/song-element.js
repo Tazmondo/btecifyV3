@@ -2,7 +2,7 @@ import {copyArray, durationSecondsToMinutes} from "../util.js";
 import {addToPlaylist, removeFromPlaylist} from "../controllers/object.js";
 import {forceSetSong} from "../controllers/music.js";
 
-function SongElement(song, playlist, superSub, otherPlaylist, isRightSide, isPlayingSong, isHistorySong, iobservedArray) {
+function SongElement(song, playlist, superSub, otherPlaylist, isRightSide, isPlayingSong, isHistorySong, iobservedArray, searchQuery) {
     let observedArray = iobservedArray ?? []
     let originalObserved = copyArray(observedArray)
 
