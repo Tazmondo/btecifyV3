@@ -6,6 +6,7 @@ import {getRandomSong} from "./object.js";
 
 let history = [];
 let queue = [];
+let sourceBuffer = undefined;
 
 let currentSong;
 let currentPlaylist;
@@ -42,7 +43,8 @@ async function setSong(song) {
                 })
             }
 
-            let res = await song.getSource()
+            let res = sourceBuffer || await song.getSource()
+            sourceBuffer = undefined
             try {
                 await promisePlay(res)
             } catch (e) {
@@ -87,9 +89,7 @@ function songEnded(depth = 0) {
         if (queue.length === 0 && currentPlaylist === undefined) queue.push(getRandomSong())
         if (queue.length > 0) {
             let nextSong = queue.shift();
-            if (currentSong) {
-                history.push(currentSong)
-            }
+            let oldSong = currentSong
             setSong(nextSong).then(res => {
                 if (!res) {
                     songEnded(depth + 1)
@@ -97,6 +97,15 @@ function songEnded(depth = 0) {
             }).catch(e => {
                 songEnded(depth + 1)
             }).finally(() => {
+                if (oldSong) {
+                    history.push(oldSong)
+                }
+
+                // Buffer the next song for seamless play.
+                if (queue.length > 0) {
+                    queue[0].getSource().then(res => sourceBuffer = res)
+                        .catch(reason => sourceBuffer = undefined)
+                }
                 dispatch('playing')
             })
         }
@@ -157,6 +166,7 @@ export function forceSetSong(song) {
     currentPlaylist = undefined
     queue = []
     queue.unshift(song)
+    sourceBuffer = undefined
     songEnded()
 }
 

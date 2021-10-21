@@ -132,7 +132,6 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
         }
     } else if (type === listType.COMPARE) {
         draw = () => {
-            console.trace("drawing")
             clearSongs()
             if (playlist) {
                 let superSongs = []
@@ -180,7 +179,6 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
 
         function resetScrollTimeout(e) {
             if (scrollTimeout) clearTimeout(scrollTimeout)
-            console.log("resetting");
             scroll = false
             scrollTimeout = setTimeout(() => {
                 scroll = true
