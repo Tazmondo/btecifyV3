@@ -1,0 +1,42 @@
+TODO
+
+features:
+add a better placeholder image
+add local keybinds (hotkey.js?)
+add hotkey changer menu
+view back button is a 100% height div that takes up the left side
+add keybind to immediately focus the window
+add more valid extractors (soundcloud, bandcamp, etc)
+mass get song metadata (getJson > track, artist etc)
+confirmation menu and dialog box
+add multiple song selection to song page
+action history with undo option
+add an options page
+add feedback notifications (e.g. a toast when you add a new song)
+add wait for next frame to all draw pages?
+display song being downloaded, and use the seeker bar as a loading bar to show progress.
+peer-to-peer listen along
+    maybe use browser protocols to share links
+    see P2P technologies
+
+play a playlist without skipping the current song
+add button to queue to remove a song from the upcoming queue
+    remember to clear the source buffer
+
+
+DONE (sort of):
+scan clipboard for youtube links and prompt for adding song
+manually add songs to a temporary playlist?
+contextmenus for playlists and such
+add styling to :active pseudo-selector to improve responsiveness
+a playlist view
+a song view
+
+
+bugs:
+fix flicker when adding/removing songs to playlist page
+when playing a new song automatically, and it ends up with no source, a duplicate of the current song will be added to history.
+receiver playlist scrolls to bottom when adding a song from one to another in playlist page
+context menu items still active even when right click, indicating that something will happen when in reality nothing happens
+high gpu usage even when alt-tabbed?
+playlist with two songs shows random dice symbol
