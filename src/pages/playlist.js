@@ -26,7 +26,7 @@ function initPage(args) {
         return getPlaylistFromTitle(selected[index])
     })
     let playlistObjects = Array.from(playlistSections).map((section, index) => {
-        return generateCompare(section.querySelector('.song-list'), undefined, selectedPlaylists[index], selectedPlaylists[1-index], index === 1)
+        return generateCompare(section.querySelector('.song-list'), selectedPlaylists[index], selectedPlaylists[1-index], index === 1)
     })
 
     let observed = []

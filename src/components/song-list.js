@@ -2,7 +2,7 @@ import {subscribe, unSubscribe} from '../controllers/event.js'
 import SongElement from './song-element.js'
 import {getInfo} from '../controllers/music.js'
 import {copyArray, isSongInSongArray} from '../util.js'
-import {} from '../controllers/search.js'
+import {searchSongs} from '../controllers/search.js'
 
 /**
  * @typedef {string} listType
@@ -25,14 +25,13 @@ function generatePlaylist(element, playlist) {
 /**
  * Take an element and turn it into a songlist
  * @param element {HTMLElement|Node} Must have class song-list
- * @param songs {Song[]}
  * @param playlist {Playlist}
  * @param otherPlaylist {Playlist}
  * @param isRightSide {boolean}
  * @returns {Object} A playlist object
  */
-function generateCompare(element, songs, playlist, otherPlaylist, isRightSide) {
-    return generateSongList(listType.COMPARE, element, songs, playlist, otherPlaylist, isRightSide)
+function generateCompare(element, playlist, otherPlaylist, isRightSide) {
+    return generateSongList(listType.COMPARE, element, undefined, playlist, otherPlaylist, isRightSide)
 }
 
 /**
@@ -64,14 +63,14 @@ const listType = {
  * @param isRightSide {boolean?}
  * @returns {Object} A playlist object
  */
-function generateSongList(type, element, playlist, otherPlaylist, isRightSide) {
+function generateSongList(type, element, songs, playlist, otherPlaylist, isRightSide) {
     let observed = []
     let drawQueued = false
 
     function getSongs() {
         switch (type) {
             case listType.NORMAL:
-                return playlist.getSongs()
+                return songs
             case listType.PLAYLIST:
                 return playlist.getSongs()
             case listType.COMPARE:

@@ -696,6 +696,11 @@ main > *.hidden {
     display: none;
 }
 
+span.highlight-text {
+    color: #00ff00;
+    background-color: #163b01;
+}
+
 /* SONG PAGE */
 #song-nav-page {
     display: flex;

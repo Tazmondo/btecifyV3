@@ -1,6 +1,7 @@
 import {copyArray, durationSecondsToMinutes} from "../util.js";
 import {addToPlaylist, removeFromPlaylist} from "../controllers/object.js";
 import {forceSetSong} from "../controllers/music.js";
+import {highlightSearchedTerm} from "../controllers/search.js";
 
 function SongElement(song, playlist, superSub, otherPlaylist, isRightSide, isPlayingSong, isHistorySong, iobservedArray, searchQuery) {
     let observedArray = iobservedArray ?? []
@@ -58,11 +59,12 @@ function SongElement(song, playlist, superSub, otherPlaylist, isRightSide, isPla
         let removeButton = newSongItem.querySelector('.playlist-page-remove-from-playlist')
 
 
-        title.innerText = song.getTitle()
         title.title = song.getTitle()
-        artist.innerText = song.getArtist()
-        album.innerText = song.getAlbum()
         duration.innerText = durationSecondsToMinutes(song.getDurationSeconds())
+
+        highlightSearchedTerm(title, song.getTitle(), searchQuery)
+        highlightSearchedTerm(artist, song.getArtist(), searchQuery)
+        highlightSearchedTerm(album, song.getAlbum(), searchQuery)
 
         if (playlist) {
             removeButton.classList.toggle("inactive")
