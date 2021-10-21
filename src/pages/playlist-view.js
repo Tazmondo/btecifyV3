@@ -1,5 +1,4 @@
 import  * as EventController from '../controllers/event.js'
-import * as util from '../impureUtil.js'
 import {generateList} from '../components/song-list.js'
 
 function init(args) {
