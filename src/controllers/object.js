@@ -4,7 +4,7 @@ import {copyArray, randomIndex} from "../util.js";
 import {dispatch} from "./event.js";
 import {saveData} from "../controller.js";
 
-function updatedSongCallback(redraw) {
+export function updatedSongCallback(redraw) {
     if (redraw) {
         dispatch('song')
         dispatch('playlist')
@@ -12,7 +12,7 @@ function updatedSongCallback(redraw) {
     saveData()
 }
 
-function updatedPlaylistCallback(redraw) {
+export function updatedPlaylistCallback(redraw) {
     if (redraw) {
         dispatch('playlist')
     }
