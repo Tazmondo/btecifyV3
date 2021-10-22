@@ -437,6 +437,7 @@ main > *.hidden {
 
 .playlist-card.selected {
     border: solid 1px rgb(27, 108, 4);
+    background-color: rgb(25, 37, 25);
 }
 
 .playlist-card.selected:hover {
