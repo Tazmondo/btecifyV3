@@ -62,7 +62,9 @@ export function Song(updatedCallback, title, remoteUrl, duration, artist = "", a
                 updatedCallback(false)
                 return source
             } else {
-                disabled = true
+                // commented as it could fail for reasons other than being unavailable
+                // todo: check whether song is actually unavailable or whether there were connection issues etc
+                // disabled = true
                 updatedCallback(true)
                 throw new Error("Song has no available source. Will become disabled.")
             }
