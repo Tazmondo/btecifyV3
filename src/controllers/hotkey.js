@@ -14,6 +14,14 @@ let localHotkeys = { // obviously unfinished todo: finish local hotkeys
     'Decrease Volume': ['down arrow', decreaseVolume, false]
 }
 
+// Without this, it would try and tab to the input on the options page, completely breaking the UI.
+// Alternative is to add tabindex -1 to every single input (kinda long?)
+document.addEventListener('keydown', e => {
+    if (e.key === 'Tab') {
+        e.preventDefault()
+    }
+})
+
 function pause() {
     MusicController.togglePlaying()
 }

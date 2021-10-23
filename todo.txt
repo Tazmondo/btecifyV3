@@ -25,6 +25,7 @@ add button to queue to remove a song from the upcoming queue
 make search only apply after finish typing for large playlists due to lag
 rewrite the routing model? do i need to reinit pages every time??
 get lyrics of song (muzicbrainz / genius maybe?)
+add a cursor to visible search bars
 
 DONE (sort of):
 scan clipboard for youtube links and prompt for adding song
