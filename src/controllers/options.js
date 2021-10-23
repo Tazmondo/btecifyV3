@@ -17,4 +17,8 @@ function updateOption(optionKey, value) {
     option.value = value
 }
 
-export {options, updateOption}
+function getOptionValue(optionKey) {
+    return options[optionKey].value
+}
+
+export {options, updateOption, getOptionValue}
