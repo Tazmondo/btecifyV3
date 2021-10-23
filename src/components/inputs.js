@@ -12,6 +12,8 @@ function CheckBox(label, parentElement, value, callBack) {
 
     labelElement.insertAdjacentHTML('beforeend', `<input type="checkbox">`)
     let inputElement = labelElement.firstElementChild
+    inputElement.checked = value
+
     inputElement.addEventListener('input', e => {
         callBack(e)
         e.stopPropagation()

@@ -1,4 +1,6 @@
 // const mode = "left"
+import {getOptionValue} from "./options.js";
+
 const mode = "centre"
 // const mode = "symmetrical"
 
@@ -37,11 +39,11 @@ function init(audioElement) {
 
     function renderFrame() {
         requestAnimationFrame(renderFrame)
-
+        ctx.clearRect(0, 0, width, height)
+        if (!getOptionValue('visualiser')) return
         curBarPos = 0;
         analyser.getByteFrequencyData(dataArray)
 
-        ctx.clearRect(0, 0, width, height)
         let centre = width/2 - barWidth/2
 
         for (let i = 0; i < bufferLength; i++) {
