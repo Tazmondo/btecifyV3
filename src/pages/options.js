@@ -10,8 +10,7 @@ function initPage() {
         switch (option.type) {
             case "checkbox":
                 CheckBox(option.name, container, option.value, (e) => {
-                    let newVal = e.target.checked
-                    updateOption(optionsKey, newVal)
+                    updateOption(optionsKey, e.target.checked)
                 })
 
                 break
