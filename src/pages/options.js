@@ -1,5 +1,5 @@
 import {options, updateOption} from '../controllers/options.js'
-import {CheckBox} from "../components/inputs.js";
+import {CheckBox, Text} from "../components/inputs.js";
 
 let page = document.getElementById('options-nav-page')
 let container = page.querySelector('div.options-container')
@@ -13,7 +13,10 @@ for (let optionsKey in options) {
             })
 
             break
-
+        case "text":
+            Text(option.name + ": ", container, e=> {
+                updateOption(optionsKey, e.target.value)
+            }, option.value)
     }
 }
 
