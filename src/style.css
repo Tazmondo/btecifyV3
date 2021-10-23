@@ -857,11 +857,12 @@ input[type=checkbox] ~ span {
     cursor: pointer;
 
     transform: scale(0.85);
-    transition: all 0.4s;
+    transition: all 0.4s, box-shadow 0.1s;
 }
 
 input[type=checkbox]:checked ~ span {
     background-color: #00d50b;
+    box-shadow: 0 0 7px #00ff00;
 }
 
 input[type=checkbox] ~ span::after {
