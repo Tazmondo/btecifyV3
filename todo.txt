@@ -27,6 +27,7 @@ rewrite the routing model? do i need to reinit pages every time??
 get lyrics of song (muzicbrainz / genius maybe?)
 add a cursor to visible search bars
 add sound effects to buttons (e.g. mechanical click for the slider checkboxes)
+song source should always be file and not stream
 
 
 DONE (sort of):
