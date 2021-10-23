@@ -793,6 +793,8 @@ span.highlight-text {
     height: 0;
 }
 
+/* INPUTS */
+
 .inputs, form {
     flex: 1;
     display: flex;
@@ -832,6 +834,51 @@ input[type=text] {
 input[type=text][disabled] {
     border: 1px outset #3a3a3a;
     color: #a2a2a2;
+}
+
+label.checkbox {
+    display: flex;
+    align-items: center;
+}
+
+input[type=checkbox] {
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+
+input[type=checkbox] ~ span {
+    height: 25px;
+    width: 50px;
+    display: inline-block;
+    position: relative;
+    background-color: #414141;
+    border-radius: 21px;
+    cursor: pointer;
+
+    transition: all 0.4s;
+}
+
+input[type=checkbox]:checked ~ span {
+    background-color: #00d50b;
+}
+
+input[type=checkbox] ~ span::after {
+    content: "";
+    width: 21px;
+    height: 21px;
+    top: 2px;
+    bottom: 2px;
+    border-radius: 50%;
+    background-color: #171717;
+    position: absolute;
+    left: 4px;
+
+    transition: all 0.4s cubic-bezier(.2,.48,.08,1.56);
+}
+
+input[type=checkbox]:checked ~ span::after {
+    left: calc(100% - 25px);
 }
 
 #new-song-view label {

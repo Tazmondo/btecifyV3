@@ -9,10 +9,13 @@
 function CheckBox(label, parentElement, value, callBack) {
     parentElement.insertAdjacentHTML('beforeend', `<label>${label}</label>`)
     let labelElement = parentElement.lastElementChild
+    labelElement.classList.toggle("checkbox", true)
 
     labelElement.insertAdjacentHTML('beforeend', `<input type="checkbox">`)
     let inputElement = labelElement.firstElementChild
     inputElement.checked = value
+
+    labelElement.insertAdjacentHTML('beforeend', '<span></span>')
 
     inputElement.addEventListener('input', e => {
         callBack(e)
