@@ -46,3 +46,4 @@ receiver playlist scrolls to bottom when adding a song from one to another in pl
 context menu items still active even when right click, indicating that something will happen when in reality nothing happens
 high gpu usage even when alt-tabbed?
 playlist with two songs shows random dice symbol
+playing songs sometimes stutter? may be to do with the visualiser, or smth else entirely
