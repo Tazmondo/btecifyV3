@@ -28,7 +28,10 @@ get lyrics of song (muzicbrainz / genius maybe?)
 add a cursor to visible search bars
 add sound effects to buttons (e.g. mechanical click for the slider checkboxes)
 song source should always be file and not stream
-
+    not really feasible since they take time to download
+show currently fetching song while it's being fetched
+allow spam skipping
+queue editing
 
 DONE (sort of):
 scan clipboard for youtube links and prompt for adding song
@@ -42,8 +45,8 @@ a song view
 bugs:
 fix flicker when adding/removing songs to playlist page
 when playing a new song automatically, and it ends up with no source, a duplicate of the current song will be added to history.
-receiver playlist scrolls to bottom when adding a song from one to another in playlist page
 context menu items still active even when right click, indicating that something will happen when in reality nothing happens
 high gpu usage even when alt-tabbed?
-playlist with two songs shows random dice symbol
 playing songs sometimes stutter? may be to do with the visualiser, or smth else entirely
+sometimes already played songs dont seem to have a file cache
+buffer songs can break downloading as multiple downoads to same file name
