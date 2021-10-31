@@ -49,4 +49,4 @@ context menu items still active even when right click, indicating that something
 high gpu usage even when alt-tabbed?
 playing songs sometimes stutter? may be to do with the visualiser, or smth else entirely
 sometimes already played songs dont seem to have a file cache
-buffer songs can break downloading as multiple downoads to same file name
+    maybe fixed?
