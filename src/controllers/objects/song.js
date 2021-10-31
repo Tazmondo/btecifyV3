@@ -56,7 +56,7 @@ export function Song(updatedCallback, title, remoteUrl, duration, artist = "", a
                         if (typeof source === "object") {
                             let msg = source?.message
                             source = ""
-                            if (msg.endsWith('ERROR: Video unavailable')){
+                            if (msg.includes('ERROR: Video unavailable')){
                                 disabled = true
                             }
                             throw new Error(msg)

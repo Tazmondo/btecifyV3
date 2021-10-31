@@ -50,8 +50,20 @@ async function setSong(song) {
                 })
             }
             let res;
+            async function waitForSourceBuffer() {
+                return new Promise(resolve => {
+                    function frame() {
+                        if (sourceBuffer?.fetching === true) {
+                            setTimeout(frame, 25)
+                        } else {
+                            resolve(sourceBuffer?.source)
+                        }
+                    }
+                    frame()
+                })
+            }
             if (sourceBuffer?.song === song) {
-                res = sourceBuffer?.source
+                res = await waitForSourceBuffer()
             } else {
                 res = await song.getSource()
             }
@@ -117,8 +129,13 @@ function songEnded(depth = 0) {
                 // Buffer the next song for seamless play.
                 if (queue.length > 0) {
                     let bufferSong = queue[0]
-                    bufferSong.getSource().then(res => sourceBuffer = {source: res, song: bufferSong})
-                        .catch(reason => sourceBuffer = undefined)
+                    sourceBuffer = {song: bufferSong, source: undefined, fetching: true}
+                    bufferSong.getSource().then(res => {
+                        if (sourceBuffer.song === bufferSong) {
+                            sourceBuffer.source = res
+                            sourceBuffer.fetching = false
+                        }
+                    }).catch(reason => sourceBuffer = undefined)
                 }
 
             })
