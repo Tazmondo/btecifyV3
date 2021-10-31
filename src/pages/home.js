@@ -48,7 +48,7 @@ function initPage() {
         })
 
         card.addEventListener('click', e => {
-            let song = getInfo().currentSong
+            let song = getInfo().playingSong
             if (song !== undefined) {
                 if (card.classList.contains('selected')) {
                     removeFromPlaylist(playlistObject, song)
@@ -70,7 +70,7 @@ function initPage() {
         unDrawPage();
 
 
-        let song = getInfo().currentSong
+        let song = getInfo().playingSong
         let playlistsToSelect = song === undefined ? [] : getPlaylistsWithSong(song)
 
         getPlaylistArray().forEach(v => {

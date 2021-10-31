@@ -117,13 +117,14 @@ function db(dbPath) {
                 output: `./db/music/${uuid}.%(ext)s`,
                 progress: false,
                 quiet: true,
+                "rm-cache-dir": true
             })
             console.log(`Downloaded ${url} for ${uuid}`)
             return await getSong(uuid)
         } catch (e) {
             console.log("downloadSong() failed")
             console.error(e.message)
-            return false
+            return e
         }
     }
 
@@ -136,12 +137,11 @@ function db(dbPath) {
                 progress: false,
                 dumpSingleJson: true,
             })
-            console.log(res);
             return res.url
         } catch (e) {
             console.log("getRemoteSongStream() failed")
             console.error(e.message)
-            return false
+            return e
         }
     }
 

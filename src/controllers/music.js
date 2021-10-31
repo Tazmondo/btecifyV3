@@ -10,6 +10,7 @@ let sourceBuffer = undefined;
 
 let currentSong;
 let currentPlaylist;
+let playingSong;
 
 let repeat = false;
 let muted = localStorage.muted === "true" || false
@@ -37,8 +38,14 @@ async function setSong(song) {
             const promisePlay = async (res) => {
                 return new Promise((resolve, reject) => {
                     player.src = res
-                    player.onplaying = e => resolve(e)
-                    player.onerror = e => reject(e)
+                    player.onplaying = e => {
+                        playingSong = song
+                        resolve(e)
+                    }
+                    player.onerror = e => {
+                        console.log(e);
+                        reject(e)
+                    }
                     play()
                 })
             }
@@ -52,10 +59,8 @@ async function setSong(song) {
             try {
                 await promisePlay(res)
             } catch (e) {
-                throw new Error("Failed to play song")
+                throw e
             }
-            // Won't set currentsong if it fails to play.
-            currentSong = song
 
             return true
         } catch (e) {
@@ -64,6 +69,7 @@ async function setSong(song) {
             throw e
         } finally {
             settingSong = false
+            currentSong = song
         }
     }
     return false
@@ -100,6 +106,7 @@ function songEnded(depth = 0) {
                 if (!res) {
                     songEnded(depth + 1)
                 }
+                dispatch('playing')
             }).catch(e => {
                 songEnded(depth + 1)
             }).finally(() => {
@@ -113,7 +120,7 @@ function songEnded(depth = 0) {
                     bufferSong.getSource().then(res => sourceBuffer = {source: res, song: bufferSong})
                         .catch(reason => sourceBuffer = undefined)
                 }
-                dispatch('playing')
+
             })
         }
     }
@@ -127,15 +134,17 @@ player.addEventListener('ended', e => {
     }
 })
 
-function dispatchPlaying() {
-    dispatch('playing')
-}
+// Caused unnecessary drawing and bugs.
 
-player.onplay = dispatchPlaying
-player.onplaying = dispatchPlaying
-player.onseeked = dispatchPlaying
-player.onstalled = dispatchPlaying
-player.onpause = dispatchPlaying
+// function dispatchPlaying() {
+//     dispatch('playing')
+// }
+
+// player.onplay = dispatchPlaying
+// player.onplaying = dispatchPlaying
+// player.onseeked = dispatchPlaying
+// player.onstalled = dispatchPlaying
+// player.onpause = dispatchPlaying
 
 export function play() {
     player.autoplay = true
@@ -157,7 +166,7 @@ export function togglePlaying() {
 
 export function getInfo() {
     return {
-        currentSong,
+        playingSong,
         currentPlaylist,
         history,
         queue,

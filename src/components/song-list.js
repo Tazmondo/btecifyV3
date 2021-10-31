@@ -176,7 +176,7 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
             let info = getSongs()
             let queue = searchSongs(searchQuery, info.queue)
             let history = searchSongs(searchQuery, info.history)
-            let currentSong = info.currentSong
+            let currentSong = info.playingSong
 
             let currentArray = []
             if (currentSong) {
@@ -193,7 +193,6 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
 
             old.forEach(v => v.remove())
 
-            console.log(scroll)
             if (currentElement && scroll) {
                 setTimeout(() => {
                     scrollToCurElement()

@@ -4,6 +4,7 @@ import {forceSetSong} from "../controllers/music.js";
 import {highlightSearchedTerm} from "../controllers/search.js";
 
 function SongElement(song, searchQuery, playlist, superSub, otherPlaylist, isRightSide, isPlayingSong, isHistorySong, iobservedArray) {
+    if (song === undefined) console.trace("undefined song on song element")
     let observedArray = iobservedArray ?? []
     let originalObserved = copyArray(observedArray)
 

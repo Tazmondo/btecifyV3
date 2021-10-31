@@ -36,7 +36,7 @@ export function Song(updatedCallback, title, remoteUrl, duration, artist = "", a
 
         async getSource() {
             let source;
-            if (cachedSong){
+            if (cachedSong && false){ // Needs more testing but if using remote urls, the source could have changed since last time
                 console.log(`Fetched from cache: ${title}`)
                 source = cachedSong
             } else {
@@ -45,13 +45,25 @@ export function Song(updatedCallback, title, remoteUrl, duration, artist = "", a
 
                 let path = await api.getSongPath(uuid)
                 if (path) {
+                    console.log("fetching from cached path");
                     source = cachedSong = path
                 } else {
                     try {
+                        // Waiting for the song to download before streaming it creates more delay than just streaming
+                        // fromt the remote
                         api.downloadSong(uuid, remoteUrl)
-                        source = await api.getRemoteSongStream(remoteUrl) || ""
+                        source = await api.getRemoteSongStream(remoteUrl)
+                        if (typeof source === "object") {
+                            let msg = source?.message
+                            source = ""
+                            if (msg.endsWith('ERROR: Video unavailable')){
+                                disabled = true
+                            }
+                            throw new Error(msg)
+                        }
                     } catch (e) {
-
+                        console.log("Fetch failed");
+                        console.log(e)
                     }
                 }
                 console.log(`Fetched `)
@@ -62,11 +74,8 @@ export function Song(updatedCallback, title, remoteUrl, duration, artist = "", a
                 updatedCallback(false)
                 return source
             } else {
-                // commented as it could fail for reasons other than being unavailable
-                // todo: check whether song is actually unavailable or whether there were connection issues etc
-                // disabled = true
                 updatedCallback(true)
-                throw new Error("Song has no available source. Will become disabled.")
+                throw new Error("Song has no available source.")
             }
         },
 

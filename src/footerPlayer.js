@@ -163,7 +163,7 @@ function initPage() {
     volumeSeeker.addEventListener('mousedown', volumeClick)
 
     function drawPage(info) {
-        let song = info?.currentSong
+        let song = info?.playingSong
         let playlist = info?.currentPlaylist
         let paused = info?.paused
         let volume = info?.volume
@@ -216,8 +216,8 @@ function initPage() {
             pauseButton.classList.toggle("inactive", false)
         }
 
-        skipForward.classList.toggle('inactive', !(queue?.length > 0))
-        playRandom.classList.toggle('inactive', queue?.length > 0)
+        skipForward.classList.toggle('inactive', !playlist) // boolean conversion
+        playRandom.classList.toggle('inactive', !!playlist)
 
         if (muted) {
             volumeFront.style.width = `0%`
