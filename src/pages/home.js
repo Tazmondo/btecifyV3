@@ -8,17 +8,18 @@ import  * as RouteController from '../controllers/route.js'
 
 function initPage() {
     const {subscribe, unSubscribe} = EventController
-    const {getPlaylistArray,getPlaylistFromTitle, getPlaylistsWithSong} = ObjectController
+    const {getPlaylistArray,getPlaylistFromTitle, getPlaylistsWithSong, addToPlaylist, removeFromPlaylist} = ObjectController
     const {setPlaylist, getInfo} = MusicController
     const {baseRoute} = RouteController
 
     let page = document.getElementById('home-nav-page')
 
-    function generatePlaylistCard(playlistName, thumbnailURLPromise, numSongs) {
+    function generatePlaylistCard(playlistName, thumbnailURLPromise, numSongs, selected) {
+        let playlistObject = getPlaylistFromTitle(playlistName);
         let container = page.getElementsByClassName("playlists-container")[0]
 
         container.insertAdjacentHTML('beforeend',
-            `<div class="playlist-card" data-context="playlist">
+            `<div class="playlist-card${selected ? " selected" : ""}" data-context="playlist">
             <div class="img-div"></div>
             <div>
                 <h3>${playlistName}</h3>
@@ -37,12 +38,24 @@ function initPage() {
             }
         })
 
-        card.addEventListener('dblclick', e => {
-            baseRoute('playlistView', [getPlaylistFromTitle(playlistName)])
-        })
+        // card.addEventListener('dblclick', e => {
+        //     baseRoute('playlistView', [playlistObject])
+        // })
 
         card.querySelector('.svg-button').addEventListener('click', e=>{
-            setPlaylist(getPlaylistFromTitle(playlistName))
+            setPlaylist(playlistObject)
+            e.stopPropagation() // so that you dont mess with playlists due to below function
+        })
+
+        card.addEventListener('click', e => {
+            let song = getInfo().currentSong
+            if (song !== undefined) {
+                if (card.classList.contains('selected')) {
+                    removeFromPlaylist(playlistObject, song)
+                } else {
+                    addToPlaylist(playlistObject, song)
+                }
+            }
         })
 
     }
@@ -56,34 +69,25 @@ function initPage() {
     function drawPage() {
         unDrawPage();
 
+
+        let song = getInfo().currentSong
+        let playlistsToSelect = song === undefined ? [] : getPlaylistsWithSong(song)
+
         getPlaylistArray().forEach(v => {
-            generatePlaylistCard(v.getTitle(), v.getThumb(), v.getLength())
+            generatePlaylistCard(v.getTitle(), v.getThumb(), v.getLength(),
+                playlistsToSelect.some(playlist => playlist.getTitle() === v.getTitle())
+            )
         })
     }
 
-    function highlightPlayingSongPlaylists(info) {
-        let song = info.currentSong
-        if (song) {
-            let playlistCards = page.querySelectorAll('.playlists-container > .playlist-card')
-            let playlistsToSelect = getPlaylistsWithSong(song)
-
-            playlistCards.forEach(card => {
-                let title = card.querySelector('h3').innerText
-                card.classList.toggle("selected", playlistsToSelect.some(playlist => playlist.getTitle() === title))
-            })
-        }
-    }
-
     drawPage()
-    highlightPlayingSongPlaylists(getInfo())
 
     subscribe('playlist', drawPage)
-    subscribe('playing', highlightPlayingSongPlaylists)
-
+    subscribe('playing', drawPage)
 
     return [() => {
         unSubscribe('playlist', drawPage)
-        unSubscribe('playing', highlightPlayingSongPlaylists)
+        unSubscribe('playing', drawPage)
 
     }, page]
 
