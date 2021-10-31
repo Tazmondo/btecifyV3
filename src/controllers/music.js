@@ -212,8 +212,10 @@ export function setSongFromUrl(urlStream) {
 export function setPlaylist(playlist) {
     currentPlaylist = playlist
     queue = []
-    songEnded()
-    history = []
+    if (playingSong === undefined) {
+        songEnded()
+    }
+    // history = []
     dispatch('playing')
 }
 
