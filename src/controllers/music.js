@@ -114,6 +114,7 @@ function songEnded(depth = 0) {
         if (queue.length > 0) {
             let nextSong = queue.shift();
             let oldSong = currentSong
+
             setSong(nextSong).then(res => {
                 if (!res) {
                     songEnded(depth + 1)
@@ -166,11 +167,13 @@ player.addEventListener('ended', e => {
 export function play() {
     player.autoplay = true
     player.play()
+    dispatch('playing')
 }
 
 export function pause() {
     player.autoplay = false
     player.pause()
+    dispatch('playing')
 }
 
 export function togglePlaying() {
@@ -179,6 +182,7 @@ export function togglePlaying() {
     } else {
         pause()
     }
+    dispatch('playing')
 }
 
 export function getInfo() {
@@ -254,6 +258,7 @@ export function back() {
 
 export function setRepeat(bool) {
     repeat = bool
+    dispatch('playing')
 }
 
 export function toggleMute(force) {
