@@ -424,7 +424,7 @@ main > *.hidden {
     align-content: center;
     margin: 5px;
     border-radius: 20px;
-    border: solid 1px rgb(0, 0, 0);
+    border: solid 1px rgb(68, 68, 68);
 
     transition: all 0.5s;
 }
@@ -433,6 +433,7 @@ main > *.hidden {
     /*transform: scale(1.05);*/
 
     border: solid 1px rgb(119, 119, 119);
+    box-shadow: #3b3b3b 0 0 10px 3px;
 }
 
 .playlist-card.selected {
