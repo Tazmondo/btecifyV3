@@ -769,6 +769,8 @@ span.highlight-text {
     background: #0c0c0c;
 }
 
+
+
 .view-back {
     margin-left: 5px;
     margin-right: 10px;
@@ -979,7 +981,7 @@ footer img {
     fill: rgba(255, 255, 255, 0.8);
 }
 
-.svg-button:hover {
+.svg-button:hover, .view-header:hover .view-back {
     fill: rgba(255, 255, 255, 1);
     filter: drop-shadow(0 0 5px #fff);
 }

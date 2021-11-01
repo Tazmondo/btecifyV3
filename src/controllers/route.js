@@ -19,7 +19,7 @@ function Route(construct, name, view, args) {
             deconstruct = res
         }
         if (view) {
-            element.querySelector('.view-back').addEventListener('click', e=>{
+            element.querySelector('.view-header').addEventListener('click', e=>{
                 back()
             }, {once: true})
 
