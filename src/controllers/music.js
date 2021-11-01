@@ -166,8 +166,11 @@ player.addEventListener('ended', e => {
 
 export function play() {
     player.autoplay = true
-    player.play()
-    dispatch('playing')
+
+    // If dispatched before play is done, then pages will be drawn with incorrect information.
+    player.play().finally(() => {
+        dispatch('playing')
+    })
 }
 
 export function pause() {
