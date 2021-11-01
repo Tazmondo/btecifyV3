@@ -152,31 +152,25 @@ player.addEventListener('ended', e => {
     }
 })
 
-// Caused unnecessary drawing and bugs.
-
-// function dispatchPlaying() {
-//     dispatch('playing')
-// }
-
-// player.onplay = dispatchPlaying
-// player.onplaying = dispatchPlaying
-// player.onseeked = dispatchPlaying
-// player.onstalled = dispatchPlaying
-// player.onpause = dispatchPlaying
-
 export function play() {
     player.autoplay = true
 
-    // If dispatched before play is done, then pages will be drawn with incorrect information.
-    player.play().finally(() => {
-        dispatch('playing')
-    })
+    // No dispatch is needed here apparently?
+    player.play()
 }
 
 export function pause() {
     player.autoplay = false
+
+    // Apparently no dispatches are needed here?
+
+    // Should only dispatch once to prevent excessive drawing
+    // player.addEventListener('pause', () => {
+    //     console.log("b");
+    //     // dispatch('playing')
+    // }, {once: true})
+
     player.pause()
-    dispatch('playing')
 }
 
 export function togglePlaying() {
