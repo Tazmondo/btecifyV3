@@ -50,3 +50,9 @@ high gpu usage even when alt-tabbed?
 playing songs sometimes stutter? may be to do with the visualiser, or smth else entirely
 sometimes already played songs dont seem to have a file cache
     maybe fixed?
+
+
+
+FOR PLAYLIST IMPORTING
+https://github.com/LaurenceRawlings/savify
+https://github.com/deepjyoti30/ytmdl
