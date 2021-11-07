@@ -28,10 +28,16 @@ const contexts = {
                         {
                             type: "text",
                             label: "Playlist Name"
+                        },
+                        {
+                            type: "text",
+                            label: "Playlist URL (optional)"
                         }
                     ]
                 }).then(res => {
                     let name = res[0]
+                    let url = res[1]
+                    console.log(name, url)
                     if (typeof name === "string" && name !== "") {
                         let newPlaylist = ObjectController.makePlaylist([name])
                         if (newPlaylist) {

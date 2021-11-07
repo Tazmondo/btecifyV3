@@ -35,13 +35,14 @@ async function generateInputDialog(title, mainText, options) {
         mainTextElement.textContent = mainText
 
         let form = backDiv.querySelector('form')
+        let submitButton = form.querySelector('input[type=submit]')
 
         switch (type) {
             case "input":
                 inputs.forEach((v, i) => {
                     let label = document.createElement('label')
                     label.textContent = v.label + ": "
-                    form.insertAdjacentElement('afterbegin', label)
+                    submitButton.insertAdjacentElement('beforebegin', label)
 
                     let newInput = document.createElement('input')
                     newInput.type = v.type
