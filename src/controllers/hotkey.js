@@ -16,10 +16,20 @@ let localHotkeys = { // obviously unfinished todo: finish local hotkeys
 
 // Without this, it would try and tab to the input on the options page, completely breaking the UI.
 // Alternative is to add tabindex -1 to every single input (kinda long?)
-document.addEventListener('keydown', e => {
-    if (e.key === 'Tab') {
-        e.preventDefault()
-    }
+// document.addEventListener('keydown', e => {
+//     if (e.key === 'Tab') {
+//         e.preventDefault()
+//     }
+// })
+
+// Found a new solution
+// the window breaks because the scroll of the html element is set to 600
+// so just set it to 0
+document.addEventListener('focusin', e=>{
+    console.log(e.relatedTarget);
+    requestAnimationFrame(() => {
+        document.scrollingElement.scrollLeft = 0
+    })
 })
 
 function pause() {
