@@ -67,7 +67,7 @@ let Limiter = function(max) {
 
     return {
         queue,
-        finish
+        setMax
     }
 }()
 
@@ -88,13 +88,13 @@ for (let index in testTarget) {
 // _type: 'playlist',
 // entries: [
 // {
-// title,
-// url,
-// view_count: null,
-// _type: 'url',
-// ie_key: 'youtube',
-// id,
-// uploader,
-// description: null
+    // title,
+    // url,
+    // view_count: null,
+    // _type: 'url',
+    // ie_key: 'youtube',
+    // id,
+    // uploader,
+    // description: null
 // }
 // ]
