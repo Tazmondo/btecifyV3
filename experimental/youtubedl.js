@@ -24,6 +24,8 @@ function test() {
     })
 }
 
+// test()
+
 function test2(finish, url, index) {
     ytdl(url, {
         dumpSingleJson: true,
@@ -72,11 +74,11 @@ let Limiter = function(max) {
     }
 }()
 
-let testTarget = test5
-for (let index in testTarget) {
-    console.log(index);
-    Limiter.queue(test2, testTarget[index], index)
-}
+// let testTarget = test5
+// for (let index in testTarget) {
+//     console.log(index);
+//     Limiter.queue(test2, testTarget[index], index)
+// }
 
 // id,
 // uploader,
@@ -97,5 +99,6 @@ for (let index in testTarget) {
     // id,
     // uploader,
     // description: null
+    // duration: (seconds)
 // }
 // ]
