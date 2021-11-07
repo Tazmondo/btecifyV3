@@ -64,6 +64,8 @@ let playlistArray = (() => {
     return []
 })()
 
+Object.assign(window, {allSongPlaylist, playlistArray}) // For testing
+
 function doesPlaylistExist(playlist) {
     let titleArray = playlistArray.map(v => v.getTitle());
     return titleArray.includes(playlist.getTitle())
