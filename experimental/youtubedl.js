@@ -67,7 +67,7 @@ let Limiter = function(max) {
 
     return {
         queue,
-        finish
+        setMax
     }
 }()
 
