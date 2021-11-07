@@ -86,7 +86,14 @@ async function generateInputDialog(title, mainText, options) {
             if (e.target === backDiv){
                 cancel()
             }
-        })
+        }, {once: true})
+        function checkEsc(e) {
+            if (e.key === "Escape") {
+                document.removeEventListener('keydown', checkEsc)
+                cancel()
+            }
+        }
+        document.addEventListener('keydown', checkEsc)
         makeDraggable(titleElement, foreDiv)
     })
 
