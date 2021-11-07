@@ -30,9 +30,10 @@ function test2(finish, url, index) {
         noPlaylist: true
     }).then(res => {
         console.log(`${index}: ${res.title}`)
-        finish()
     }).catch(e => {
         console.log(e.message);
+    }).finally(() => {
+        finish()
     })
 }
 
