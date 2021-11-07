@@ -4,6 +4,7 @@ const axios = require("axios");
 const ytdl = require('youtube-dl-exec');
 const clipboardy = require('clipboardy')
 const extractor = require('./extractor.js')
+const {getShallowPlaylist} = require("./extractor.js");
 
 let test = (() => {
     ytdl("https://www.youtube.com/watch?v=oA1OkYxBIZo", {
@@ -258,7 +259,9 @@ function db(dbPath) {
             } catch (e) {
                 return undefined
             }
-        }
+        },
+
+        getShallowPlaylist
     }
 }
 

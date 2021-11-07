@@ -26,7 +26,6 @@ let localHotkeys = { // obviously unfinished todo: finish local hotkeys
 // the window breaks because the scroll of the html element is set to 600
 // so just set it to 0
 document.addEventListener('focusin', e=>{
-    console.log(e.relatedTarget);
     requestAnimationFrame(() => {
         document.scrollingElement.scrollLeft = 0
     })

@@ -37,11 +37,18 @@ const contexts = {
                 }).then(res => {
                     let name = res[0]
                     let url = res[1]
-                    console.log(name, url)
                     if (typeof name === "string" && name !== "") {
-                        let newPlaylist = ObjectController.makePlaylist([name])
-                        if (newPlaylist) {
-                            // RouteController.baseRoute('playlistView', [newPlaylist])
+                        if (typeof url === "string" && url !== "") {
+                            ObjectController.makeRemotePlaylist(name, url).then(newPlaylist => {
+                                if (newPlaylist) {
+                                    RouteController.baseRoute('playlistView', [newPlaylist])
+                                }
+                            })
+                        } else{
+                            let newPlaylist = ObjectController.makePlaylist([name])
+                            if (newPlaylist) {
+                                // RouteController.baseRoute('playlistView', [newPlaylist])
+                            }
                         }
                     }
                 })

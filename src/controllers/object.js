@@ -66,9 +66,9 @@ let playlistArray = (() => {
 
 Object.assign(window, {allSongPlaylist, playlistArray}) // For testing
 
-function doesPlaylistExist(playlist) {
+function isPlaylistTitleUsed(title) {
     let titleArray = playlistArray.map(v => v.getTitle());
-    return titleArray.includes(playlist.getTitle())
+    return titleArray.includes(title)
 }
 
 function getPlaylistIndex(playlist) {
@@ -87,7 +87,7 @@ function doesSongExist(song) {
 export function makePlaylist(playlistArgs) {
     let newPlaylist = Playlist(updatedPlaylistCallback, ...playlistArgs)
 
-    if (!doesPlaylistExist(newPlaylist)) {
+    if (!isPlaylistTitleUsed(newPlaylist.getTitle())) {
         playlistArray.push(newPlaylist)
         dispatch('playlist')
         return newPlaylist
@@ -167,4 +167,21 @@ export function getRandomSong() {
 export function setData(songPlaylist, iPlaylistArray) {
     allSongPlaylist = songPlaylist
     playlistArray = iPlaylistArray
+}
+
+export async function makeRemotePlaylist(playlistName, playlistURL) {
+    if (!isPlaylistTitleUsed(playlistName)) {
+        let remotePlaylist = await api.getShallowPlaylist(playlistURL)
+        if (remotePlaylist?.entries) {
+            let songs = Array.from(remotePlaylist.entries.map(v => {
+                let newSong = Song(updatedSongCallback, v.title, v.url, v.duration, v.uploader)
+                // todo: check against song list
+                return newSong
+            }))
+            let newPlaylist = Playlist(updatedPlaylistCallback, playlistName, songs)
+            playlistArray.push(newPlaylist)
+            dispatch('playlist')
+            return newPlaylist
+        }
+    }
 }
