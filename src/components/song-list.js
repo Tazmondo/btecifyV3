@@ -263,4 +263,4 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
     }
 }
 
-export {generateList, generateQueue, generateCompare}
+export {generateList, generatePlaylist, generateQueue, generateCompare}
