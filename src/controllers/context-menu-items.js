@@ -163,6 +163,17 @@ const contexts = {
                     deleteSong(getSongFromUUID(uuid))
                 }
             }
+        },
+        {
+            name: 'Copy URL to clipboard',
+            type: 'button',
+            action: context => {
+                let uuid = context?.dataset?.uuid
+                if (uuid) {
+                    let song = getSongFromUUID(uuid)
+                    navigator.clipboard.writeText(song.getURL())
+                }
+            }
         }
     ],
 
