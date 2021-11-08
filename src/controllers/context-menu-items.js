@@ -2,7 +2,7 @@ import * as MusicController from './music.js'
 import * as ObjectController from './object.js'
 import * as RouteController from './route.js'
 import {generateInputDialog} from "./dialog-box.js";
-import {deleteSong, getSongFromUUID} from "./object.js";
+import {deleteSong, deleteUnusedSongs, getSongFromUUID} from "./object.js";
 
 const contexts = {
     'body': [
@@ -133,6 +133,15 @@ const contexts = {
                 let playlist = ObjectController.getPlaylistFromTitle(context.querySelector('h3').textContent)
                 let res = ObjectController.deletePlaylist(playlist)
                 console.log(playlist, res)
+            }
+        }
+    ],
+    '#song-nav-page': [
+        {
+            name: 'Delete unused songs',
+            type: 'button',
+            action: context => {
+                deleteUnusedSongs()
             }
         }
     ],

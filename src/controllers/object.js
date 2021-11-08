@@ -162,6 +162,24 @@ export function deleteSong(song) {
     dispatch('song')
 }
 
+export function deleteUnusedSongs() {
+    let usedUUIDS = playlistArray.reduce((map, playlist) => {
+        playlist.getSongs().reduce((map2, song) => {
+            map2[song.getUUID()] = true
+            return map2
+        }, map)
+        return map
+    }, {})
+    allSongPlaylist.getSongs().forEach(v => {
+        if (usedUUIDS[v.getUUID()] !== true) {
+            allSongPlaylist.removeSongWithSong(v)
+        }
+    })
+    // console.log(unusedSongs.map(v => v.getTitle()));
+    dispatch('song')
+    dispatch('playlist')
+}
+
 // Returns a sorted array of playlists.
 export function getPlaylistArray() {
     return copyArray(playlistArray).sort((a, b) => {
