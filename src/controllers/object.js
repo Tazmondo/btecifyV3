@@ -218,6 +218,7 @@ export async function makeRemotePlaylist(playlistName, playlistURL) {
                 if (remotes[newUrl] === undefined) {
                     let newSong = Song(updatedSongCallback, v.title, newUrl, v.duration, v.uploader)
                     allSongPlaylist.addSong(newSong)
+                    remotes[newUrl] = newSong // Sometimes there are duplicate songs in the extracted playlist
                     return newSong
                 } else {
                     return remotes[newUrl]
