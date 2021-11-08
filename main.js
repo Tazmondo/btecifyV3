@@ -8,6 +8,10 @@ let ipcLoad = require('./ipc.js')
 //     require('electron-reload')(__dirname)
 // }
 
+console.log(`Electron: ${process.versions.electron}
+Chromium: ${process.versions.chrome}
+Node: ${process.versions.node}`)
+
 if (!app.isPackaged) {
     app.setPath('userData', app.getPath('userData')+'-test')
     console.log(app.getPath('userData'))
