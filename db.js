@@ -3,7 +3,6 @@ const path = require("path");
 const axios = require("axios");
 const ytdl = require('youtube-dl-exec');
 const clipboardy = require('clipboardy')
-const extractor = require('./extractor.js')
 const {getShallowPlaylist} = require("./extractor.js");
 
 let test = (() => {

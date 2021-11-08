@@ -137,10 +137,3 @@ export function makeDraggable(dragger, container) {
         }, {once: true})
     })
 }
-
-/**
- * Adds text to an element and highlights the queried text.
- * @param {HTMLElement|Node} element 
- * @param {String} text 
- * @param {String} query 
- */
