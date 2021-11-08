@@ -49,4 +49,6 @@ for (let funcName in dbFunctions) {
 
 contextBridge.exposeInMainWorld('api', api)
 contextBridge.exposeInMainWorld('Popper', Popper)
-contextBridge.exposeInMainWorld('Spotify', Spotify)
+let SpotifyWrapper = new Spotify()
+console.log(SpotifyWrapper);
+contextBridge.exposeInMainWorld('Spotify', SpotifyWrapper)
