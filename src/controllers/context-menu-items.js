@@ -132,7 +132,6 @@ const contexts = {
             action: (context) => {
                 let playlist = ObjectController.getPlaylistFromTitle(context.querySelector('h3').textContent)
                 let res = ObjectController.deletePlaylist(playlist)
-                console.log(playlist, res)
             }
         }
     ],

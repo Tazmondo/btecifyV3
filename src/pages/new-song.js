@@ -1,4 +1,4 @@
-import {durationSecondsToMinutes, durationMinutesToSeconds} from "../util.js";
+import {durationSecondsToMinutes, durationMinutesToSeconds, extractId} from "../util.js";
 import  * as EventController from '../controllers/event.js'
 import  * as ObjectController from '../controllers/object.js'
 import * as ClipboardController from '../controllers/clipboard.js'
@@ -19,6 +19,8 @@ function init() {
     let artist = page.querySelector('#new-song-artist')
     let thumbnail = page.querySelector('#new-song-thumbnail')
     let duration = page.querySelector('#new-song-duration')
+    let id = page.querySelector('#new-song-id')
+    let extractor = page.querySelector('#new-song-extractor')
 
     let playlistListElement = page.querySelector('.playlist-list-select')
 
@@ -76,6 +78,8 @@ function init() {
         thumbnail.value = ""
         thumbImg.src = ""
         duration.value = ""
+        id.value = ""
+        extractor.value = ""
 
         if (data) {
             url.value = data.webpage_url
@@ -85,6 +89,8 @@ function init() {
             thumbnail.value = data.thumbnail || ""
             thumbImg.src = thumbnail.value
             duration.value = durationSecondsToMinutes(data.duration)
+            id.value = data.id
+            extractor.value = data.extractor
         }
 
 
@@ -97,7 +103,8 @@ function init() {
         if (e.target === createButton) {
             makeSong([
                 title.value,
-                url.value,
+                id.value,
+                extractor.value,
                 durationMinutesToSeconds(duration.value),
                 artist.value,
                 album.value,

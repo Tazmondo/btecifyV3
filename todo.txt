@@ -53,6 +53,9 @@ high gpu usage even when alt-tabbed?
 playing songs sometimes stutter? may be to do with the visualiser, or smth else entirely
 sometimes already played songs dont seem to have a file cache
     maybe fixed?
+when song ends current time stops increasing but playback jumps to a random spot earlier
+    maybe check if current time = duration to make sure song ends properly
+    also just fade volume based on where current time is for song fading
 
 
 

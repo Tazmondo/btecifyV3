@@ -1,9 +1,7 @@
-import {placeholderURL} from '../../util.js'
+import {placeholderURL, extractId} from '../../util.js'
 
-export function Song(updatedCallback, title, remoteUrl, duration, artist = "", album = "", remoteThumb = "", uuid = "", disabled=false) {
+export function Song(updatedCallback, title, vidId, extractor, duration, artist = "", album = "", remoteThumb = "", uuid = "", disabled=false) {
     uuid = uuid || api.getUUID()
-
-    remoteUrl = remoteUrl.replace("http://", "https://")
 
     let cachedThumb;
     let cachedSong;
@@ -29,7 +27,12 @@ export function Song(updatedCallback, title, remoteUrl, duration, artist = "", a
 
         // Returns localurl or the remoteurl if local does not exist.
         getURL() {
-            return remoteUrl;
+            switch (extractor) {
+                case "youtube":
+                    return `youtube.com/watch?v=${vidId}`
+                default:
+                    throw new Error(`Unsupported extractor: ${extractor}`)
+            }
         },
 
         isDisabled() {
@@ -53,8 +56,8 @@ export function Song(updatedCallback, title, remoteUrl, duration, artist = "", a
                     try {
                         // Waiting for the song to download before streaming it creates more delay than just streaming
                         // fromt the remote
-                        api.downloadSong(uuid, remoteUrl)
-                        source = await api.getRemoteSongStream(remoteUrl)
+                        api.downloadSong(uuid, vidId)
+                        source = await api.getRemoteSongStream(vidId)
                         if (typeof source === "object") {
                             let msg = source?.message
                             source = ""
@@ -82,7 +85,7 @@ export function Song(updatedCallback, title, remoteUrl, duration, artist = "", a
         },
 
         getVideoId() {
-            return remoteUrl.substr(remoteUrl.length-11, 11)
+            return vidId.substr(vidId.length-11, 11)
         },
 
         // Returns length of song in seconds
@@ -104,7 +107,7 @@ export function Song(updatedCallback, title, remoteUrl, duration, artist = "", a
 
         // Used by JSON.stringify
         toJSON() {
-            return ['song', title, remoteUrl, duration, artist, album, remoteThumb, uuid, disabled]
+            return ['song', title, vidId, extractor, duration, artist, album, remoteThumb, uuid, disabled]
         }
     }
 }

@@ -1,8 +1,8 @@
 import {Playlist} from "./objects/playlist.js";
 import {Song} from './objects/song.js'
-import {copyArray, randomIndex} from "../util.js";
+import {copyArray, randomIndex, extractId} from "../util.js";
 import {dispatch} from "./event.js";
-import {saveData} from "../controller.js";
+import {saveData, CURFLAG} from "../controller.js";
 
 export function updatedSongCallback(redraw) {
     if (redraw) {
@@ -19,8 +19,16 @@ export function updatedPlaylistCallback(redraw) {
     saveData()
 }
 
+let flag = localStorage['flag'] || 0
+
 let parsers = {
     'song': argArray => {
+        if (flag < 1) {
+            argArray[1] = extractId(argArray[1])
+            argArray.splice(2, 0, 'youtube')
+            console.log(argArray)
+        }
+
         return Song(updatedSongCallback, ...argArray)
     },
 
@@ -213,17 +221,23 @@ export async function makeRemotePlaylist(playlistName, playlistURL) {
         let remotePlaylist = await api.getShallowPlaylist(playlistURL)
         if (remotePlaylist?.entries) {
             let remotes = getUsedRemoteUrls()
+            let duplicates = {}
             let songs = Array.from(remotePlaylist.entries.map(v => {
-                let newUrl = `https://www.youtube.com/watch?v=${v.url}`
+                let newUrl = `youtube.com/watch?v=${v.url}`
+                if (duplicates[newUrl] !== undefined) {
+                    return false
+                }
                 if (remotes[newUrl] === undefined) {
-                    let newSong = Song(updatedSongCallback, v.title, newUrl, v.duration, v.uploader)
+                    let newSong = Song(updatedSongCallback, v.title, v.url, "youtube", v.duration, v.uploader)
                     allSongPlaylist.addSong(newSong)
                     remotes[newUrl] = newSong // Sometimes there are duplicate songs in the extracted playlist
+                    duplicates[newUrl] = newSong
                     return newSong
                 } else {
+                    duplicates[newUrl] = remotes[newUrl]
                     return remotes[newUrl]
                 }
-            }))
+            }).filter(v => v !== false))
             let newPlaylist = Playlist(updatedPlaylistCallback, playlistName, songs)
             playlistArray.push(newPlaylist)
             dispatch('playlist')
