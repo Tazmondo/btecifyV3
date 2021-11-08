@@ -3,6 +3,8 @@ import {placeholderURL} from '../../util.js'
 export function Song(updatedCallback, title, remoteUrl, duration, artist = "", album = "", remoteThumb = "", uuid = "", disabled=false) {
     uuid = uuid || api.getUUID()
 
+    remoteUrl = remoteUrl.replace("http://", "https://")
+
     let cachedThumb;
     let cachedSong;
 
