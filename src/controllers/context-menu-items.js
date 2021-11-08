@@ -2,6 +2,7 @@ import * as MusicController from './music.js'
 import * as ObjectController from './object.js'
 import * as RouteController from './route.js'
 import {generateInputDialog} from "./dialog-box.js";
+import {deleteSong, getSongFromUUID} from "./object.js";
 
 const contexts = {
     'body': [
@@ -142,6 +143,16 @@ const contexts = {
             type: 'button',
             action: (context) => {
                 context.dispatchEvent(new Event('dblclick'))
+            }
+        },
+        {
+            name: 'Delete',
+            type: 'button',
+            action: (context) => {
+                let uuid = context?.dataset?.uuid
+                if (uuid) {
+                    deleteSong(getSongFromUUID(uuid))
+                }
             }
         }
     ],

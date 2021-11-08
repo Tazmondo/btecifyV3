@@ -75,8 +75,21 @@ function getPlaylistIndex(playlist) {
     return playlistArray.findIndex(v => v === playlist)
 }
 
+function getUsedRemoteUrls() {
+    return allSongPlaylist.getSongs().reduce((map, song) => {
+        map[song.getURL()] = song
+        return map
+    }, {})
+}
+
 function doesSongExist(song) {
-    return false // todo: song name searching and stuff to check for potential duplicates
+    let remotes = getUsedRemoteUrls()
+    return !!remotes[song.getURL()]
+    // return false // todo: song name searching and stuff to check for potential duplicates
+}
+
+export function getSongFromUUID(uuid) {
+    return allSongPlaylist.getSongs().find(v => v.getUUID() === uuid)
 }
 
 /**
@@ -121,7 +134,7 @@ export function renamePlaylist(playlist, newName) {
  */
 export function deletePlaylist(playlist) {
     let index = getPlaylistIndex(playlist)
-    if (index) {
+    if (index !== -1) {
         playlistArray.splice(index, 1)
         dispatch('playlist')
         return true
@@ -136,9 +149,17 @@ export function makeSong(songArgs, playlists=[]) {
         playlists.forEach(playlist => {
             playlist.addSong(newSong)
         })
+        dispatch('song')
         return newSong
     }
     return false
+}
+
+export function deleteSong(song) {
+    allSongPlaylist.removeSongWithSong(song)
+    playlistArray.forEach(playlist => playlist.removeSongWithSong(song))
+    dispatch('playlist')
+    dispatch('song')
 }
 
 // Returns a sorted array of playlists.
@@ -173,10 +194,16 @@ export async function makeRemotePlaylist(playlistName, playlistURL) {
     if (!isPlaylistTitleUsed(playlistName)) {
         let remotePlaylist = await api.getShallowPlaylist(playlistURL)
         if (remotePlaylist?.entries) {
+            let remotes = getUsedRemoteUrls()
             let songs = Array.from(remotePlaylist.entries.map(v => {
-                let newSong = Song(updatedSongCallback, v.title, v.url, v.duration, v.uploader)
-                // todo: check against song list
-                return newSong
+                let newUrl = `https://www.youtube.com/watch?v=${v.url}`
+                if (remotes[newUrl] === undefined) {
+                    let newSong = Song(updatedSongCallback, v.title, newUrl, v.duration, v.uploader)
+                    allSongPlaylist.addSong(newSong)
+                    return newSong
+                } else {
+                    return remotes[newUrl]
+                }
             }))
             let newPlaylist = Playlist(updatedPlaylistCallback, playlistName, songs)
             playlistArray.push(newPlaylist)
