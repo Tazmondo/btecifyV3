@@ -49,6 +49,7 @@ function SongElement(song, searchQuery, playlist, superSub, otherPlaylist, isRig
 
     function populateSongItem() {
         let newSongItem = template.content.firstElementChild.cloneNode(true)
+        newSongItem.dataset.uuid = song.getUUID()
         newSongItem.classList.toggle('enabled', !song.isDisabled())
 
         let thumb = newSongItem.querySelector('.thumb')
