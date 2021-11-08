@@ -4,6 +4,7 @@ const {v4: uuidv4, validate} = require('uuid')
 const dbFunctions = require('./ipc.js')(false)
 const { contextBridge, ipcRenderer } = require('electron')
 const Popper = require('@popperjs/core')
+const Spotify = require('spotify-web-api-js')
 
 let api = {
     getUUID() {return uuidv4()},
@@ -48,3 +49,4 @@ for (let funcName in dbFunctions) {
 
 contextBridge.exposeInMainWorld('api', api)
 contextBridge.exposeInMainWorld('Popper', Popper)
+contextBridge.exposeInMainWorld('Spotify', Spotify)
