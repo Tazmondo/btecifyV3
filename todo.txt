@@ -37,6 +37,8 @@ store more efficiently
     so instead each playlist should just reference a UUID
 extract video chapters
     for albums that are all in one video
+in playlist comparison add opposite arrow to remove this song from the opposing playlist
+
 
 
 DONE (sort of):
