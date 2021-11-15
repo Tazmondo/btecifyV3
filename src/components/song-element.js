@@ -97,7 +97,10 @@ function SongElement(song, searchQuery, playlist, superSub, otherPlaylist, isRig
                 addButton.querySelector('title').textContent = `Add to ${otherPlaylist.getTitle()}`
                 addButton.addEventListener('click', e => {
                     addToPlaylist(otherPlaylist, song)
+                    e.stopPropagation() // So that spam adding does not cause songs to play.
                 })
+                // So that spam adding does not cause songs to play.
+                addButton.addEventListener('dblclick', e =>  e.stopPropagation())
             }
         }
 
