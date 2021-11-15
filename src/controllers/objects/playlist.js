@@ -85,6 +85,11 @@ export function Playlist(updatedCallback, title, songs=[], thumb="") {
             })()
         },
 
+        refreshThumb() {
+            cachedThumb = undefined
+            updatedCallback(true)
+        },
+
         // Returns boolean indicating whether the playlist contains a certain song object.
         doesContainSong(songObject) {
             return songs.some(v => {

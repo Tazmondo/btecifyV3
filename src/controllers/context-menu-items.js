@@ -127,6 +127,14 @@ const contexts = {
             }
         },
         {
+            name: 'Refresh Thumbnail',
+            type: 'button',
+            action: context => {
+                let playlist = ObjectController.getPlaylistFromTitle(context.querySelector('h3').textContent)
+                playlist.refreshThumb()
+            }
+        },
+        {
             name: 'Delete Playlist',
             type: 'button',
             action: (context) => {
