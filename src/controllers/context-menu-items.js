@@ -6,16 +6,16 @@ import {deleteSong, deleteUnusedSongs, getSongFromUUID} from "./object.js";
 
 const contexts = {
     'body': [
-        {
-            name: 'Test Dialog box',
-            type: 'button',
-            action: context => {
-                generateInputDialog("A test dialog box", "This is a test!", {
-                    inputs: [{type: 'text', label: 'test input'}],
-                    type: 'confirm'
-                })
-            }
-        }
+        // {
+        //     name: 'Test Dialog box',
+        //     type: 'button',
+        //     action: context => {
+        //         generateInputDialog("A test dialog box", "This is a test!", {
+        //             inputs: [{type: 'text', label: 'test input'}],
+        //             type: 'confirm'
+        //         })
+        //     }
+        // }
     ],
     '#home-nav-page': [
         {
