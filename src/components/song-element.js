@@ -71,8 +71,14 @@ function SongElement(song, searchQuery, playlist, superSub, otherPlaylist, isRig
         if (playlist) {
             removeButton.classList.toggle("inactive")
             removeButton.querySelector('title').textContent = `Remove from ${playlist.getTitle()}`
+
+            // Stop playing song by accident when editing playlists (see again below)
             removeButton.addEventListener('click', e => {
                 removeFromPlaylist(playlist, song)
+                e.stopPropagation()
+            })
+            removeButton.addEventListener('dblclick', e => {
+                e.stopPropagation()
             })
         }
         if (isHistorySong) {
@@ -99,7 +105,7 @@ function SongElement(song, searchQuery, playlist, superSub, otherPlaylist, isRig
                     addToPlaylist(otherPlaylist, song)
                     e.stopPropagation() // So that spam adding does not cause songs to play.
                 })
-                // So that spam adding does not cause songs to play.
+                // So that spam adding does not cause songs to play. (see again above)
                 addButton.addEventListener('dblclick', e =>  e.stopPropagation())
             }
         }
