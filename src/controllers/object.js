@@ -26,7 +26,6 @@ let parsers = {
         if (flag < 1) {
             argArray[1] = extractId(argArray[1])
             argArray.splice(2, 0, 'youtube')
-            console.log(argArray)
         }
 
         return Song(updatedSongCallback, ...argArray)
