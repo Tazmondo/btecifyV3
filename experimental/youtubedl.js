@@ -14,10 +14,11 @@ let test5 = ["http://www.youtube.com/watch?v=aukaEzR2D1U","http://www.youtube.co
 
 const extractionWrappers = {
     'youtube:tab': async (response) => {
+        response.entries.forEach(v => v.extractor = "youtube")
         return response
     },
     'Bandcamp:album': async (response) => {
-        return await Promise.all(response.entries.map(async (v) => {
+        response.entries = await Promise.all(response.entries.map(async (v) => {
             try{
                 return await ytdl(v.url, {
                     dumpSingleJson: true,
@@ -28,6 +29,8 @@ const extractionWrappers = {
                 return false
             }
         }))
+
+        return response
     }
 }
 
@@ -37,14 +40,29 @@ function test(url) {
         yesPlaylist: true,
         flatPlaylist: true
     }).then(res => {
-        console.log(JSON.stringify(res, null, 2))
+        if (res.extractor in extractionWrappers) {
+            extractionWrappers[res.extractor](res).then(res => {
+                res['automatic_captions'] = undefined
+                res['formats'] = undefined
+                res['requested_formats'] = undefined
+                console.log(JSON.stringify(res, null, 2))
+            })
+        } else {
+            res['automatic_captions'] = undefined
+            res['formats'] = undefined
+            res['requested_formats'] = undefined
+            console.log(JSON.stringify(res, null, 2))
+        }
     }).catch(e => {
         console.log(e.message)
     })
 }
 
-// test("https://windows96.bandcamp.com/album/magic-peaks")
-// test("https://www.youtube.com/playlist?list=PL22baOOM5dLdXrvuaxtquOQnnzB8mW6JB")
+console.log("a");
+test("https://www.youtube.com/playlist?list=PL22baOOM5dLdXrvuaxtquOQnnzB8mW6JB")
+test("https://www.youtube.com/watch?v=NzTzGWWKevA")
+test("https://windows96.bandcamp.com/album/magic-peaks")
+test("https://windows96.bandcamp.com/track/looking-forward")
 
 function test10(url) {
     ytdl(url, {
@@ -70,7 +88,7 @@ function test10(url) {
     })
 }
 
-test10("https://windows96.bandcamp.com/album/magic-peaks")
+// test10("https://windows96.bandcamp.com/album/magic-peaks")
 
 function test2(finish, url, index) {
     ytdl(url, {
