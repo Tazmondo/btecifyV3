@@ -87,10 +87,6 @@ async function setSong(song) {
     return false
 }
 
-player.addEventListener('timeupdate', e => {
-    dispatch('songtime')
-})
-
 function songEnded(depth = 0) {
     if (depth > 10) {
         console.log("maximum songended depth reached");
@@ -144,13 +140,30 @@ function songEnded(depth = 0) {
     }
 }
 
-player.addEventListener('ended', e => {
-    if (repeat) {
-        player.play()
-    } else {
-        songEnded()
+// This has been done to fix an issue where sometimes a song would reach the end of its
+// duration, but fail to end properly.
+// Im not sure whether it was because the ended event didnt fire properly but
+// either way this should fix it.
+player.addEventListener('timeupdate', e => {
+    if (player.currentTime === player.duration) {
+        console.log("time ended");
+        if (repeat) {
+            player.play()
+        } else {
+            songEnded()
+        }
     }
+    dispatch('songtime')
 })
+
+// player.addEventListener('ended', e => {
+//     console.log("ended");
+//     // if (repeat) {
+//     //     player.play()
+//     // } else {
+//     //     songEnded()
+//     // }
+// })
 
 export function play() {
     player.autoplay = true
