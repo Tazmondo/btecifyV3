@@ -114,18 +114,20 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
                 if (otherPlaylist !== undefined) {
                     superSongs = playlist.getSuperSongs(otherPlaylist.getSongs())
                 }
+                let superItems = []
                 getSongs().forEach(song => {
                     let superSong = isSongInSongArray(superSongs, song)
                     let newElement = SongElement(song, searchQuery, playlist, superSong, otherPlaylist, isRightSide, undefined, undefined, observed)
 
                     if (superSong) {
-                        let superItems = Array.from(element.querySelectorAll('.song-list-item-container.super'))
+                        // let superItems = Array.from(element.querySelectorAll('.song-list-item-container.super'))
                         if (superItems.length > 0) {
-                            superItems.pop().insertAdjacentElement('afterend', newElement)
+                            superItems[superItems.length-1].insertAdjacentElement('afterend', newElement)
 
                         } else {
                             listElement.insertAdjacentElement('afterbegin', newElement)
                         }
+                        superItems.push(newElement)
 
                     } else {
                         listElement.insertAdjacentElement('beforeend', newElement)
@@ -227,12 +229,12 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
 
     function setPlaylist(iPlaylist) {
         playlist = iPlaylist
-        draw()
+        drawQueued = true
     }
 
     function setOtherPlaylist(iPlaylist) {
         otherPlaylist = iPlaylist
-        draw()
+        drawQueued = true
     }
 
     function frame() {
