@@ -1,6 +1,11 @@
 import {placeholderURL, extractId} from '../../util.js'
 
 export function Song(updatedCallback, title, vidId, extractor, duration, artist = "", album = "", remoteThumb = "", uuid = "", disabled=false) {
+    // title: string
+    // vidID: string
+    // extractor: string
+    // duration: string
+
     uuid = uuid || api.getUUID()
 
     let cachedThumb;
@@ -90,7 +95,7 @@ export function Song(updatedCallback, title, vidId, extractor, duration, artist 
 
         // Returns length of song in seconds
         getDurationSeconds() {
-            return duration
+            return parseInt(duration)
         },
 
         // Returns a url to the thumbnail, downloading it locally if it doesn't exist, or falling back to the remote
