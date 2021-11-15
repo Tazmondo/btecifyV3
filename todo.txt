@@ -35,6 +35,9 @@ queue editing
 store more efficiently
     currently songs appear multiple times for each playlist
     so instead each playlist should just reference a UUID
+extract video chapters
+    for albums that are all in one video
+
 
 DONE (sort of):
 scan clipboard for youtube links and prompt for adding song
