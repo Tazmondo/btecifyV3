@@ -1,10 +1,13 @@
 import {placeholderURL, extractId} from '../../util.js'
 
-export function Song(updatedCallback, title, vidId, extractor, duration, artist = "", album = "", remoteThumb = "", uuid = "", disabled=false) {
+export function Song(updatedCallback, title, vidId, extractor, duration, artist = "", album = "", remoteThumb = "", uuid = "", disabled=false, webpageUrl="") {
     // title: string
     // vidID: string
     // extractor: string
     // duration: string
+    if (extractor === "youtube" && webpageUrl === "") {
+        webpageUrl = `youtube.com/watch?v=${vidId}`
+    }
 
     uuid = uuid || api.getUUID()
 
@@ -35,6 +38,8 @@ export function Song(updatedCallback, title, vidId, extractor, duration, artist 
             switch (extractor) {
                 case "youtube":
                     return `youtube.com/watch?v=${vidId}`
+                case "Bandcamp":
+                    return webpageUrl
                 default:
                     throw new Error(`Unsupported extractor: ${extractor}`)
             }
@@ -61,8 +66,8 @@ export function Song(updatedCallback, title, vidId, extractor, duration, artist 
                     try {
                         // Waiting for the song to download before streaming it creates more delay than just streaming
                         // fromt the remote
-                        api.downloadSong(uuid, vidId)
-                        source = await api.getRemoteSongStream(vidId)
+                        api.downloadSong(uuid, webpageUrl)
+                        source = await api.getRemoteSongStream(webpageUrl)
                         if (typeof source === "object") {
                             let msg = source?.message
                             source = ""
@@ -89,10 +94,6 @@ export function Song(updatedCallback, title, vidId, extractor, duration, artist 
             }
         },
 
-        getVideoId() {
-            return vidId.substr(vidId.length-11, 11)
-        },
-
         // Returns length of song in seconds
         getDurationSeconds() {
             return parseInt(duration)
@@ -112,7 +113,7 @@ export function Song(updatedCallback, title, vidId, extractor, duration, artist 
 
         // Used by JSON.stringify
         toJSON() {
-            return ['song', title, vidId, extractor, duration, artist, album, remoteThumb, uuid, disabled]
+            return ['song', title, vidId, extractor, duration, artist, album, remoteThumb, uuid, disabled, webpageUrl]
         }
     }
 }

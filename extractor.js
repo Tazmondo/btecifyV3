@@ -2,6 +2,7 @@ const ytdl = require("youtube-dl-exec");
 
 const extractionWrappers = {
     'youtube:tab': async (response) => {
+        response.entries.forEach(v => v.extractor = "youtube")
         return response
     },
     'Bandcamp:album': async (response) => {

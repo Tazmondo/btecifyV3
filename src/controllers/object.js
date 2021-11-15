@@ -215,6 +215,16 @@ export function setData(songPlaylist, iPlaylistArray) {
     playlistArray = iPlaylistArray
 }
 
+function urlFromResponse(responseData) {
+    switch (responseData.extractor) {
+        case "youtube":
+            return `youtube.com/watch?v=${responseData.id}`
+
+        case "Bandcamp":
+            return responseData.webpage_url
+    }
+}
+
 export async function makeRemotePlaylist(playlistName, playlistURL) {
     if (!isPlaylistTitleUsed(playlistName)) {
         let remotePlaylist = await api.getShallowPlaylist(playlistURL)
@@ -223,12 +233,13 @@ export async function makeRemotePlaylist(playlistName, playlistURL) {
             let duplicates = {}
             console.log(remotePlaylist, remotePlaylist.entries)
             let songs = Array.from(remotePlaylist.entries.map(v => {
-                let newUrl = `youtube.com/watch?v=${v.url}`
+                let newUrl = urlFromResponse(v)
                 if (duplicates[newUrl] !== undefined) {
                     return false
                 }
                 if (remotes[newUrl] === undefined) {
-                    let newSong = Song(updatedSongCallback, v.title, v.url, "youtube", v.duration, v.uploader)
+                    let title = v.track || v.title
+                    let newSong = Song(updatedSongCallback, title, v.id, v.extractor, v.duration, v.uploader, v?.album, v?.thumbnail, undefined, undefined, newUrl)
                     allSongPlaylist.addSong(newSong)
                     remotes[newUrl] = newSong // Sometimes there are duplicate songs in the extracted playlist
                     duplicates[newUrl] = newSong
