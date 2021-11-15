@@ -221,6 +221,7 @@ export async function makeRemotePlaylist(playlistName, playlistURL) {
         if (remotePlaylist?.entries) {
             let remotes = getUsedRemoteUrls()
             let duplicates = {}
+            console.log(remotePlaylist, remotePlaylist.entries)
             let songs = Array.from(remotePlaylist.entries.map(v => {
                 let newUrl = `youtube.com/watch?v=${v.url}`
                 if (duplicates[newUrl] !== undefined) {
