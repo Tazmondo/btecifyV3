@@ -108,18 +108,45 @@ function Seeker(label, callback, rounded, minValue, maxValue, defaultValue) {
     seekerForegroundElement.insertAdjacentElement('beforeend', seekerThumbElement)
     seekerThumbElement.classList.toggle('seeker-thumb')
 
+    let valueTip = document.createElement('div')
+    labelElement.insertAdjacentElement('beforeend', valueTip)
+    valueTip.innerText = "50"
+    valueTip.classList.toggle("seeker-tip")
+
+    let tipPopper = Popper.createPopper(seekerThumbElement, valueTip, {
+        placement: "top",
+    })
+
+    labelElement.addEventListener('mouseenter', () => {
+        tipPopper.update()
+        valueTip.classList.toggle('hover', true)
+    })
+    labelElement.addEventListener('mouseleave', () => {
+        valueTip.classList.toggle('hover', false)
+    })
+
     let oldValue = defaultValue
 
-    function updateSeeker(value) {
-        let percentage = (value / (minValue + maxValue)) * 100
+    function updateSeeker(calculatedValue) {
+        let distanceProportion = (calculatedValue - minValue) / (maxValue - minValue)
+        let percentage = distanceProportion * 100
 
         if (percentage < 0) {
             percentage = 0
         } else if (percentage > 100) {
             percentage = 100
         }
+        let transitioning = true
+        let duration = parseFloat(getComputedStyle(seekerForegroundElement).transitionDuration)
+        setTimeout(() => transitioning = false, duration*1000)
+        function updPopper() {
+            tipPopper.update()
+            if (transitioning) requestAnimationFrame(updPopper)
+        }
+        updPopper()
+
         seekerForegroundElement.style = `width: ${percentage}%`
-        // currentTime.innerText = getSongTimeFromPercentage(percentage)
+        valueTip.innerText = calculatedValue.toString()
     }
     updateSeeker(defaultValue)
 
@@ -129,7 +156,14 @@ function Seeker(label, callback, rounded, minValue, maxValue, defaultValue) {
 
         function moveFunc(e) {
             let relativeX = getMousePosition(e, seekerBackgroundElement)[0]
-            let newValue = relativeX / seekerBackgroundElement.clientWidth * (maxValue + minValue)
+
+            // 0 < relativeX < width of element
+            relativeX = Math.min(seekerBackgroundElement.clientWidth, Math.max(0, relativeX))
+
+            let proportion = relativeX / seekerBackgroundElement.clientWidth
+
+            // Interpolate between min and max based on the proportion
+            let newValue = (proportion * (maxValue - minValue)) + minValue
             if (rounded) {
                 newValue = Math.round(newValue)
                 updateSeeker(newValue)
@@ -152,8 +186,10 @@ function Seeker(label, callback, rounded, minValue, maxValue, defaultValue) {
         function mouseMove(e) {
             currentEvent = e
         }
+        valueTip.classList.toggle('held', true)
         document.addEventListener("mousemove", mouseMove)
         document.addEventListener("mouseup", e => {
+            valueTip.classList.toggle('held', false)
             document.removeEventListener("mousemove", mouseMove)
             clearInterval(interval)
         }, {once: true})

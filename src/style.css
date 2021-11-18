@@ -1127,6 +1127,15 @@ svg.inactive {
     margin-left: -6px;
 }
 
+.seeker-tip {
+    display: none;
+}
+
+.seeker-tip.hover,
+.seeker-tip.held {
+    display: revert;
+}
+
 .footer-side-buttons {
     display: flex;
     width: 30%;

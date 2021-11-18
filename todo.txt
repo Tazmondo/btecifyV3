@@ -61,7 +61,7 @@ sometimes already played songs dont seem to have a file cache
 when song ends current time stops increasing but playback jumps to a random spot earlier
     maybe check if current time = duration to make sure song ends properly
     also just fade volume based on where current time is for song fading
-
+seeker popper is a bit janky
 
 
 FOR PLAYLIST IMPORTING
