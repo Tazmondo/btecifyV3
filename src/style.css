@@ -839,6 +839,7 @@ input[type=text][disabled] {
     color: #a2a2a2;
 }
 
+label.seeker-label,
 label.checkbox {
     display: flex;
     align-items: center;
@@ -1062,15 +1063,22 @@ svg.inactive {
 }
 
 .seeker {
-    width: 100%;
-    min-width: 350px;
-    max-width: 450px;
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 3px 0;
     cursor: grab;
+}
+
+.options-container .seeker {
+    max-width: 25%;
+}
+
+.player-seeker {
+    min-width: 350px;
+    max-width: 450px;
+    width: 100%;
 }
 
 .seeker-background {

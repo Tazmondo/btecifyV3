@@ -6,8 +6,11 @@ const options = {
     },
     visualiserDetail: {
         name: "Visualiser Detail",
-        type: "number",
-        value: 8 // 2 to the power of value = fft size
+        type: "seeker",
+        round: true,
+        value: 8, // 2 to the power of value = fft size,
+        min: 5,
+        max: 12
     },
     downloadMusic: {
         name: "Download music",
@@ -31,7 +34,7 @@ const options = {
     },
     volumeScale: {
         name: "Volume Scale",
-        type: "number",
+        type: "float",
         value: 2.5
     }
 
