@@ -14,33 +14,49 @@ function init(audioElement) {
     src.connect(analyser)
     analyser.connect(context.destination)
 
-    analyser.fftSize = 256 // todo: any higher results in jankiness
-
-    let bufferLength = analyser.frequencyBinCount
-
-    let dataArray = new Uint8Array(bufferLength)
-
-    canvas.width = canvas.clientWidth
-    canvas.height = 256
-
-    let width = canvas.width
-    let height = canvas.height
-
+    let prevDetail = -1
+    let bufferLength
+    let dataArray;
+    let width;
+    let height;
     let barWidth;
 
-    if (mode === "symmetrical") {
-        barWidth = (width / bufferLength) * 0.5
-    } else if (mode === "left") {
-        barWidth = (width / bufferLength) * 1.5
-    } else if (mode === "centre") {
-        barWidth = (width / bufferLength) * 0.75
+    function refreshDetail() {
+        let newDetail = getOptionValue('visualiserDetail')
+
+        if (prevDetail !== newDetail) {
+            prevDetail = newDetail
+
+            analyser.fftSize = 2 ** newDetail
+            bufferLength = analyser.frequencyBinCount
+            dataArray = new Uint8Array(bufferLength)
+
+            canvas.width = canvas.clientWidth
+            canvas.height = 256
+
+            width = canvas.width
+            height = canvas.height
+
+            if (mode === "symmetrical") {
+                barWidth = (width / bufferLength) * 0.5
+            } else if (mode === "left") {
+                barWidth = (width / bufferLength) * 1.5
+            } else if (mode === "centre") {
+                barWidth = (width / bufferLength) * 0.9
+            }
+        }
     }
+
+    refreshDetail()
+
+
     let curBarPos = 0;
 
     function renderFrame() {
         requestAnimationFrame(renderFrame)
         ctx.clearRect(0, 0, width, height)
         if (!getOptionValue('visualiser')) return
+        refreshDetail()
         curBarPos = 0;
         analyser.getByteFrequencyData(dataArray)
 
