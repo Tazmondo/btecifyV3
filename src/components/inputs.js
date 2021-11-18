@@ -1,3 +1,5 @@
+import {generateInputDialog} from "../controllers/dialog-box.js";
+
 function createLabel(label, parent) {
     parent.insertAdjacentHTML('beforeend', `<label>${label}</label>`)
     return parent.lastElementChild
@@ -200,4 +202,38 @@ function Seeker(label, callback, rounded, minValue, maxValue, defaultValue) {
     return labelElement
 }
 
-export {CheckBox, Text, Seeker}
+/**
+ * Creates an input that accepts a hotkey.
+ * @param label {string} The name of the hotkey
+ * @param callback {function(string)} Callback function called with the new hotkey
+ * @param defaultValue {string} Default hotkey value
+ * @return [HTMLElement, function(boolean)] Returns the element and a function used to set the validity of the hotkey.
+ */
+function Hotkey(label, callback, defaultValue) {
+    let labelElement = document.createElement('label')
+    labelElement.innerText = label
+
+    let keyValue = document.createElement('kbd')
+    labelElement.insertAdjacentElement('beforeend', keyValue)
+    keyValue.innerText = defaultValue
+
+    keyValue.addEventListener('click', e => {
+        generateInputDialog("New Hotkey...", `Enter a hotkey for: ${label.substring(0, label.length-2)}`, {
+            type: 'hotkey'
+        }).then(res => {
+            keyValue.innerText = res[0]
+            callback(res[0])
+        }).catch(res => {
+            keyValue.innerText = "NO KEYBIND SET"
+            callback("")
+        })
+    })
+
+    function valid(isValid) {
+        keyValue.classList.toggle('valid', isValid)
+    }
+
+    return [labelElement, valid]
+}
+
+export {CheckBox, Text, Seeker, Hotkey}

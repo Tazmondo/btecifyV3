@@ -36,11 +36,18 @@ function ipc(main, isPackaged, appWindow) {
         })
 
         ipcMain.on('sethotkey', (e, hotkeyString) => {
-            e.returnValue = globalShortcut.register(hotkeyString, () => {
-                // ??/??/?? - This is unreliable. todo: make me more reliable
-                // 21/08/21 - this might be fixed now?
-                webContent.send(hotkeyString)
-            })
+            try {
+                let returnVal = globalShortcut.register(hotkeyString, () => {
+                    // ??/??/?? - This is unreliable. todo: make me more reliable
+                    // 21/08/21 - this might be fixed now?
+                    webContent.send(hotkeyString)
+                })
+                e.returnValue = returnVal
+            } catch (e) {
+                console.log(e.message);
+                e.returnValue = false
+            }
+
         })
 
         ipcMain.on('close', e => {

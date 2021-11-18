@@ -1,10 +1,26 @@
 import * as MusicController from './music.js'
 
+function saveHotkeys() {
+    let saveTable = {}
+    for (let hotkeyName in globalHotkeys) {
+        saveTable[hotkeyName] = globalHotkeys[hotkeyName][0]
+    }
+    localStorage.setItem('hotkeys', JSON.stringify(saveTable))
+}
+
 let globalHotkeys = {
     Pause:  ['F13', pause, false],
     Skip: ['F14', skip, false],
     'Increase Volume': ['F18', increaseVolume, false],
     'Decrease Volume': ['F15', decreaseVolume, false]
+}
+
+if (localStorage.getItem('hotkeys') !== null) {
+    let saveTable = JSON.parse(localStorage.getItem('hotkeys'))
+    for (let hotkeyName in saveTable) {
+        globalHotkeys[hotkeyName][0] = saveTable[hotkeyName]
+    }
+    // Registered lower down
 }
 
 let localHotkeys = { // obviously unfinished todo: finish local hotkeys
@@ -50,7 +66,11 @@ function decreaseVolume() {
 function registerHotkeys() {
     api.unRegisterAllHotkeys()
     for (let hotkey in globalHotkeys) {
-        globalHotkeys[hotkey][2] = api.registerHotkey(globalHotkeys[hotkey][0], globalHotkeys[hotkey][1])
+        if (globalHotkeys[hotkey][0] !== "") {
+            globalHotkeys[hotkey][2] = api.registerHotkey(globalHotkeys[hotkey][0], globalHotkeys[hotkey][1])
+        } else {
+            globalHotkeys[hotkey][2] = false
+        }
     }
 }
 
@@ -60,10 +80,20 @@ function getHotKeys() {
     return globalHotkeys
 }
 
+const jsToNativeMap = {
+    'AudioVolumeUp': 'VolumeUp',
+    'AudioVolumeMute': 'VolumeMute',
+    'AudioVolumeDown': 'VolumeDown',
+    'MediaTrackNext': 'MediaNextTrack',
+    'MediaTrackPrevious': 'MediaPreviousTrack',
+}
+
 function setHotkey(hotkeyName, hotkeyString) {
     if (hotkeyName in globalHotkeys) {
+        hotkeyString = jsToNativeMap[hotkeyString] || hotkeyString
         globalHotkeys[hotkeyName][0] = hotkeyString
         registerHotkeys()
+        saveHotkeys()
         return globalHotkeys[hotkeyName][2]
     }
     throw new Error("Tried to set an invalid hotkey!")
@@ -77,4 +107,4 @@ function subscribeToKeydown(callback) {
     return () => document.removeEventListener('keydown', listener)
 }
 
-export {subscribeToKeydown}
+export {subscribeToKeydown, getHotKeys, setHotkey}

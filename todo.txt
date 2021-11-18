@@ -12,9 +12,7 @@ confirmation menu and dialog box
 add multiple song selection to song page
 action history with undo option
 add an options page
-add feedback notifications (e.g. a toast when you add a new song)
 add wait for next frame to all draw pages?
-display song being downloaded, and use the seeker bar as a loading bar to show progress.
 peer-to-peer listen along
     maybe use browser protocols to share links
     see P2P technologies
@@ -35,10 +33,15 @@ queue editing
 store more efficiently
     currently songs appear multiple times for each playlist
     so instead each playlist should just reference a UUID
+    electron-store?
 extract video chapters
     for albums that are all in one video
 in playlist comparison add opposite arrow to remove this song from the opposing playlist
 click on images/thumbnails to play song
+add a progress bar
+    display song being downloaded, and use the seeker bar as a loading bar to show progress.
+    add feedback notifications (e.g. a toast when you add a new song)
+
 
 
 DONE (sort of):

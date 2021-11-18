@@ -10,7 +10,7 @@ import {makeDraggable} from "../util.js";
  *         type: "text",
  *         label: string
  *     }],
- *     [type]: "input"|"confirm"
+ *     [type]: "input"|"confirm"|"hotkey"
  * }}
  * @return {Promise<Array|boolean>} Returns an array of the user inputs, or false if they cancelled.
  */
@@ -55,15 +55,27 @@ async function generateInputDialog(title, mainText, options) {
             case "confirm":
 
                 break
-
+            case "hotkey":
+                submitButton.style.display = "none"
+                function keyEvent(e) {
+                    let key = e.key
+                    if (!["Escape", "Shift", "Control", "Alt", "AltGraph"].includes(key)) {
+                        let modifier = e.altKey ? "Alt+" : e.ctrlKey ? "Ctrl+" : e.shiftKey ? "Shift+" : ""
+                        let hotkeyString = modifier + key
+                        submit([hotkeyString])
+                        document.removeEventListener('keydown', keyEvent)
+                    }
+                }
+                document.addEventListener('keydown', keyEvent)
         }
 
-        function submit() {
-            let inputs = Array.from(form.elements)
-                .filter(v => v.type !== 'submit');
+        function submit(userInputs) {
+            let inputs = userInputs ?? Array.from(form.elements)
+                .filter(v => v.type !== 'submit')
+                .map(v => v.value);
             backDiv.remove()
             if (inputs.length > 0) {
-                resolve(inputs.map(v => v.value))
+                resolve(inputs)
             } else {
                 resolve(true)
             }
