@@ -3,10 +3,9 @@ TODO
 features:
 add a better placeholder image
 add local keybinds (hotkey.js?)
-add hotkey changer menu
 view back button is a 100% height div that takes up the left side
 add keybind to immediately focus the window
-add more valid extractors (soundcloud, bandcamp, etc)
+add more valid extractors (soundcloud, etc)
 mass get song metadata (getJson > track, artist etc)
 confirmation menu and dialog box
 add multiple song selection to song page
