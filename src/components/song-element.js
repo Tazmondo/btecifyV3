@@ -1,9 +1,9 @@
 import {copyArray, durationSecondsToMinutes} from "../util.js";
 import {addToPlaylist, removeFromPlaylist} from "../controllers/object.js";
-import {forceSetSong} from "../controllers/music.js";
+import {forceSetSong, removeFromQueue} from "../controllers/music.js";
 import {highlightSearchedTerm} from "../controllers/search.js";
 
-function SongElement(song, searchQuery, playlist, superSub, otherPlaylist, isRightSide, isPlayingSong, isHistorySong, iobservedArray) {
+function SongElement(song, searchQuery, playlist, superSub, otherPlaylist, isRightSide, isPlayingSong, isHistorySong, iobservedArray, isQueue) {
     if (song === undefined) console.trace("undefined song on song element")
     let observedArray = iobservedArray ?? []
     let originalObserved = copyArray(observedArray)
@@ -108,6 +108,19 @@ function SongElement(song, searchQuery, playlist, superSub, otherPlaylist, isRig
                 // So that spam adding does not cause songs to play. (see again above)
                 addButton.addEventListener('dblclick', e =>  e.stopPropagation())
             }
+        }
+        if (isQueue && !playlist) {
+            removeButton.classList.toggle("inactive")
+            removeButton.querySelector('title').textContent = `Remove from queue`
+
+            // Stop playing song by accident when editing playlists (see again below)
+            removeButton.addEventListener('click', e => {
+                removeFromQueue(song)
+                e.stopPropagation()
+            })
+            removeButton.addEventListener('dblclick', e => {
+                e.stopPropagation()
+            })
         }
 
         let cachedThumb = song.getCachedThumb()

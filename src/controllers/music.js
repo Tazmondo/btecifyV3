@@ -277,3 +277,7 @@ export function toggleMute(force) {
     muted ? player.volume = 0 : player.volume = unModdedVol ** volMod
     dispatch('playing')
 }
+
+export function removeFromQueue(song) {
+    queue.remove
+}

@@ -149,11 +149,11 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
         let currentElement;
 
         function scrollToCurElement() {
-        if (currentElement) {
-            currentElement.scrollIntoView()
-            listElement.scrollBy(0, -listElement.clientHeight/2)
+            if (currentElement) {
+                currentElement.scrollIntoView()
+                listElement.scrollBy(0, -listElement.clientHeight/2)
+            }
         }
-    }
 
         function resetScrollTimeout(e) {
             if (scrollTimeout) clearTimeout(scrollTimeout)
@@ -167,7 +167,7 @@ function generateSongList(type, element, songs, playlist, otherPlaylist, isRight
         listElement.addEventListener('mousemove', resetScrollTimeout)
 
         function addSong(song, playing, past) {
-            let insertedElement = SongElement(song, searchQuery, undefined, undefined, undefined, undefined, playing, past, observed);
+            let insertedElement = SongElement(song, searchQuery, undefined, undefined, undefined, undefined, playing, past, observed, true);
             listElement.insertAdjacentElement('beforeend', insertedElement)
             if (playing) {
                 currentElement = insertedElement
