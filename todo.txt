@@ -10,20 +10,20 @@ mass get song metadata (getJson > track, artist etc)
 confirmation menu and dialog box
 add multiple song selection to song page
 action history with undo option
-add an options page
 add wait for next frame to all draw pages?
 peer-to-peer listen along
     maybe use browser protocols to share links
     see P2P technologies
 
-play a playlist without skipping the current song
 add button to queue to remove a song from the upcoming queue
     remember to clear the source buffer
 make search only apply after finish typing for large playlists due to lag
 rewrite the routing model? do i need to reinit pages every time??
 get lyrics of song (muzicbrainz / genius maybe?)
 add a cursor to visible search bars
+    add highlights to the song lists to indicate that a search is enabled
 add sound effects to buttons (e.g. mechanical click for the slider checkboxes)
+    enable/disable in options
 song source should always be file and not stream
     not really feasible since they take time to download
 show currently fetching song while it's being fetched
@@ -40,6 +40,8 @@ click on images/thumbnails to play song
 add a progress bar
     display song being downloaded, and use the seeker bar as a loading bar to show progress.
     add feedback notifications (e.g. a toast when you add a new song)
+hold shift in playlist comparison adds all
+    or add a merge/copy right click to playlists
 
 
 
@@ -50,6 +52,7 @@ contextmenus for playlists and such
 add styling to :active pseudo-selector to improve responsiveness
 a playlist view
 a song view
+add an options page
 
 
 bugs:
@@ -57,6 +60,7 @@ fix flicker when adding/removing songs to playlist page
 when playing a new song automatically, and it ends up with no source, a duplicate of the current song will be added to history.
 context menu items still active even when right click, indicating that something will happen when in reality nothing happens
 high gpu usage even when alt-tabbed?
+    seems to jump when open task manager???
 playing songs sometimes stutter? may be to do with the visualiser, or smth else entirely
 sometimes already played songs dont seem to have a file cache
     maybe fixed?

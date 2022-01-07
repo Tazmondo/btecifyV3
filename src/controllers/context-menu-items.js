@@ -4,6 +4,21 @@ import * as RouteController from './route.js'
 import {generateInputDialog} from "./dialog-box.js";
 import {deleteSong, deleteUnusedSongs, getSongFromUUID} from "./object.js";
 
+function getOtherPlaylists(context, callback) {
+    let curTitle = context.querySelector('h3').textContent
+    let newItems = []
+    ObjectController.getPlaylistArray().filter(v => v.getTitle() !== curTitle).forEach(playlist => {
+        newItems.push({
+            name: playlist.getTitle(),
+            type: 'button',
+            action: () => {
+                callback(context, playlist)
+            }
+        })
+    })
+    return [{context, actiosdasasns: getOtherPlaylists(context, callback)}]
+}
+
 const contexts = {
     'body': [
         // {
@@ -100,8 +115,33 @@ const contexts = {
                         }
                     })
                 })
+                return [{context, actions: getOtherPlaylists(context, callback)}]
+            }
+        },
+        {
+            name: 'Merge songs from...',
+            type: 'extend',
+            action: (context, extensionSelection) => {
+                let title1 = context.querySelector('h3').textContent
+                let title2 = extensionSelection?.getTitle()
+                // todo: add merging implementation
+            },
+            extensionItems: (context, callback) => {
+                let newItems = []
+                ObjectController.getPlaylistArray().filter(v => v.getTitle() !== context.querySelector('h3').textContent).forEach(playlist => {
+                    newItems.push({
+                        name: playlist.getTitle(),
+                        type: 'button',
+                        action: () => {
+                            callback(context, playlist)
+                        }
+                    })
+                })
                 return [{context, actions: newItems}]
             }
+        },
+        {
+
         },
         {
             name: 'Rename Playlist',
