@@ -1,6 +1,6 @@
 import {dispatch} from "./event.js";
 
-const validExtractors = ['youtube']
+const validExtractors = ['youtube', 'bandcamp']
 const clipboardPollInterval = 250
 
 let prevClip = ""
