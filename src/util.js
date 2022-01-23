@@ -19,7 +19,7 @@ export function isSongInSongArray (songArray, song) {
 
 export function durationSecondsToMinutes(iSeconds) {
     let minutes = Math.floor(iSeconds/60)
-    let seconds = iSeconds % 60
+    let seconds = Math.floor(iSeconds % 60)
     if (seconds < 10) {
         seconds = `0${seconds}`
     }
