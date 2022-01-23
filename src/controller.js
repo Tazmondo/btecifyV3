@@ -95,7 +95,7 @@ footerPlayerInit()
 //                 }
 //                 let thumb = song.thumbnail.replace("hqdefault.jpg", "maxresdefault.jpg")
 //                 thumb = thumb.replace("sddefault.jpg", "maxresdefault.jpg")
-//                 let newSong = Song(ObjectController.updatedSongCallback, song.songname, song.songurl, "youtube", duration, song.author, "", thumb)
+//                 let newSong = Song(song.songname, song.songurl, "youtube", duration, song.author, "", thumb)
 //                 songs.push(newSong)
 //             }
 //         }
@@ -106,7 +106,7 @@ footerPlayerInit()
 //     for (let playlist of inputData) {
 //         if (playlist.playlistname !== "empty"){
 //
-//             let newPlaylist = Playlist(ObjectController.updatedPlaylistCallback, playlist.playlistname, songs.filter(v => {
+//             let newPlaylist = Playlist(playlist.playlistname, songs.filter(v => {
 //                 return playlist.songs.find(v2 => {
 //                     return v.getURL() === v2.songurl
 //                 })
@@ -116,7 +116,7 @@ footerPlayerInit()
 //     }
 //
 //
-//     let newPlaylist = Playlist(ObjectController.updatedPlaylistCallback, "Songs", songs);
+//     let newPlaylist = Playlist("Songs", songs);
 //     ObjectController.setData(newPlaylist, playlists)
 //     localStorage['song'] = JSON.stringify(ObjectController.getSongPlaylist())
 //     localStorage['playlist'] = JSON.stringify(ObjectController.getPlaylistArray())

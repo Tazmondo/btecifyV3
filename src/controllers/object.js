@@ -90,7 +90,7 @@ export function getSongFromUUID(uuid) {
  * @return {false | Playlist} Returns false if a playlist with that name already exists, or the new playlist.
  */
 export function makePlaylist(playlistArgs) {
-    let newPlaylist = Playlist(updatedPlaylistCallback, ...playlistArgs)
+    let newPlaylist = Playlist( ...playlistArgs)
 
     if (!isPlaylistTitleUsed(newPlaylist.getTitle())) {
         playlistArray.push(newPlaylist)
@@ -229,7 +229,7 @@ export async function makeRemotePlaylist(playlistName, playlistURL) {
                 }
                 if (remotes[newUrl] === undefined) {
                     let title = v.track || v.title
-                    let newSong = Song(updatedSongCallback, title, v.id, v.extractor, v.duration, v.uploader, v?.album, v?.thumbnail, undefined, undefined, newUrl)
+                    let newSong = Song(title, v.id, v.extractor, v.duration, v.uploader, v?.album, v?.thumbnail, undefined, undefined, newUrl)
                     allSongPlaylist.addSong(newSong)
                     remotes[newUrl] = newSong // Sometimes there are duplicate songs in the extracted playlist
                     duplicates[newUrl] = newSong
@@ -239,7 +239,7 @@ export async function makeRemotePlaylist(playlistName, playlistURL) {
                     return remotes[newUrl]
                 }
             }).filter(v => v !== false))
-            let newPlaylist = Playlist(updatedPlaylistCallback, playlistName, songs)
+            let newPlaylist = Playlist(playlistName, songs)
             playlistArray.push(newPlaylist)
             dispatch('playlist')
             return newPlaylist
