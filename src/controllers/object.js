@@ -1,23 +1,8 @@
-import {Playlist} from "./objects/playlist.js";
-import {Song} from './objects/song.js'
+import Playlist from "./objects/playlist.js";
+import Song from './objects/song.js'
 import {copyArray, randomIndex, extractId} from "../util.js";
 import {dispatch} from "./event.js";
 import {saveData, CURFLAG} from "../controller.js";
-
-export function updatedSongCallback(redraw) {
-    if (redraw) {
-        dispatch('song')
-        dispatch('playlist')
-    }
-    saveData()
-}
-
-export function updatedPlaylistCallback(redraw) {
-    if (redraw) {
-        dispatch('playlist')
-    }
-    saveData()
-}
 
 let flag = localStorage['flag'] || 0
 
@@ -28,11 +13,11 @@ let parsers = {
             argArray.splice(2, 0, 'youtube')
         }
 
-        return Song(updatedSongCallback, ...argArray)
+        return Song(...argArray)
     },
 
     'playlist': argArray => {
-        return Playlist(updatedPlaylistCallback, ...argArray)
+        return Playlist(...argArray)
     }
 }
 
@@ -56,7 +41,7 @@ let allSongPlaylist = (() => {
         }
     }
     console.log("Making new song array");
-    return Playlist(updatedPlaylistCallback, "Songs")
+    return Playlist("Songs")
 })()
 
 let playlistArray = (() => {
@@ -149,15 +134,20 @@ export function deletePlaylist(playlist) {
     return false
 }
 
-export function makeSong(songArgs, playlists=[]) {
-    let newSong = Song(updatedSongCallback, ...songArgs)
-    if (!doesSongExist(newSong)) {
-        allSongPlaylist.addSong(newSong)
+/**
+ * Register a song object with playlists.
+ * @param song {Song}
+ * @param playlists {[Playlist]}
+ * @return boolean
+ */
+export function makeSong(song, playlists=[]) {
+    if (!doesSongExist(song)) {
+        allSongPlaylist.addSong(song)
         playlists.forEach(playlist => {
-            playlist.addSong(newSong)
+            playlist.addSong(song)
         })
         dispatch('song')
-        return newSong
+        return true
     }
     return false
 }

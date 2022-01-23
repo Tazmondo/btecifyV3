@@ -1,6 +1,16 @@
 import {placeholderURL, extractId} from '../../util.js'
+import {saveData} from "../../controller.js";
+import {dispatch} from "../event.js";
 
-export function Song(updatedCallback, title, vidId, extractor, duration, artist = "", album = "", remoteThumb = "", uuid = "", disabled=false, webpageUrl="") {
+function updated(redraw) {
+    if (redraw) {
+        dispatch('song')
+        dispatch('playlist')
+    }
+    saveData()
+}
+
+export default function Song(title, vidId, extractor, duration, artist = "", album = "", remoteThumb = "", uuid = "", disabled = false, webpageUrl = "") {
     // title: string
     // vidID: string
     // extractor: string
@@ -86,10 +96,10 @@ export function Song(updatedCallback, title, vidId, extractor, duration, artist 
 
             }
             if (source) {
-                updatedCallback(false)
+                updated(false)
                 return source
             } else {
-                updatedCallback(true)
+                updated(true)
                 throw new Error("Song has no available source.")
             }
         },

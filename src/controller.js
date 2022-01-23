@@ -2,8 +2,8 @@ console.log("controller.js running...")
 
 // IMPORTING AND SETTING UP
 
-import {Playlist} from "./controllers/objects/playlist.js";
-import {Song} from './controllers/objects/song.js'
+import Playlist from "./controllers/objects/playlist.js";
+import Song from './controllers/objects/song.js'
 import {copyArray, durationMinutesToSeconds, extractId} from "./util.js";
 import * as EventController from './controllers/event.js'
 import * as ObjectController from './controllers/object.js'
@@ -11,7 +11,7 @@ import * as MusicController from './controllers/music.js'
 import * as RouteController from './controllers/route.js'
 import * as ClipboardController from './controllers/clipboard.js'
 
-export const CURFLAG = 1
+export const CURFLAG = 1 // Update when parsing requires change, so old data can be updated with new parser.
 
 export function saveData() {
     localStorage["playlist"] = JSON.stringify(ObjectController.getPlaylistArray())

@@ -1,7 +1,16 @@
 // todo: Song added dates
 import {placeholderURL, copyArray, randomIndex, validSong} from "../../util.js";
+import {dispatch} from "../event.js";
+import {saveData} from "../../controller.js";
 
-export function Playlist(updatedCallback, title, songs=[], thumb="") {
+function updatedCallback(redraw) {
+    if (redraw) {
+        dispatch('playlist')
+    }
+    saveData()
+}
+
+export default function Playlist(title, songs=[], thumb="") {
     let cachedThumb; // So that when using random thumbnail, it is consistent.
     songs = songs.filter(validSong)
 

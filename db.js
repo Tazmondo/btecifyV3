@@ -141,6 +141,7 @@ function db(dbPath) {
             return res.url
         } catch (e) {
             console.log("getRemoteSongStream() failed")
+            console.log(url)
             console.error(e.message)
             return e
         }
