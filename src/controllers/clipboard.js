@@ -12,7 +12,7 @@ setInterval(() => {
             prevClip = contents
             api.getSongData(contents).then(res => {
                 if (res) {
-                    if (validExtractors.includes(res.extractor)) {
+                    if (validExtractors.includes(res.extractor.toLowerCase())) {
                         console.log(res);
                         prevClipData = res
                         dispatch('clipboard')
