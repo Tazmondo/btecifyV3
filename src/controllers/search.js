@@ -51,7 +51,11 @@ function searchSongs(term, songs) {
     if (typeof term === "string" && term !== "") {
         return songs.filter(song => {
             return [song.getTitle(), song.getArtist(), song.getAlbum()].some(v => {
-                return v.search(new RegExp(term, "i")) !== -1
+                try {
+                    return v.search(new RegExp(term, "i")) !== -1
+                } catch (e) { // Fixes weird rare error when a weird regex expression is entered, causing an error render failure.
+                    return true
+                }
             })
         })
     } else {
