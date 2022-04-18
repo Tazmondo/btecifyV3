@@ -43,6 +43,8 @@ add a progress bar
 hold shift in playlist comparison adds all
     or add a merge/copy right click to playlists
 
+use youtube-dlp for faster downloads?
+
 
 
 DONE (sort of):
