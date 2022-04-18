@@ -44,7 +44,7 @@ hold shift in playlist comparison adds all
     or add a merge/copy right click to playlists
 
 use youtube-dlp for faster downloads?
-
+    https://github.com/wololo-aeyoyo/youtube-dl-exec
 
 
 DONE (sort of):
