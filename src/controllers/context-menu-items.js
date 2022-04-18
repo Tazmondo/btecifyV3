@@ -5,9 +5,8 @@ import {generateInputDialog} from "./dialog-box.js";
 import {deleteSong, deleteUnusedSongs, getSongFromUUID} from "./object.js";
 
 function getOtherPlaylists(context, callback) {
-    let curTitle = context.querySelector('h3').textContent
     let newItems = []
-    ObjectController.getPlaylistArray().filter(v => v.getTitle() !== curTitle).forEach(playlist => {
+    ObjectController.getPlaylistArray().filter(v => v.getTitle() !== context.querySelector('h3').textContent).forEach(playlist => {
         newItems.push({
             name: playlist.getTitle(),
             type: 'button',
@@ -16,7 +15,7 @@ function getOtherPlaylists(context, callback) {
             }
         })
     })
-    return [{context, actiosdasasns: getOtherPlaylists(context, callback)}]
+    return [{context, actions: newItems}]
 }
 
 const contexts = {
@@ -104,19 +103,7 @@ const contexts = {
                 let title2 = extensionSelection?.getTitle();
                 RouteController.baseRoute('playlist', [title1, title2])
             },
-            extensionItems: (context, callback) => {
-                let newItems = []
-                ObjectController.getPlaylistArray().filter(v => v.getTitle() !== context.querySelector('h3').textContent).forEach(playlist => {
-                    newItems.push({
-                        name: playlist.getTitle(),
-                        type: 'button',
-                        action: () => {
-                            callback(context, playlist)
-                        }
-                    })
-                })
-                return [{context, actions: getOtherPlaylists(context, callback)}]
-            }
+            extensionItems: getOtherPlaylists
         },
         {
             name: 'Merge songs from...',
@@ -126,19 +113,7 @@ const contexts = {
                 let title2 = extensionSelection?.getTitle()
                 // todo: add merging implementation
             },
-            extensionItems: (context, callback) => {
-                let newItems = []
-                ObjectController.getPlaylistArray().filter(v => v.getTitle() !== context.querySelector('h3').textContent).forEach(playlist => {
-                    newItems.push({
-                        name: playlist.getTitle(),
-                        type: 'button',
-                        action: () => {
-                            callback(context, playlist)
-                        }
-                    })
-                })
-                return [{context, actions: newItems}]
-            }
+            extensionItems: getOtherPlaylists
         },
         {
 
