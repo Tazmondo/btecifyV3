@@ -15,8 +15,8 @@ export default function Song(title, vidId, extractor, duration, artist = "", alb
     // vidID: string
     // extractor: string
     // duration: string
-    if (extractor === "youtube" && webpageUrl === "") {
-        webpageUrl = `youtube.com/watch?v=${vidId}`
+    if (extractor === "youtube") {
+        webpageUrl = `https://www.youtube.com/watch?v=${vidId}`
     }
 
     uuid = uuid || api.getUUID()
