@@ -17,7 +17,7 @@ function ipc(main, isPackaged, appWindow) {
                 return await db[funcName](args)
             })
         }
-        console.log(`Registering ${funcName} with:\n ${db[funcName]}`)
+        console.log(`Registering ${funcName}`)
     }
 
     if (main) {
