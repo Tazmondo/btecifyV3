@@ -1,6 +1,6 @@
 const url = "127.0.0.1:8000"
-const serverAddress = "http://"+url
-const webSocketAddress = "ws://"+url
+const serverAddress = "http://" + url
+const webSocketAddress = "ws://" + url
 
 type fullsyncSong = {
     title: string
@@ -29,45 +29,53 @@ async function post(endpoint: String, data: any = null) {
 
 type ProgressCallbackFunction = (progress: number, total: number, done: boolean) => void;
 
-export async function fullSync(playlists: {playlists: fullsyncPlaylist[]}, progressCallback: ProgressCallbackFunction) {
-    let response = await post("/fullsync", playlists)
+export async function fullSync(playlists: { playlists: fullsyncPlaylist[] }, progressCallback: ProgressCallbackFunction) {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let response = await post("/fullsync", playlists)
 
+            if (response.status === 200) {
+                let response2 = await post('/fulldownload')
 
-    if (response.status === 200) {
-        let response2 = await post('/fulldownload')
-        if (response2.status == 200) {
-            let jobId = await response2.json()
+                if (response2.status == 200) {
+                    let jobId = await response2.json()
 
-            let webSocket = new WebSocket(webSocketAddress + "/job/" + jobId)
-            webSocket.onopen = (event) => {
-                webSocket.send("Begin progress transmitting")
-            }
-            webSocket.onmessage = (event) => {
-                let data = JSON.parse(event.data)
-                progressCallback(data.progress, data.size, data.status)
-                webSocket.send("Send me more!")
-            }
-            webSocket.onclose = (event) => {
-                switch (event.code) {
-                    case 3006:
-                        console.log("Job id was invalid");
-                        return false
-                    case 3005:
-                        console.log("Job completed successfully");
-                        return true
-                    default:
-                        console.log(`Job failed, code: ${event.code}`);
+                    let webSocket = new WebSocket(webSocketAddress + "/job/" + jobId)
+
+                    webSocket.onopen = (event) => {
+                        webSocket.send("Begin progress transmitting")
+                    }
+                    webSocket.onmessage = (event) => {
+                        let data = JSON.parse(event.data)
+                        progressCallback(data.progress, data.size, data.status)
+                        webSocket.send("Send me more!")
+                    }
+                    webSocket.onclose = (event) => {
+                        switch (event.code) {
+                            case 3006:
+                                console.log("Job id was invalid");
+                                reject("Job id was invalid")
+                                break
+                            case 3005:
+                                console.log("Job completed successfully");
+                                resolve(true)
+                                break
+                            default:
+                                console.log(`Job failed, code: ${event.code}`);
+                                reject(`Job failed, code: ${event.code}`)
+                        }
+                    }
+
+                } else {
+                    reject("Status code of fulldownlaod was " + response2.status)
                 }
+            } else {
+                reject("Status code of fullsync was " + response.status)
             }
-
-
-        } else {
-            return false
+        } catch (e) {
+            reject(e)
         }
-        return true
-    } else {
-        return false
-    }
+    })
 }
 
 async function test() {
@@ -105,7 +113,7 @@ async function test() {
     }
 
     await fullSync(syncdata, (progress, total, done) => console.log(progress, total, done))
-
+    console.log("Done!")
 }
 
-// test()
+test()
