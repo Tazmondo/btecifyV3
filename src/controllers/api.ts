@@ -16,6 +16,53 @@ type fullsyncPlaylist = {
     songs: fullsyncSong[]
 }
 
+type apiPlaylistShallow = {
+    id: number
+    title: string
+    songs: number[]
+}
+
+interface albumBase {
+    id: number
+    title: string
+}
+
+interface artistBase {
+    id: number
+    title: string
+}
+
+interface playlistBase {
+    id: number
+    title: string
+}
+
+interface songPlaylist extends playlistBase {
+    dateadded: string
+}
+
+type apiSong = {
+    dateadded: string
+    title: string
+    weburl: string
+    playlists: songPlaylist[]
+    duration?: number
+    extractor?: string
+    album?: albumBase
+    artist?: artistBase
+}
+
+
+interface apiPlaylistDeep extends playlistBase{
+    songs: apiSong[]
+}
+
+
+
+function getUrl(endpoint: string) {
+    return serverAddress + endpoint
+}
+
 async function post(endpoint: String, data: any = null) {
     return await fetch(serverAddress + endpoint, {
         method: "post",
@@ -78,6 +125,17 @@ export async function fullSync(playlists: { playlists: fullsyncPlaylist[] }, pro
     })
 }
 
+export async function getShallowPlaylists(): Promise<apiPlaylistShallow[]> {
+    let res = await fetch(getUrl('/playlist'))
+
+    return await res.json()
+}
+
+export async function getPlaylist(playlistId: number): Promise<apiPlaylistDeep> {
+    let res = await fetch(getUrl('/playlist/'+playlistId))
+    return await res.json()
+}
+
 async function test() {
     let syncdata = {
         "playlists": [
@@ -113,7 +171,12 @@ async function test() {
     }
 
     await fullSync(syncdata, (progress, total, done) => console.log(progress, total, done))
+    let playlists = await getShallowPlaylists()
+    let deep = await getPlaylist(playlists[0].id)
+    console.log(playlists, deep);
+    // console.log(await getShallowPlaylists());
+
     console.log("Done!")
 }
 
-test()
+// test()
