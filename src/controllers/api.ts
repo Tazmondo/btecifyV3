@@ -2,7 +2,7 @@ const url = "127.0.0.1:8000"
 const serverAddress = "http://"+url
 const webSocketAddress = "ws://"+url
 
-type Song = {
+type fullsyncSong = {
     title: string
     album?: string
     duration?: number
@@ -11,9 +11,9 @@ type Song = {
     artist?: string
 }
 
-type Playlist = {
+type fullsyncPlaylist = {
     title: string,
-    songs: Song[]
+    songs: fullsyncSong[]
 }
 
 async function post(endpoint: String, data: any = null) {
@@ -27,9 +27,9 @@ async function post(endpoint: String, data: any = null) {
     })
 }
 
-type ProgressCallbackFunction = (progress: number) => void;
+type ProgressCallbackFunction = (progress: number, total: number, done: boolean) => void;
 
-export async function fullSync(playlists: {playlists: Playlist[]}, progressCallback: ProgressCallbackFunction) {
+export async function fullSync(playlists: {playlists: fullsyncPlaylist[]}, progressCallback: ProgressCallbackFunction) {
     let response = await post("/fullsync", playlists)
 
 
@@ -43,7 +43,8 @@ export async function fullSync(playlists: {playlists: Playlist[]}, progressCallb
                 webSocket.send("Begin progress transmitting")
             }
             webSocket.onmessage = (event) => {
-                console.log(event.data)
+                let data = JSON.parse(event.data)
+                progressCallback(data.progress, data.size, data.status)
                 webSocket.send("Send me more!")
             }
             webSocket.onclose = (event) => {
@@ -63,7 +64,6 @@ export async function fullSync(playlists: {playlists: Playlist[]}, progressCallb
         } else {
             return false
         }
-
         return true
     } else {
         return false
@@ -104,7 +104,7 @@ async function test() {
         ]
     }
 
-    await fullSync(syncdata, (progress) => {})
+    await fullSync(syncdata, (progress, total, done) => console.log(progress, total, done))
 
 }
 
