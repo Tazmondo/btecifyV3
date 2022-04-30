@@ -73,7 +73,6 @@ when song ends current time stops increasing but playback jumps to a random spot
     maybe check if current time = duration to make sure song ends properly
     also just fade volume based on where current time is for song fading
 seeker popper is a bit janky
-when extending into a list o fplaylists in context menus, there is a weird jump as the size suddenly increases.
 
 
 FOR PLAYLIST IMPORTING
