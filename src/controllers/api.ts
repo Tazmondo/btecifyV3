@@ -1,4 +1,4 @@
-const url = "127.0.0.1:8000"
+const url = "localhost:8000"
 const serverAddress = "http://" + url
 const webSocketAddress = "ws://" + url
 
@@ -41,8 +41,7 @@ interface songPlaylist extends playlistBase {
     dateadded: string
 }
 
-type apiSong = {
-    dateadded: string
+interface songBase {
     title: string
     weburl: string
     playlists: songPlaylist[]
@@ -52,8 +51,12 @@ type apiSong = {
     artist?: artistBase
 }
 
+interface apiSong extends songBase {
+    dateadded: string
+}
 
-interface apiPlaylistDeep extends playlistBase{
+
+interface apiPlaylistDeep extends playlistBase {
     songs: apiSong[]
 }
 
@@ -63,9 +66,20 @@ function getUrl(endpoint: string) {
     return serverAddress + endpoint
 }
 
-async function post(endpoint: String, data: any = null) {
+async function post(endpoint: String, data?: any) {
     return await fetch(serverAddress + endpoint, {
         method: "post",
+        mode: "cors",
+        body: data ? JSON.stringify(data) : "",
+        headers: {
+            'Content-Type': "application/json"
+        }
+    })
+}
+
+async function put(endpoint: String, data?: any) {
+    return await fetch(serverAddress + endpoint, {
+        method: "put",
         mode: "cors",
         body: data ? JSON.stringify(data) : "",
         headers: {
@@ -136,6 +150,18 @@ export async function getPlaylist(playlistId: number): Promise<apiPlaylistDeep> 
     return await res.json()
 }
 
+// Overwrites playlist's songs with the given input songs
+export async function putPlaylist(playlistId: number, title: string, newSongs?: number[]) {
+    let url = '/playlist/' + playlistId
+    let body = {
+        title: title,
+        songs: newSongs
+    }
+    let res = await put(url, body)
+
+    return res.json()
+}
+
 async function test() {
     let syncdata = {
         "playlists": [
@@ -166,15 +192,15 @@ async function test() {
                         "artist:": "artist2"
                     }
                 ]
+            },
+            {
+                "title": "test playlist 2",
+                "songs": []
             }
         ]
     }
 
-    await fullSync(syncdata, (progress, total, done) => console.log(progress, total, done))
-    let playlists = await getShallowPlaylists()
-    let deep = await getPlaylist(playlists[0].id)
-    console.log(playlists, deep);
-    // console.log(await getShallowPlaylists());
+    // await fullSync(syncdata, (progress, total, done) => console.log(progress, total, done))
 
     console.log("Done!")
 }
