@@ -3,10 +3,6 @@ const path = require('path')
 const fs = require('fs')
 let ipcLoad = require('./ipc.js')
 
-// if (!app.isPackaged) {
-//     console.log("reload")
-//     require('electron-reload')(__dirname)
-// }
 
 console.log(`Electron: ${process.versions.electron}
 Chromium: ${process.versions.chrome}
@@ -16,6 +12,8 @@ if (!app.isPackaged) {
     app.setPath('userData', app.getPath('userData')+'-test')
     console.log(app.getPath('userData'))
     app.commandLine.appendSwitch('remote-debugging-port', '8315')
+    console.log("reload")
+    require('electron-reload')(__dirname+'/src')
 }
 
 function createWindow () {
