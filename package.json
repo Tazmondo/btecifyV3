@@ -5,10 +5,12 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron-forge start",
+    "start": "npm run build && electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make --targets @electron-forge/maker-zip",
-    "experiment": "node ./experimental/youtubedl.js"
+    "experiment": "node ./experimental/youtubedl.js",
+    "build": "tsc && copyfiles src/index.html src/style.css src/assets/** dist",
+    "watch": "tsc -w"
   },
   "author": "Taran McVay",
   "license": "ISC",
@@ -18,6 +20,7 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.59",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.59",
     "@electron-forge/maker-zip": "^6.0.0-beta.59",
+    "copyfiles": "^2.4.1",
     "electron": "^15.3.0",
     "electron-reload": "^2.0.0-alpha.1",
     "typescript": "^4.6.4"

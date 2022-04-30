@@ -4,3 +4,4 @@ ut/
 db/
 out/
 /count-loc.py
+dist

@@ -13,7 +13,7 @@ if (!app.isPackaged) {
     console.log(app.getPath('userData'))
     app.commandLine.appendSwitch('remote-debugging-port', '8315')
     console.log("reload")
-    require('electron-reload')(__dirname+'/src')
+    require('electron-reload')(__dirname+'/dist/src')
 }
 
 function createWindow () {
@@ -31,7 +31,7 @@ function createWindow () {
     })
     // win.webContents.openDevTools()
     ipcLoad(true, app.isPackaged, win)
-    win.loadFile('src/index.html')
+    win.loadFile('dist/src/index.html')
 
 }
 
