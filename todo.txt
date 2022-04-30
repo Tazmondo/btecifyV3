@@ -47,6 +47,9 @@ use youtube-dlp for faster downloads?
     https://github.com/wololo-aeyoyo/youtube-dl-exec
 
 
+for long api requests (fullsync and fulldownload), turn off song visualiser and use the titlebar as a progress bar to show the websocket progress.
+
+
 DONE (sort of):
 scan clipboard for youtube links and prompt for adding song
 manually add songs to a temporary playlist?
