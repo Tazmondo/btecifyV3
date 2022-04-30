@@ -1,3 +1,5 @@
+import {end} from "@popperjs/core";
+
 const url = "localhost:8000"
 const serverAddress = "http://" + url
 const webSocketAddress = "ws://" + url
@@ -64,6 +66,10 @@ interface apiPlaylistDeep extends playlistBase {
 
 function getUrl(endpoint: string) {
     return serverAddress + endpoint
+}
+
+async function get(endpoint: string) {
+    return await fetch(getUrl(endpoint))
 }
 
 async function post(endpoint: String, data?: any) {
@@ -140,13 +146,13 @@ export async function fullSync(playlists: { playlists: fullsyncPlaylist[] }, pro
 }
 
 export async function getShallowPlaylists(): Promise<apiPlaylistShallow[]> {
-    let res = await fetch(getUrl('/playlist'))
+    let res = await get('/playlist')
 
     return await res.json()
 }
 
 export async function getPlaylist(playlistId: number): Promise<apiPlaylistDeep> {
-    let res = await fetch(getUrl('/playlist/'+playlistId))
+    let res = await get('/playlist/'+playlistId)
     return await res.json()
 }
 
@@ -160,6 +166,16 @@ export async function putPlaylist(playlistId: number, title: string, newSongs?: 
     let res = await put(url, body)
 
     return res.json()
+}
+
+export async function postPlaylist(title: string, songs?: number[]) {
+    let res = await post('/playlist', {title: title, songs: songs})
+    return await res.json()
+}
+
+export async function getSong(songId: number) {
+    let res = await get('/song/'+songId)
+    return await res.json()
 }
 
 async function test() {
@@ -202,6 +218,7 @@ async function test() {
 
     // await fullSync(syncdata, (progress, total, done) => console.log(progress, total, done))
 
+    console.log(await getSong(1));
     console.log("Done!")
 }
 
