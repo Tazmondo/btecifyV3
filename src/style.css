@@ -257,15 +257,19 @@ nav button.active::after {
 }
 
 .submenu.closed {
-    min-width: 0;
     max-width: 0;
 }
 
 .submenu {
-    max-width: 100vw;
-    min-width: 100px;
+    min-width: 0;
+    max-width: initial;
     overflow: hidden;
-    transition: max-width ease 0.5s 0.5s, min-width ease 0.5s;
+}
+
+/* See context-menu function for JS animation (line 69 at 30/4/22) */
+
+.submenu.animate {
+    transition: max-width ease 0.5s
 }
 
 .context-menu.disabled {
@@ -281,6 +285,7 @@ nav button.active::after {
     justify-content: center;
     align-items: center ;
     display: flex;
+    white-space: nowrap;
 }
 
 .context-menu-item.extend {

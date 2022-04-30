@@ -65,9 +65,14 @@ function generateMenu(items) {
                                             }
                                         ]
                                     })
-
                                     requestAnimationFrame(() => {
                                         subMenu.classList.toggle('closed')
+                                        let width = subMenu.offsetWidth.toString();
+                                        subMenu.style.maxWidth = "0"
+                                        requestAnimationFrame(() => {
+                                            subMenu.classList.toggle("animate")
+                                            subMenu.style.maxWidth = (width + "px")
+                                        })
                                     })
                                 }
                             }, 100)
