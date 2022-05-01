@@ -9,7 +9,24 @@ function forceRedraw() {
     dispatch('playlist')
 }
 
-export default function Playlist(info: apiPlaylistDeep) {
+export interface PlaylistInterface {
+    getEnabledSongs(): apiSong[];
+    getId(): number;
+    getTitle(): string;
+    setTitle(newTitle: string): void;
+    getSongs(): apiSong[];
+    getLength(): number;
+    getRandomFilteredSong(filter: number[]): apiSong | false;
+    getThumb(): string;
+    refreshThumb(): void;
+    doesContainSong(songId: number): boolean;
+    addSong(song: apiSong): boolean;
+    removeSongWithId(songId: number): boolean;
+    getSuperSongs(songArray: number[]): apiSong[];
+    getSubSongs(songArray: apiSong[]): apiSong[];
+}
+
+export default function Playlist(info: apiPlaylistDeep): PlaylistInterface {
     let cachedThumb: number | undefined = undefined; // So that when using random thumbnail, it is consistent.
     let songs: {[key: number]: apiSong} = {}
 
@@ -75,7 +92,7 @@ export default function Playlist(info: apiPlaylistDeep) {
 
 
         // Takes an array of songs, returning a random song that does not exist in the array.
-        getRandomFilteredSong(filter: number[]=[]): apiSong | false {
+        getRandomFilteredSong(filter: number[] = []): apiSong | false {
             let possibleSongs = getEnabledSongs().filter(v => {
                 return !filter.includes(v.id)
             })
@@ -137,9 +154,9 @@ export default function Playlist(info: apiPlaylistDeep) {
         // Attempts to remove a song using a uuid. Returns a boolean indicating success.
         // Throws an error if given an invalid uuid.
         removeSongWithId(songId: number) {
-                let result = removeSong(songId)
-                forceRedraw()
-                return result
+            let result = removeSong(songId)
+            forceRedraw()
+            return result
         },
 
         // Take a song array and return all songs in the playlist that do not exist in the array.
