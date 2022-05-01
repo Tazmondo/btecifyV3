@@ -1,5 +1,3 @@
-import song from "../pages/song";
-
 const url = "localhost:8000"
 const serverAddress = "http://" + url
 const webSocketAddress = "ws://" + url

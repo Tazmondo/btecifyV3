@@ -1,5 +1,5 @@
 import {pages, views} from '../pages/pages.js'
-import {copyArray, pageExit, pageEntry} from "../util.js";
+import {pageExit, pageEntry} from "../util.js";
 import {dispatch} from "./event.js";
 
 function Route(construct, name, view, args) {

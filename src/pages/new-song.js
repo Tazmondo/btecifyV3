@@ -2,7 +2,6 @@ import {durationSecondsToMinutes, durationMinutesToSeconds, extractId} from "../
 import  * as EventController from '../controllers/event.js'
 import  * as ObjectController from '../controllers/object.js'
 import * as ClipboardController from '../controllers/clipboard.js'
-import Song from '../controllers/objects/song.js'
 
 function init() {
     const {subscribe, unSubscribe} = EventController
