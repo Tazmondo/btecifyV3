@@ -1,5 +1,5 @@
 import {subscribeToKeydown} from "./hotkey.js";
-import {apiSong} from "./types";
+import {playlistSong} from "./types";
 
 let searchBar = <HTMLInputElement>document.getElementById('global-search')
 
@@ -25,7 +25,7 @@ searchBar.addEventListener('blur', () => {
     // if (keySubscription) keySubscription()
     // keySubscription = subscribeToKeydown(keyDown)
 })
-let keySubscription = undefined
+let keySubscription
 function keyDown(e: KeyboardEvent) {
     // if (e.key.length === 1) {
     //     searchBar.value = e.key
@@ -41,15 +41,12 @@ function keyDown(e: KeyboardEvent) {
     }
 
 }
+
 keySubscription = subscribeToKeydown(keyDown)
 
-/**
- * Take a search term and a list of songs, and return all songs linked to the search term.
- * @param term {string} The search term.
- * @param songs {Song[]} The list of songs.
- * @returns Song[] List of songs containing the query
- */
-function searchSongs(term: string, songs: apiSong[]) {
+// Take a search term and a list of songs, and return all songs linked to the search term.
+
+function searchSongs(term: string, songs: playlistSong[]) {
     if (term !== "") {
         return songs.filter(song => {
             return [song.title, song.album?.title, song.artist?.title].some(v => {

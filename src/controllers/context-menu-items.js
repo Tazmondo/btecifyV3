@@ -1,8 +1,8 @@
 import * as MusicController from './music.js'
 import * as ObjectController from './object.js'
+import {deleteSong, deleteUnusedSongs, getSongFromId} from './object.js'
 import * as RouteController from './route.js'
 import {generateInputDialog} from "./dialog-box.js";
-import {deleteSong, deleteUnusedSongs, getSongFromUUID} from "./object.js";
 
 function getOtherPlaylists(context, callback) {
     let newItems = []
@@ -35,7 +35,7 @@ const contexts = {
         {
             name: 'New Playlist',
             type: 'button',
-            action: (context) => {
+            action: () => {
                 // Switch page to new playlist page, or bring up an input dialog box.
                 generateInputDialog("New Playlist", "Please enter the name of the playlist", {
                     type: "input",
@@ -60,7 +60,7 @@ const contexts = {
                                 }
                             })
                         } else{
-                            let newPlaylist = ObjectController.makePlaylist([name])
+                            let newPlaylist = ObjectController.makePlaylist(name)
                             if (newPlaylist) {
                                 // RouteController.baseRoute('playlistView', [newPlaylist])
                             }
@@ -182,7 +182,7 @@ const contexts = {
             action: (context) => {
                 let uuid = context?.dataset?.uuid
                 if (uuid) {
-                    deleteSong(getSongFromUUID(uuid))
+                    deleteSong(getSongFromId(uuid))
                 }
             }
         },
@@ -192,7 +192,7 @@ const contexts = {
             action: context => {
                 let uuid = context?.dataset?.uuid
                 if (uuid) {
-                    let song = getSongFromUUID(uuid)
+                    let song = getSongFromId(uuid)
                     navigator.clipboard.writeText(song.getURL())
                 }
             }

@@ -1,4 +1,4 @@
-import {apiSong} from "./controllers/types";
+import {playlistSong} from "./controllers/types";
 
 console.log("utils.js running")
 
@@ -14,7 +14,7 @@ export function copyArray(array: any[]): any[] {
     return array.slice(0)
 }
 
-export function isSongInSongArray (songArray: apiSong[], song: apiSong): boolean {
+export function isSongInSongArray(songArray: playlistSong[], song: playlistSong): boolean {
     return songArray.some(v => v.id === song.id)
 }
 

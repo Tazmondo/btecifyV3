@@ -2,7 +2,7 @@ const url = "localhost:8000"
 const serverAddress = "http://" + url
 const webSocketAddress = "ws://" + url
 
-import {apiPlaylistDeep, apiPlaylistShallow, fullsyncPlaylist, songIn, songBase} from './types.js'
+import {apiPlaylistDeep, apiPlaylistShallow, fullsyncPlaylist, songBase, songIn} from './types.js'
 
 
 function getUrl(endpoint: string) {
@@ -93,27 +93,50 @@ export async function fullSync(playlists: { playlists: fullsyncPlaylist[] }, pro
     })
 }
 
-export async function getShallowPlaylists(): Promise<apiPlaylistShallow[] | null> {
+/**
+ * @throws {Error}
+ */
+export async function getShallowPlaylists(): Promise<apiPlaylistShallow[]> {
     let res = await get('/playlist')
 
     if (res.status == 200) {
         return await res.json()
     } else {
-        return null
+        throw new Error("Could not get playlists " + res.status)
     }
 }
 
-export async function getPlaylist(playlistId: number): Promise<apiPlaylistDeep | null> {
-    let res = await get('/playlist/'+playlistId)
+/**
+ * @throws {Error}
+ */
+export async function getDeepPlaylists(): Promise<apiPlaylistDeep[]> {
+    let res = await get('/playlist?shallow=false')
+
     if (res.status == 200) {
         return await res.json()
     } else {
-        return null
+        throw new Error("Could not get deep playlists " + res.status)
     }
 }
 
-// Overwrites playlist's songs with the given input songs
-export async function putPlaylist(playlistId: number, title: string, newSongs?: number[]): Promise<apiPlaylistDeep | null> {
+/**
+ * @throws {Error}
+ */
+export async function getPlaylist(playlistId: number): Promise<apiPlaylistDeep> {
+    let res = await get('/playlist/' + playlistId)
+    if (res.status == 200) {
+        return await res.json()
+    } else {
+        throw new Error("Could not get playlist " + res.status)
+    }
+}
+
+
+/**
+ * Overwrites playlist's songs with the given input songs
+ * @throws {Error}
+ */
+export async function putPlaylist(playlistId: number, title: string, newSongs?: number[]): Promise<apiPlaylistDeep> {
     let url = '/playlist/' + playlistId
     let body = {
         title: title,
@@ -123,16 +146,19 @@ export async function putPlaylist(playlistId: number, title: string, newSongs?: 
     if (res.status == 200) {
         return res.json()
     } else {
-        return null
+        throw new Error("Could not put playlist " + res.status)
     }
 }
 
-export async function postPlaylist(title: string, songs?: number[]): Promise<apiPlaylistDeep | null> {
+/**
+ * @throws {Error}
+ */
+export async function postPlaylist(title: string, songs?: number[]): Promise<apiPlaylistDeep> {
     let res = await post('/playlist', {title: title, songs: songs})
     if (res.status == 200) {
         return await res.json()
     } else {
-        return null
+        throw new Error("Could not post playlist " + res.status)
     }
 }
 
@@ -141,41 +167,50 @@ export async function deletePlaylist(playlistId: number): Promise<boolean> {
     return res.status == 200
 }
 
-
-export async function getSongs(): Promise<songBase[] | null> {
+/**
+ * @throws {Error}
+ */
+export async function getSongs(): Promise<songBase[]> {
     let res = await get('/song')
     if (res.status == 200) {
         return await res.json()
     } else {
-        return null
+        throw new Error("Could not get songs " + res.status)
     }
 }
 
-export async function getSong(songId: number): Promise<songBase | null> {
-    let res = await get('/song/'+songId)
+/**
+ * @throws {Error}
+ */
+export async function getSong(songId: number): Promise<songBase> {
+    let res = await get('/song/' + songId)
     if (res.status == 200) {
         return await res.json()
     } else {
-        return null
+        throw new Error("Could not get song " + res.status)
+    }
+}
+
+/**
+ * @throws {Error}
+ */
+export async function postSong(song: songIn, playlists: number[] = []): Promise<songBase> {
+    let res = await post('/song', {song, playlists})
+    if (res.status == 200) {
+        return await res.json()
+    } else {
+        throw new Error("")
     }
 }
 
 export function getThumbUrl(songId: number): string {
-    return serverAddress + "/song/"+songId+"/thumb"
+    return serverAddress + "/song/" + songId + "/thumb"
 }
 
 export function getSrcUrl(songId: number): string {
     return serverAddress + "/song/" + songId + "/src"
 }
 
-export async function postSong(song: songIn, playlists: number[] = []): Promise<songBase | null> {
-    let res = await post('/song', {song, playlists})
-    if (res.status == 200) {
-        return await res.json()
-    } else {
-        return null
-    }
-}
 
 // todo: ADD ENDPOINTS FOR DELETION
 

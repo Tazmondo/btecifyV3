@@ -1,7 +1,7 @@
 // todo: Song added dates
 import {placeholderURL, randomIndex} from "../../util.js";
 import {dispatch} from "../event.js";
-import {apiPlaylistDeep, apiSong} from '../types.js'
+import {apiPlaylistDeep, playlistSong, songBase} from '../types.js'
 import * as api from '../api.js'
 
 
@@ -10,25 +10,40 @@ function forceRedraw() {
 }
 
 export interface PlaylistInterface {
-    getEnabledSongs(): apiSong[];
+    getEnabledSongs(): playlistSong[];
+
     getId(): number;
+
     getTitle(): string;
+
     setTitle(newTitle: string): void;
-    getSongs(): apiSong[];
+
+    getSongs(): playlistSong[];
+
+    getSongIds(): number[];
+
     getLength(): number;
-    getRandomFilteredSong(filter: number[]): apiSong | false;
+
+    getRandomFilteredSong(filter: number[]): playlistSong | false;
+
     getThumb(): string;
+
     refreshThumb(): void;
+
     doesContainSong(songId: number): boolean;
-    addSong(song: apiSong): boolean;
+
+    addSong(song: songBase): playlistSong;
+
     removeSongWithId(songId: number): boolean;
-    getSuperSongs(songArray: number[]): apiSong[];
-    getSubSongs(songArray: apiSong[]): apiSong[];
+
+    getSuperSongs(songArray: number[]): playlistSong[];
+
+    getSubSongs(songArray: playlistSong[]): playlistSong[];
 }
 
 export default function Playlist(info: apiPlaylistDeep): PlaylistInterface {
     let cachedThumb: number | undefined = undefined; // So that when using random thumbnail, it is consistent.
-    let songs: {[key: number]: apiSong} = {}
+    let songs: { [key: number]: playlistSong } = {}
 
     for (let song of info.songs) {
         songs[song.id] = song
@@ -38,7 +53,7 @@ export default function Playlist(info: apiPlaylistDeep): PlaylistInterface {
     let id = info.id
 
     // Sorts song list in place by title.
-    function sortedSongs(): apiSong[] {
+    function sortedSongs(): playlistSong[] {
         return getSongArray().sort((a, b) => a.dateadded.localeCompare(b.dateadded))
     }
 
@@ -54,11 +69,11 @@ export default function Playlist(info: apiPlaylistDeep): PlaylistInterface {
     }
 
     // Returns array of songs that are not disabled.
-    function getEnabledSongs(): apiSong[] {
+    function getEnabledSongs(): playlistSong[] {
         return getSongArray().filter(value => !value.disabled)
     }
 
-    function getSongArray(): apiSong[] {
+    function getSongArray(): playlistSong[] {
         return Object.values(songs)
     }
 
@@ -85,6 +100,10 @@ export default function Playlist(info: apiPlaylistDeep): PlaylistInterface {
             return sortedSongs()
         },
 
+        getSongIds(): number[] {
+            return Object.keys(songs).map(v => Number(v))  // Use number instead of parseint as its more performant and we know that they will be regular number keys
+        },
+
         // Returns integer number of enabled songs in song playlist.
         getLength() {
             return getEnabledSongs().length
@@ -92,7 +111,7 @@ export default function Playlist(info: apiPlaylistDeep): PlaylistInterface {
 
 
         // Takes an array of songs, returning a random song that does not exist in the array.
-        getRandomFilteredSong(filter: number[] = []): apiSong | false {
+        getRandomFilteredSong(filter: number[] = []): playlistSong | false {
             let possibleSongs = getEnabledSongs().filter(v => {
                 return !filter.includes(v.id)
             })
@@ -124,13 +143,15 @@ export default function Playlist(info: apiPlaylistDeep): PlaylistInterface {
         },
 
         // Add song object to songs. Return boolean indicating success.
-        addSong(song: apiSong): boolean {
+        addSong(song: songBase): playlistSong {
             if (!this.doesContainSong(song.id)) {
-                songs[song.id] = song
+                let newPlaylistSong: playlistSong = {...song, dateadded: new Date().toISOString()}
+                songs[song.id] = newPlaylistSong
                 forceRedraw()
-                return true
+                return newPlaylistSong
+            } else {
+                throw new Error("Song already in playlist.")
             }
-            return false
         },
 
         // COMMENTED SINCE USING SONG IDS IS MUCH BETTER
@@ -167,18 +188,13 @@ export default function Playlist(info: apiPlaylistDeep): PlaylistInterface {
         },
 
         // Take a song array and return all songs in it that aren't in the playlist.
-        getSubSongs(songArray: apiSong[]) {
+        getSubSongs(songArray: playlistSong[]) {
             return songArray.filter(v => !(v.id in songs))
         },
     }
 }
 
 async function test() {
-    let pInfo = await api.getPlaylist(1)
-    if (pInfo !== null) {
-        let testPlaylist = Playlist(pInfo)
-
-    }
 
 }
 

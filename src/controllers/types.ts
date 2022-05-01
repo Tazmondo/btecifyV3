@@ -43,7 +43,7 @@ export interface songBase {
     artist: artistBase | null
 }
 
-export interface apiSong extends songBase {
+export interface playlistSong extends songBase {
     dateadded: string
 }
 
@@ -52,7 +52,7 @@ export interface apiPlaylistShallow extends playlistBase{
 }
 
 export interface apiPlaylistDeep extends playlistBase {
-    songs: apiSong[]
+    songs: playlistSong[]
 }
 
 export interface songIn {

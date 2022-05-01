@@ -1,21 +1,20 @@
-
 console.log("musicController.js running")
 import initVisualiser from './visualiser.js'
 import {dispatch} from "./event.js";
 import {getRandomSong} from "./object.js";
-import {apiSong} from "./types";
+import {playlistSong, songBase} from "./types";
 import {PlaylistInterface} from "./objects/playlist.js";
 import * as api from './api.js'
 
 
-let history: apiSong[] = [];
-let queue: apiSong[] = [];
+let history: songBase[] = [];
+let queue: songBase[] = [];
 // let sourceBuffer = undefined; todo: add source buffer functionality (maybe rewrite so that every source buffer has its own player, so each song is played on its own player and then deleted?
 //                                     might cause memory leak issues or just not work
 
-let currentSong: apiSong | undefined;
+let currentSong: songBase | undefined;
 let currentPlaylist: PlaylistInterface | undefined;
-let playingSong: apiSong | undefined;
+let playingSong: songBase | undefined;
 
 let repeat = false;
 let muted = localStorage.muted === "true" || false
@@ -35,7 +34,7 @@ initVisualiser(player)
 
 Object.assign(window, {player}) // for testing
 
-async function setSong(song: apiSong) {
+async function setSong(song: songBase) {
     if (!settingSong) {
         console.log(`play ${song.title}`)
         settingSong = true;
@@ -115,7 +114,7 @@ function songEnded(depth = 0) {
             queue.push(getRandomSong())
         }
         if (queue.length > 0) {
-            let nextSong: apiSong = queue.shift()!;  // Because queue length greater than 0
+            let nextSong: songBase = queue.shift()!;  // Because queue length greater than 0
             let oldSong = currentSong
 
             setSong(nextSong).then(res => {
@@ -216,7 +215,7 @@ export function getInfo() {
     }
 }
 
-export function forceSetSong(song: apiSong) {
+export function forceSetSong(song: playlistSong) {
     currentPlaylist = undefined
     queue = []
     queue.unshift(song)
@@ -285,6 +284,6 @@ export function toggleMute(force: boolean) {
     dispatch('playing')
 }
 
-export function removeFromQueue(song: apiSong) {
+export function removeFromQueue(song: playlistSong) {
     // todo: implement removeFromQueue
 }
