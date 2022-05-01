@@ -37,10 +37,10 @@ export interface songBase {
     weburl: string
     disabled: boolean
     playlists: songPlaylist[]
-    duration?: number
-    extractor?: string
-    album?: albumBase
-    artist?: artistBase
+    duration: number | null
+    extractor: string | null
+    album: albumBase | null
+    artist: artistBase | null
 }
 
 export interface apiSong extends songBase {
