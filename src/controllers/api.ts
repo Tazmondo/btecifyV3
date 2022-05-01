@@ -211,6 +211,8 @@ export async function postSong(song: songIn, playlists: number[] = []): Promise<
     }
 }
 
+// todo: ADD ENDPOINTS FOR DELETION
+
 async function test() {
     let syncdata = {
         "playlists": [
