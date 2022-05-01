@@ -3,7 +3,7 @@ import {copyArray, randomIndex} from "../util.js";
 import {dispatch} from "./event.js";
 import * as serverApi from './api.js'
 import {postSong, putPlaylist} from './api.js'
-import {apiPlaylistShallow, playlistSong, songBase, songIn} from "./types.js";
+import {apiPlaylistShallow, songBase, songIn} from "./types.js";
 
 
 // let parsers = {
@@ -150,7 +150,7 @@ export async function addToPlaylist(playlist: PlaylistInterface, song: songBase)
     }
 }
 
-export async function removeFromPlaylist(playlist: PlaylistInterface, song: playlistSong): Promise<boolean> {
+export async function removeFromPlaylist(playlist: PlaylistInterface, song: songBase): Promise<boolean> {
     let songs = playlist.getSongIds()
     songs = songs.filter(v => v !== song.id)
 
@@ -243,6 +243,12 @@ export function deleteUnusedSongs() {
 export function getPlaylistArray(): apiPlaylistShallow[] {
     return copyArray(shallowPlaylistArray).sort((a: apiPlaylistShallow, b: apiPlaylistShallow) => {
         return b.songs.length - a.songs.length
+    })
+}
+
+export function getDeepPlaylistArray(): PlaylistInterface[] {
+    return Object.values(deepPlaylists).sort((a: PlaylistInterface, b: PlaylistInterface) => {
+        return b.getLength() - a.getLength()
     })
 }
 

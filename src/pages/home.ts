@@ -1,19 +1,30 @@
-import {pageEntry, pageExit} from "../util.js";
+import * as EventController from '../controllers/event.js'
+import * as ObjectController from '../controllers/object.js'
+import {getDeepPlaylistArray} from '../controllers/object.js'
+import * as MusicController from '../controllers/music.js'
+import {PlaylistInterface} from "../controllers/objects/playlist";
 
 console.log("homePage.js running...")
-import  * as EventController from '../controllers/event.js'
-import  * as ObjectController from '../controllers/object.js'
-import  * as MusicController from '../controllers/music.js'
 
 function initPage() {
     const {subscribe, unSubscribe} = EventController
-    const {getPlaylistArray,getPlaylistFromTitle, getPlaylistsWithSong, addToPlaylist, removeFromPlaylist} = ObjectController
+    const {
+        getPlaylistArray,
+        getPlaylistFromTitle,
+        getPlaylistsWithSong,
+        addToPlaylist,
+        removeFromPlaylist
+    } = ObjectController
     const {setPlaylist, getInfo} = MusicController
 
-    let page = document.getElementById('home-nav-page')
+    let page = document.getElementById('home-nav-page')!
 
-    function generatePlaylistCard(playlistName, thumbnailURLPromise, numSongs, selected) {
-        let playlistObject = getPlaylistFromTitle(playlistName);
+    function generatePlaylistCard(playlistName: string, thumb: string, numSongs: number, selected: boolean) {
+        let playlistObject = getPlaylistFromTitle(playlistName) as PlaylistInterface;
+        if (playlistObject == undefined) {
+            return false
+        }
+
         let container = page.getElementsByClassName("playlists-container")[0]
 
         container.insertAdjacentHTML('beforeend',
@@ -28,22 +39,19 @@ function initPage() {
             </div>
         </div>`)
 
-        let card = container.lastElementChild
-        thumbnailURLPromise.then( res => {
-            if (res) {
-                let img = card.querySelector('.img-div');
-                img.style.backgroundImage = `url(${res})`
-            }
-        })
+        let card = container.lastElementChild!
+        let img: HTMLImageElement = card.querySelector('.img-div')!
+        img.style.backgroundImage = `url(${thumb})`
 
         // card.addEventListener('dblclick', e => {
         //     baseRoute('playlistView', [playlistObject])
         // })
 
-        card.querySelector('.svg-button').addEventListener('click', e=>{
+        card.querySelector('.svg-button')!.addEventListener('click', e => {
             setPlaylist(playlistObject)
             e.stopPropagation() // so that you dont mess with playlists due to below function
         })
+
 
         card.addEventListener('click', e => {
             let song = getInfo().playingSong
@@ -69,11 +77,11 @@ function initPage() {
 
 
         let song = getInfo().playingSong
-        let playlistsToSelect = song === undefined ? [] : getPlaylistsWithSong(song)
+        let playlistsToSelect = song === undefined ? [] : getPlaylistsWithSong(song.id)
 
-        getPlaylistArray().forEach(v => {
+        getDeepPlaylistArray().forEach(v => {
             generatePlaylistCard(v.getTitle(), v.getThumb(), v.getLength(),
-                playlistsToSelect.some(playlist => playlist.getTitle() === v.getTitle())
+                playlistsToSelect.some(playlistId => playlistId === v.getId())
             )
         })
     }

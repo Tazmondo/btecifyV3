@@ -127,7 +127,7 @@ export default function Playlist(info: apiPlaylistDeep): PlaylistInterface {
             if (cachedThumb !== undefined) {
                 return api.getThumbUrl(cachedThumb)
             } else {
-                cachedThumb = getEnabledSongs()[randomIndex(this.getLength())].id || undefined
+                cachedThumb = getEnabledSongs()[randomIndex(this.getLength())]?.id || undefined
                 return cachedThumb === undefined ? placeholderURL : api.getThumbUrl(cachedThumb)
             }
         },
