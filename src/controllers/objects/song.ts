@@ -1,20 +1,16 @@
 import {placeholderURL, extractId} from '../../util.js'
-import {saveData} from "../../controller.js";
 import {dispatch} from "../event.js";
+import {apiSong} from "../types";
 
-function updated(redraw) {
-    if (redraw) {
-        dispatch('song')
-        dispatch('playlist')
-    }
-    saveData()
+function forceRedraw() {
+    dispatch('song')
+    dispatch('playlist')
 }
 
-export default function Song(title, vidId, extractor, duration, artist = "", album = "", remoteThumb = "", uuid = "", disabled = false, webpageUrl = "") {
-    // title: string
-    // vidID: string
-    // extractor: string
-    // duration: string
+export default function Song(info: apiSong) {
+    let id = info.id
+    let title = info.title
+    let extractor = info.extractor
     if (extractor === "youtube") {
         webpageUrl = `https://www.youtube.com/watch?v=${vidId}`
     }
@@ -96,10 +92,9 @@ export default function Song(title, vidId, extractor, duration, artist = "", alb
 
             }
             if (source) {
-                updated(false)
                 return source
             } else {
-                updated(true)
+                forceRedraw(true)
                 throw new Error("Song has no available source.")
             }
         },
