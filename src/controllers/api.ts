@@ -1,5 +1,3 @@
-import {end} from "@popperjs/core";
-
 const url = "localhost:8000"
 const serverAddress = "http://" + url
 const webSocketAddress = "ws://" + url
@@ -60,6 +58,13 @@ interface apiSong extends songBase {
 
 interface apiPlaylistDeep extends playlistBase {
     songs: apiSong[]
+}
+
+interface songIn {
+    weburl: string
+    title?: string
+    album?: string
+    artist?: string
 }
 
 
@@ -145,15 +150,23 @@ export async function fullSync(playlists: { playlists: fullsyncPlaylist[] }, pro
     })
 }
 
-export async function getShallowPlaylists(): Promise<apiPlaylistShallow[]> {
+export async function getShallowPlaylists(): Promise<apiPlaylistShallow[] | null> {
     let res = await get('/playlist')
 
-    return await res.json()
+    if (res.status == 200) {
+        return await res.json()
+    } else {
+        return null
+    }
 }
 
-export async function getPlaylist(playlistId: number): Promise<apiPlaylistDeep> {
+export async function getPlaylist(playlistId: number): Promise<apiPlaylistDeep | null> {
     let res = await get('/playlist/'+playlistId)
-    return await res.json()
+    if (res.status == 200) {
+        return await res.json()
+    } else {
+        return null
+    }
 }
 
 // Overwrites playlist's songs with the given input songs
@@ -164,18 +177,38 @@ export async function putPlaylist(playlistId: number, title: string, newSongs?: 
         songs: newSongs
     }
     let res = await put(url, body)
-
-    return res.json()
+    if (res.status == 200) {
+        return res.json()
+    } else {
+        return null
+    }
 }
 
 export async function postPlaylist(title: string, songs?: number[]) {
     let res = await post('/playlist', {title: title, songs: songs})
-    return await res.json()
+    if (res.status == 200) {
+        return await res.json()
+    } else {
+        return null
+    }
 }
 
 export async function getSong(songId: number) {
     let res = await get('/song/'+songId)
-    return await res.json()
+    if (res.status == 200) {
+        return await res.json()
+    } else {
+        return null
+    }
+}
+
+export async function postSong(song: songIn, playlists: number[] = []) {
+    let res = await post('/song', {song, playlists})
+    if (res.status == 200) {
+        return await res.json()
+    } else {
+        return null
+    }
 }
 
 async function test() {
@@ -216,10 +249,15 @@ async function test() {
         ]
     }
 
-    // await fullSync(syncdata, (progress, total, done) => console.log(progress, total, done))
+    await fullSync(syncdata, (progress, total, done) => console.log(progress, total, done))
 
-    console.log(await getSong(1));
+    console.log(await postSong({
+        weburl: "https://www.youtube.com/watch?v=dBvlnyvgOnw"
+    }, [1]))
+
+
+    console.log(await getPlaylist(1))
     console.log("Done!")
 }
 
-// test()
+test()
