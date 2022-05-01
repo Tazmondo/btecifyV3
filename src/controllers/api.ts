@@ -170,7 +170,7 @@ export async function getPlaylist(playlistId: number): Promise<apiPlaylistDeep |
 }
 
 // Overwrites playlist's songs with the given input songs
-export async function putPlaylist(playlistId: number, title: string, newSongs?: number[]) {
+export async function putPlaylist(playlistId: number, title: string, newSongs?: number[]): Promise<apiPlaylistDeep | null> {
     let url = '/playlist/' + playlistId
     let body = {
         title: title,
@@ -184,7 +184,7 @@ export async function putPlaylist(playlistId: number, title: string, newSongs?: 
     }
 }
 
-export async function postPlaylist(title: string, songs?: number[]) {
+export async function postPlaylist(title: string, songs?: number[]): Promise<apiPlaylistDeep | null> {
     let res = await post('/playlist', {title: title, songs: songs})
     if (res.status == 200) {
         return await res.json()
@@ -193,7 +193,7 @@ export async function postPlaylist(title: string, songs?: number[]) {
     }
 }
 
-export async function getSong(songId: number) {
+export async function getSong(songId: number): Promise<songBase | null> {
     let res = await get('/song/'+songId)
     if (res.status == 200) {
         return await res.json()
@@ -202,7 +202,7 @@ export async function getSong(songId: number) {
     }
 }
 
-export async function postSong(song: songIn, playlists: number[] = []) {
+export async function postSong(song: songIn, playlists: number[] = []): Promise<songBase | null> {
     let res = await post('/song', {song, playlists})
     if (res.status == 200) {
         return await res.json()
@@ -260,4 +260,4 @@ async function test() {
     console.log("Done!")
 }
 
-test()
+// test()
