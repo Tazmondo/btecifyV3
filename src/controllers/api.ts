@@ -35,6 +35,13 @@ async function put(endpoint: String, data?: any) {
     })
 }
 
+async function del(endpoint: String) {
+        return await fetch(serverAddress + endpoint, {
+        method: "delete",
+        mode: "cors",
+    })
+}
+
 type ProgressCallbackFunction = (progress: number, total: number, done: boolean) => void;
 
 export async function fullSync(playlists: { playlists: fullsyncPlaylist[] }, progressCallback: ProgressCallbackFunction) {
@@ -129,6 +136,11 @@ export async function postPlaylist(title: string, songs?: number[]): Promise<api
     }
 }
 
+export async function deletePlaylist(playlistId: number): Promise<boolean> {
+    let res = await del("/playlist/"+playlistId)
+    return res.status == 200
+}
+
 
 export async function getSongs(): Promise<songBase[] | null> {
     let res = await get('/song')
@@ -199,12 +211,11 @@ async function test() {
 
     await fullSync(syncdata, (progress, total, done) => console.log(progress, total, done))
 
-    console.log(await postSong({
-        weburl: "https://www.youtube.com/watch?v=dBvlnyvgOnw"
-    }, [1]))
+    console.log(await getPlaylist(2))
+    console.log(await deletePlaylist(2))
+    console.log(await getPlaylist(2))
+    console.log(await getShallowPlaylists())
 
-
-    console.log(await getPlaylist(1))
     console.log("Done!")
 }
 
