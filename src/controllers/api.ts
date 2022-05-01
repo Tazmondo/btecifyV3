@@ -129,6 +129,16 @@ export async function postPlaylist(title: string, songs?: number[]): Promise<api
     }
 }
 
+
+export async function getSongs(): Promise<songBase[] | null> {
+    let res = await get('/song')
+    if (res.status == 200) {
+        return await res.json()
+    } else {
+        return null
+    }
+}
+
 export async function getSong(songId: number): Promise<songBase | null> {
     let res = await get('/song/'+songId)
     if (res.status == 200) {
