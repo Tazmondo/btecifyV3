@@ -1,25 +1,29 @@
 // const mode = "left"
 import {getOptionValue} from "./options.js";
 
-const mode = "centre"
+let mode: string;
+mode = "centre"
+
 // const mode = "symmetrical"
 
-function init(audioElement) {
+function init(audioElement: HTMLAudioElement) {
     let context = new AudioContext()
     let src = context.createMediaElementSource(audioElement)
     let analyser = context.createAnalyser()
-    let canvas = document.querySelector('.audio-visualiser')
-    let ctx = canvas.getContext("2d")
+    let canvas: HTMLCanvasElement = document.querySelector('.audio-visualiser')!  // To tell typescript that canvas is not null
+    if (canvas === null) return
+
+    let ctx: CanvasRenderingContext2D = canvas.getContext("2d")!  // Ditto above
 
     src.connect(analyser)
     analyser.connect(context.destination)
 
     let prevDetail = -1
-    let bufferLength
-    let dataArray;
-    let width;
-    let height;
-    let barWidth;
+    let bufferLength: number;
+    let dataArray: Uint8Array;
+    let width: number;
+    let height: number;
+    let barWidth: number;
 
     function refreshDetail() {
         let newDetail = getOptionValue('visualiserDetail')
@@ -39,10 +43,12 @@ function init(audioElement) {
 
             if (mode === "symmetrical") {
                 barWidth = (width / bufferLength) * 0.5
-            } else if (mode === "left") {
-                barWidth = (width / bufferLength) * 1.5
-            } else if (mode === "centre") {
-                barWidth = (width / bufferLength) * 0.9
+            } else {
+                if (mode === "left") {
+                    barWidth = (width / bufferLength) * 1.5
+                } else if (mode === "centre") {
+                    barWidth = (width / bufferLength) * 0.9
+                }
             }
         }
     }
@@ -60,20 +66,20 @@ function init(audioElement) {
         curBarPos = 0;
         analyser.getByteFrequencyData(dataArray)
 
-        let centre = width/2 - barWidth/2
+        let centre = width / 2 - barWidth / 2
 
         for (let i = 0; i < bufferLength; i++) {
             let preBarHeight = dataArray[i];
             if (preBarHeight > 0) {
                 let barHeight = ((preBarHeight / 256) ** 1) * 256 // for modulating the bar heights if necessary in future
-                let r = 250 * (i/bufferLength);
-                let g = barHeight + (25 * (i/bufferLength));
+                let r = 250 * (i / bufferLength);
+                let g = barHeight + (25 * (i / bufferLength));
                 let b = 50;
 
                 ctx.fillStyle = "rgb(0, 255, 0)";
                 ctx.fillStyle = "rgb(" + r + "," + g + "," + b + ")";
 
-                switch (mode){
+                switch (mode) {
                     case "left":
                         ctx.fillRect(curBarPos * barWidth - 1, height - barHeight, barWidth, barHeight);
                         break
