@@ -2,6 +2,7 @@
 import {placeholderURL, copyArray, randomIndex, validSong} from "../../util.js";
 import {dispatch} from "../event.js";
 import {saveData} from "../../controller.js";
+import {apiPlaylistShallow} from '../types.js'
 
 function updatedCallback(redraw) {
     if (redraw) {
@@ -10,18 +11,17 @@ function updatedCallback(redraw) {
     saveData()
 }
 
-export default function Playlist(title, songs=[], thumb="") {
+export default function Playlist(info: apiPlaylistShallow) {
     let cachedThumb; // So that when using random thumbnail, it is consistent.
-    songs = songs.filter(validSong)
+    let songIds = info.songs
 
     // Sorts song list in place by title.
-    function sortSongs() {
-        songs.sort((a, b) => {
-            //console.log(a.getTitle(), b.getTitle(), a.getTitle() > b.getTitle())
-            return a.getTitle().toLowerCase() > b.getTitle().toLowerCase() ? 1 : -1
-        })
-    }
-    sortSongs()
+    // function sortSongs() {
+    //     songs.sort((a, b) => {
+    //         //console.log(a.getTitle(), b.getTitle(), a.getTitle() > b.getTitle())
+    //         return a.getTitle().toLowerCase() > b.getTitle().toLowerCase() ? 1 : -1
+    //     })
+    // }
 
     // Removes a song from a playlist using its uuid. Boolean indicating success returned.
     function removeSong(uuid) {

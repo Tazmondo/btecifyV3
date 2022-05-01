@@ -2,7 +2,7 @@ console.log("controller.js running...")
 
 // IMPORTING AND SETTING UP
 
-import Playlist from "./controllers/objects/playlist.js";
+import Playlist from "./controllers/objects/playlist.ts";
 import Song from './controllers/objects/song.js'
 import {copyArray, durationMinutesToSeconds, extractId} from "./util.js";
 import * as EventController from './controllers/event.js'
