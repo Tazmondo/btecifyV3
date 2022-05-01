@@ -2,71 +2,7 @@ const url = "localhost:8000"
 const serverAddress = "http://" + url
 const webSocketAddress = "ws://" + url
 
-type fullsyncSong = {
-    title: string
-    album?: string
-    duration?: number
-    extractor?: string
-    weburl: string
-    artist?: string
-}
-
-type fullsyncPlaylist = {
-    title: string,
-    songs: fullsyncSong[]
-}
-
-type apiPlaylistShallow = {
-    id: number
-    title: string
-    songs: number[]
-}
-
-interface albumBase {
-    id: number
-    title: string
-}
-
-interface artistBase {
-    id: number
-    title: string
-}
-
-interface playlistBase {
-    id: number
-    title: string
-}
-
-interface songPlaylist extends playlistBase {
-    dateadded: string
-}
-
-interface songBase {
-    title: string
-    weburl: string
-    playlists: songPlaylist[]
-    duration?: number
-    extractor?: string
-    album?: albumBase
-    artist?: artistBase
-}
-
-interface apiSong extends songBase {
-    dateadded: string
-}
-
-
-interface apiPlaylistDeep extends playlistBase {
-    songs: apiSong[]
-}
-
-interface songIn {
-    weburl: string
-    title?: string
-    album?: string
-    artist?: string
-}
-
+import {apiPlaylistDeep, apiPlaylistShallow, fullsyncPlaylist, songIn, songBase} from './types.js'
 
 
 function getUrl(endpoint: string) {
