@@ -1,3 +1,5 @@
+// todo: use requestanimationframe to group all dispatches together and execute all at once, saving massively on time
+
 let events = {}
 
 function invalidEvent(event) {

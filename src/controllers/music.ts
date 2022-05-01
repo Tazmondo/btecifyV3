@@ -3,14 +3,19 @@ console.log("musicController.js running")
 import initVisualiser from './visualiser.js'
 import {dispatch} from "./event.js";
 import {getRandomSong} from "./object.js";
+import {apiSong} from "./types";
+import {PlaylistInterface} from "./objects/playlist.js";
+import * as api from './api.js'
 
-let history = [];
-let queue = [];
-let sourceBuffer = undefined;
 
-let currentSong;
-let currentPlaylist;
-let playingSong;
+let history: apiSong[] = [];
+let queue: apiSong[] = [];
+// let sourceBuffer = undefined; todo: add source buffer functionality (maybe rewrite so that every source buffer has its own player, so each song is played on its own player and then deleted?
+//                                     might cause memory leak issues or just not work
+
+let currentSong: apiSong | undefined;
+let currentPlaylist: PlaylistInterface | undefined;
+let playingSong: apiSong | undefined;
 
 let repeat = false;
 let muted = localStorage.muted === "true" || false
@@ -30,14 +35,14 @@ initVisualiser(player)
 
 Object.assign(window, {player}) // for testing
 
-async function setSong(song) {
+async function setSong(song: apiSong) {
     if (!settingSong) {
-        console.log(`play ${song.getTitle()}`)
+        console.log(`play ${song.title}`)
         settingSong = true;
         try {
-            const promisePlay = async (res) => {
+            const promisePlay = async (source: string) => {
                 return new Promise((resolve, reject) => {
-                    player.src = res
+                    player.src = source
                     player.onplaying = e => {
                         playingSong = song
                         resolve(e)
@@ -50,24 +55,25 @@ async function setSong(song) {
                 })
             }
             let res;
-            async function waitForSourceBuffer() {
-                return new Promise(resolve => {
-                    function frame() {
-                        if (sourceBuffer?.fetching === true) {
-                            setTimeout(frame, 25)
-                        } else {
-                            resolve(sourceBuffer?.source)
-                        }
-                    }
-                    frame()
-                })
-            }
-            if (sourceBuffer?.song === song) {
-                res = await waitForSourceBuffer()
-            } else {
-                res = await song.getSource()
-            }
-            sourceBuffer = undefined
+            // async function waitForSourceBuffer() {
+            //     return new Promise(resolve => {
+            //         function frame() {
+            //             if (sourceBuffer?.fetching === true) {
+            //                 setTimeout(frame, 25)
+            //             } else {
+            //                 resolve(sourceBuffer?.source)
+            //             }
+            //         }
+            //         frame()
+            //     })
+            // }
+            // if (sourceBuffer?.song === song) {
+            //     res = await waitForSourceBuffer()
+            // } else {
+            //     res = await song.getSource()
+            // }
+            // sourceBuffer = undefined
+            res = api.getSrcUrl(song.id)
             try {
                 await promisePlay(res)
             } catch (e) {
@@ -77,7 +83,8 @@ async function setSong(song) {
             return true
         } catch (e) {
             console.error("setSong() failed");
-            console.error(e.message);
+
+            if (e instanceof Error) console.error(e.message);
             throw e
         } finally {
             settingSong = false
@@ -95,7 +102,7 @@ function songEnded(depth = 0) {
     if (!settingSong) {
         if (currentPlaylist) {
             while (queue.length < 50 && queue.length < Math.ceil(currentPlaylist.getLength() / 2)) {
-                let randomSong = currentPlaylist.getRandomFilteredSong(queue);
+                let randomSong = currentPlaylist.getRandomFilteredSong(queue.map(value => value.id));
                 if (randomSong) {
                     queue.push(randomSong)
                 } else {
@@ -108,7 +115,7 @@ function songEnded(depth = 0) {
             queue.push(getRandomSong())
         }
         if (queue.length > 0) {
-            let nextSong = queue.shift();
+            let nextSong: apiSong = queue.shift()!;  // Because queue length greater than 0
             let oldSong = currentSong
 
             setSong(nextSong).then(res => {
@@ -124,16 +131,16 @@ function songEnded(depth = 0) {
                 }
 
                 // Buffer the next song for seamless play.
-                if (queue.length > 0) {
-                    let bufferSong = queue[0]
-                    sourceBuffer = {song: bufferSong, source: undefined, fetching: true}
-                    bufferSong.getSource().then(res => {
-                        if (sourceBuffer.song === bufferSong) {
-                            sourceBuffer.source = res
-                            sourceBuffer.fetching = false
-                        }
-                    }).catch(reason => sourceBuffer = undefined)
-                }
+                // if (queue.length > 0) {
+                //     let bufferSong = queue[0]
+                //     sourceBuffer = {song: bufferSong, source: undefined, fetching: true}
+                //     bufferSong.getSource().then(res => {
+                //         if (sourceBuffer.song === bufferSong) {
+                //             sourceBuffer.source = res
+                //             sourceBuffer.fetching = false
+                //         }
+                //     }).catch(reason => sourceBuffer = undefined)
+                // }
 
             })
         }
@@ -209,21 +216,21 @@ export function getInfo() {
     }
 }
 
-export function forceSetSong(song) {
+export function forceSetSong(song: apiSong) {
     currentPlaylist = undefined
     queue = []
     queue.unshift(song)
-    sourceBuffer = undefined
+    // sourceBuffer = undefined
     songEnded(10)
 }
 
-export function setSongFromUrl(urlStream) {
+export function setSongFromUrl(urlStream: string) {
     currentSong = undefined
     player.src = urlStream
     play()
 }
 
-export function setPlaylist(playlist) {
+export function setPlaylist(playlist: PlaylistInterface) {
     currentPlaylist = playlist
     queue = []
     if (playingSong === undefined) {
@@ -233,17 +240,17 @@ export function setPlaylist(playlist) {
     dispatch('playing')
 }
 
-export function getTime() {
+export function getTime(): number {
     return player.currentTime
 }
 
-export function setTime(seconds) {
+export function setTime(seconds: number) {
     player.play() // In case the song has ended and playback has stopped.
     player.currentTime = seconds
     return player.currentTime
 }
 
-export function setVolume(volume) {
+export function setVolume(volume: number) {
     if (volume < 0) volume = 0
     if (volume > 1) volume = 1
     unModdedVol = volume
@@ -258,7 +265,7 @@ export function forward() {
 
 export function back() {
     let nextSong = history.pop()
-    if (nextSong) {
+    if (nextSong && currentSong) {
         queue.unshift(currentSong)
         setSong(nextSong).finally(() => {
             dispatch('playing')
@@ -266,18 +273,18 @@ export function back() {
     }
 }
 
-export function setRepeat(bool) {
+export function setRepeat(bool: boolean) {
     repeat = bool
     dispatch('playing')
 }
 
-export function toggleMute(force) {
+export function toggleMute(force: boolean) {
     muted = force ?? !muted
     localStorage.muted = muted
     muted ? player.volume = 0 : player.volume = unModdedVol ** volMod
     dispatch('playing')
 }
 
-export function removeFromQueue(song) {
-    queue.remove
+export function removeFromQueue(song: apiSong) {
+    // todo: implement removeFromQueue
 }
