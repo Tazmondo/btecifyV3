@@ -3,8 +3,6 @@ import {placeholderURL, copyArray, randomIndex, validSong} from "../../util.js";
 import {dispatch} from "../event.js";
 import {apiPlaylistDeep, apiPlaylistShallow, apiSong} from '../types.js'
 import * as api from '../api.js'
-import song from "../../pages/song";
-import {getSong} from "../api.js";
 
 
 function forceRedraw() {
