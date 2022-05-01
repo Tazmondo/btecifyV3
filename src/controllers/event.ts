@@ -1,17 +1,17 @@
 // todo: use requestanimationframe to group all dispatches together and execute all at once, saving massively on time
 
-let events = {}
+let events: {[eventName: string]: {callbacks: Function[], e: Function}} = {}
 
-function invalidEvent(event) {
-    return events[event] === undefined
+function invalidEvent(eventName: string) {
+    return events[eventName] === undefined
 }
 
-function unSubscribe(event, callback) {
-    if (invalidEvent(event)) {
+function unSubscribe(eventName: string, callback: Function) {
+    if (invalidEvent(eventName)) {
         return false
     }
 
-    let callbacks = events[event].callbacks;
+    let callbacks = events[eventName].callbacks;
 
     let index = callbacks.findIndex(v => {return v === callback})
     if (index > -1) {
@@ -21,14 +21,14 @@ function unSubscribe(event, callback) {
     return false
 }
 
-function setupEvent(name, callbacks, eventObjectCreator) {
+function setupEvent(name: string, callbacks: Function[], eventObjectCreator: Function) {
     events[name] = {
         callbacks: callbacks,
         e: eventObjectCreator
     }
 }
 
-function dispatch(eventName) {
+function dispatch(eventName: string) {
     if (invalidEvent(eventName)) {
         return false
     }
@@ -43,14 +43,14 @@ function dispatch(eventName) {
     return true
 }
 
-window.dispatch = dispatch // For testing
+Object.assign(window, {dispatch})  // For testing
 
-function subscribe(event, callback) {
-    if (invalidEvent(event)) {
+function subscribe(eventName: string, callback: Function) {
+    if (invalidEvent(eventName)) {
         return false
     }
-    unSubscribe(event, callback)
-    events[event].callbacks.push(callback)
+    unSubscribe(eventName, callback)
+    events[eventName].callbacks.push(callback)
     return true
 }
 

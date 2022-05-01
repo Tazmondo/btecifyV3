@@ -1,7 +1,7 @@
 // todo: Song added dates
-import {placeholderURL, copyArray, randomIndex, validSong} from "../../util.js";
+import {placeholderURL, randomIndex} from "../../util.js";
 import {dispatch} from "../event.js";
-import {apiPlaylistDeep, apiPlaylistShallow, apiSong} from '../types.js'
+import {apiPlaylistDeep, apiSong} from '../types.js'
 import * as api from '../api.js'
 
 
