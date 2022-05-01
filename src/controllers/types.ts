@@ -12,12 +12,6 @@ export type fullsyncPlaylist = {
     songs: fullsyncSong[]
 }
 
-export type apiPlaylistShallow = {
-    id: number
-    title: string
-    songs: number[]
-}
-
 export interface albumBase {
     id: number
     title: string
@@ -38,8 +32,10 @@ export interface songPlaylist extends playlistBase {
 }
 
 export interface songBase {
+    id: number
     title: string
     weburl: string
+    disabled: boolean
     playlists: songPlaylist[]
     duration?: number
     extractor?: string
@@ -51,6 +47,9 @@ export interface apiSong extends songBase {
     dateadded: string
 }
 
+export interface apiPlaylistShallow extends playlistBase{
+    songs: number[]
+}
 
 export interface apiPlaylistDeep extends playlistBase {
     songs: apiSong[]

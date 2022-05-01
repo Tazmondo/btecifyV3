@@ -1,37 +1,36 @@
 // todo: Song added dates
 import {placeholderURL, copyArray, randomIndex, validSong} from "../../util.js";
 import {dispatch} from "../event.js";
-import {saveData} from "../../controller.js";
-import {apiPlaylistShallow} from '../types.js'
+import {apiPlaylistDeep, apiPlaylistShallow, apiSong} from '../types.js'
+import * as api from '../api.js'
+import song from "../../pages/song";
+import {getSong} from "../api.js";
 
-function updatedCallback(redraw) {
-    if (redraw) {
-        dispatch('playlist')
-    }
-    saveData()
+
+function forceRedraw() {
+    dispatch('playlist')
 }
 
-export default function Playlist(info: apiPlaylistShallow) {
-    let cachedThumb; // So that when using random thumbnail, it is consistent.
-    let songIds = info.songs
+export default function Playlist(info: apiPlaylistDeep) {
+    let cachedThumb: number | undefined = undefined; // So that when using random thumbnail, it is consistent.
+    let songs: {[key: number]: apiSong} = {}
+
+    for (let song of info.songs) {
+        songs[song.id] = song
+    }
+
+    let title = info.title
+    let id = info.id
 
     // Sorts song list in place by title.
-    // function sortSongs() {
-    //     songs.sort((a, b) => {
-    //         //console.log(a.getTitle(), b.getTitle(), a.getTitle() > b.getTitle())
-    //         return a.getTitle().toLowerCase() > b.getTitle().toLowerCase() ? 1 : -1
-    //     })
-    // }
+    function sortedSongs(): apiSong[] {
+        return getSongArray().sort((a, b) => a.dateadded.localeCompare(b.dateadded))
+    }
 
     // Removes a song from a playlist using its uuid. Boolean indicating success returned.
-    function removeSong(uuid) {
-        let targetSongIndex = songs.findIndex(v => {
-            return v.getUUID() === uuid
-        })
-
-        if (targetSongIndex > -1) {
-            songs.splice(targetSongIndex, 1)
-            updatedCallback()
+    function removeSong(id: number) {
+        if (id in songs) {
+            delete songs[id]
             return true
         } else {
             console.warn("Tried to remove from a playlist a song that it didn't contain.")
@@ -40,27 +39,35 @@ export default function Playlist(info: apiPlaylistShallow) {
     }
 
     // Returns array of songs that are not disabled.
-    function getEnabledSongs() {
-        return copyArray(songs).filter( v => !v.isDisabled())
+    function getEnabledSongs(): apiSong[] {
+        return getSongArray().filter(value => !value.disabled)
+    }
+
+    function getSongArray(): apiSong[] {
+        return Object.values(songs)
     }
 
     return {
         getEnabledSongs,
 
+        getId(): number {
+            return id
+        },
+
         // Returns string title.
-        getTitle() {
+        getTitle(): string {
             return title
         },
 
         // Sets a new title. Must only be called from object controller so it can validate that no other playlists
         // with the title exist.
-        setTitle(newTitle) {
+        setTitle(newTitle: string) {
             title = newTitle
         },
 
         // Returns a copy of the song array.
         getSongs() {
-            return copyArray(songs)
+            return sortedSongs()
         },
 
         // Returns integer number of enabled songs in song playlist.
@@ -70,9 +77,9 @@ export default function Playlist(info: apiPlaylistShallow) {
 
 
         // Takes an array of songs, returning a random song that does not exist in the array.
-        getRandomFilteredSong(filter=[]) {
+        getRandomFilteredSong(filter: number[]=[]): apiSong | false {
             let possibleSongs = getEnabledSongs().filter(v => {
-                return !filter.includes(v)
+                return !filter.includes(v.id)
             })
             if (possibleSongs.length > 0) {
                 return possibleSongs[randomIndex(possibleSongs.length)]
@@ -80,86 +87,84 @@ export default function Playlist(info: apiPlaylistShallow) {
             return false
         },
 
-        // Async, returns a thumbnail randomly chosen from songs in the playlist, and on subsequent calls, the one
+        // returns a thumbnail randomly chosen from songs in the playlist, and on subsequent calls, the one
         // returned from the first call.
-        async getThumb() {
-            return thumb || cachedThumb || await (async () => {
-                if (this.getLength() > 0) {
-                    cachedThumb = await getEnabledSongs()[randomIndex(this.getLength())]?.getThumb() || undefined
-                    updatedCallback(false)
-                    return cachedThumb || placeholderURL
-                } else {
-                    return placeholderURL
-                }
-            })()
+        getThumb(): string {
+            if (cachedThumb !== undefined) {
+                return api.getThumbUrl(cachedThumb)
+            } else {
+                cachedThumb = getEnabledSongs()[randomIndex(this.getLength())].id || undefined
+                return cachedThumb === undefined ? placeholderURL : api.getThumbUrl(cachedThumb)
+            }
         },
 
         refreshThumb() {
             cachedThumb = undefined
-            updatedCallback(true)
+            forceRedraw()
         },
 
         // Returns boolean indicating whether the playlist contains a certain song object.
-        doesContainSong(songObject) {
-            return songs.some(v => {
-                return v.getUUID() === songObject.getUUID()
-            })
+        doesContainSong(songId: number): boolean {
+            return songId in songs
         },
 
         // Add song object to songs. Return boolean indicating success.
-        addSong(song) {
-            if (validSong(song) && !this.doesContainSong(song)) {
-                songs.push(song)
-                sortSongs()
-                updatedCallback()
+        addSong(song: apiSong): boolean {
+            if (!this.doesContainSong(song.id)) {
+                songs[song.id] = song
+                forceRedraw()
                 return true
             }
             return false
         },
 
+        // COMMENTED SINCE USING SONG IDS IS MUCH BETTER
+
         // Attempts to remove a song from songs using a song Object. Returns a boolean indicating success.
         // Throws an error if an invalid song Object is passed.
-        removeSongWithSong(song) {
-            if (validSong(song)) {
-                let uuid = song.getUUID()
-                if (api.uuidIsValid(uuid)) {
-                    let result = removeSong(uuid);
-                    sortSongs()
-                    updatedCallback()
-                    return result
-                }
-            }
-            throw `This should never be reached. removeSong called on an invalid song: ${song}`
-            return false
-        },
+        // removeSongWithSong(song) {
+        //     if (validSong(song)) {
+        //         let uuid = song.getUUID()
+        //         if (api.uuidIsValid(uuid)) {
+        //             let result = removeSong(uuid);
+        //             sortSongs()
+        //             forceRedraw()
+        //             return result
+        //         }
+        //     }
+        //     throw `This should never be reached. removeSong called on an invalid song: ${song}`
+        //     return false
+        // },
 
         // Attempts to remove a song using a uuid. Returns a boolean indicating success.
         // Throws an error if given an invalid uuid.
-        removeSongWithUuid(uuid) {
-            if (api.uuidIsValid(uuid)) {
-                let result = removeSong(uuid)
-                sortSongs()
-                updatedCallback()
+        removeSongWithId(songId: number) {
+                let result = removeSong(songId)
+                forceRedraw()
                 return result
-            }
-            throw `This should never be reached. removeSong called with an invalid uuid: ${uuid}`
-            return false
         },
 
         // Take a song array and return all songs in the playlist that do not exist in the array.
-        getSuperSongs(songArray) {
-            return songs.filter(v => {return !songArray.some(v2 => {return v.getUUID() === v2.getUUID()})})
+        getSuperSongs(songArray: number[]) {
+            let givenSongs = songArray.reduce((obj, key) => ({...obj, [key]: true}), {})
+
+            return getSongArray().filter(v => !(v.id in givenSongs))
         },
 
         // Take a song array and return all songs in it that aren't in the playlist.
-        getSubSongs(songArray) {
-            return songArray.filter(v => {return !songs.some(v2 => {return v.getUUID() === v2.getUUID()})})
+        getSubSongs(songArray: apiSong[]) {
+            return songArray.filter(v => !(v.id in songs))
         },
-
-        // For JSON.stringify
-        toJSON() {
-            return ['playlist', title, songs, thumb]
-        }
-
     }
 }
+
+async function test() {
+    let pInfo = await api.getPlaylist(1)
+    if (pInfo !== null) {
+        let testPlaylist = Playlist(pInfo)
+
+    }
+
+}
+
+test()

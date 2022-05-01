@@ -1,3 +1,5 @@
+import song from "../pages/song";
+
 const url = "localhost:8000"
 const serverAddress = "http://" + url
 const webSocketAddress = "ws://" + url
@@ -158,6 +160,14 @@ export async function getSong(songId: number): Promise<songBase | null> {
     } else {
         return null
     }
+}
+
+export function getThumbUrl(songId: number): string {
+    return serverAddress + "/song/"+songId+"/thumb"
+}
+
+export function getSrcUrl(songId: number): string {
+    return serverAddress + "/song/" + songId + "/src"
 }
 
 export async function postSong(song: songIn, playlists: number[] = []): Promise<songBase | null> {

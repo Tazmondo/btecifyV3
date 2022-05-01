@@ -13,11 +13,11 @@ import * as ClipboardController from './controllers/clipboard.js'
 
 export const CURFLAG = 1 // Update when parsing requires change, so old data can be updated with new parser.
 
-export function saveData() {
-    localStorage["playlist"] = JSON.stringify(ObjectController.getPlaylistArray())
-    localStorage["song"] = JSON.stringify(ObjectController.getSongPlaylist())
-    localStorage['flag'] = CURFLAG
-}
+// export function saveData() {
+//     localStorage["playlist"] = JSON.stringify(ObjectController.getPlaylistArray())
+//     localStorage["song"] = JSON.stringify(ObjectController.getSongPlaylist())
+//     localStorage['flag'] = CURFLAG
+// }
 
 // CONTROLLER IMPORTS
 
