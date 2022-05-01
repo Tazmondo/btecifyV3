@@ -1,8 +1,6 @@
 import Playlist from "./objects/playlist.js";
-import Song from './objects/song.js'
 import {copyArray, randomIndex, extractId} from "../util.js";
 import {dispatch} from "./event.js";
-import {saveData, CURFLAG} from "../controller.js";
 import * as api from './api.js'
 
 let flag = localStorage['flag'] || 0

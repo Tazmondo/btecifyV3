@@ -1,40 +1,47 @@
+import {apiSong} from "./controllers/types";
+
 console.log("utils.js running")
 
 
 export const placeholderURL = "./assets/thumbplaceholder.png"
 
-export function validSong(song) {
-    return Boolean(song?.getUUID && song?.getTitle && song?.getURL)
+// Commented 01/5/22
+// export function validSong(song) {
+//     return Boolean(song?.getUUID && song?.getTitle && song?.getURL)
+// }
+
+export function copyArray(array: any[]): any[] {
+    return array.slice(0)
 }
 
-export function copyArray(array) {
-    if (Array.isArray(array)) {
-        return array.slice(0)
-    }
+export function isSongInSongArray (songArray: apiSong[], song: apiSong): boolean {
+    return songArray.some(v => v.id === song.id)
 }
 
-export function isSongInSongArray (songArray, song) {
-    return songArray.some(v => {return v.getUUID() === song.getUUID()})
-}
-
-export function durationSecondsToMinutes(iSeconds) {
+export function durationSecondsToMinutes(iSeconds: number): string {
     let minutes = Math.floor(iSeconds/60)
     let seconds = Math.floor(iSeconds % 60)
+
+    let stringSeconds = seconds.toString()
+    let stringMinutes = minutes.toString()
+
     if (seconds < 10) {
-        seconds = `0${seconds}`
+        stringSeconds = `0${seconds}`
     }
+
     if (minutes < 10) {
-        minutes = `0${minutes}`
+        stringMinutes = `0${minutes}`
     }
-    return `${minutes}:${seconds}`
+
+    return `${stringMinutes}:${stringSeconds}`
 }
 
-export function durationMinutesToSeconds(iMinutes) {
+export function durationMinutesToSeconds(iMinutes: string): number {
     let duration = 0;
     if (iMinutes.length === 8) {
-        duration = (Number(iMinutes.substr(3, 2)) * 60) + Number(iMinutes.substr(6, 2))
+        duration = (Number(iMinutes.substring(3, 5)) * 60) + Number(iMinutes.substring(6, 8))
     } else if (iMinutes.length === 5) {
-        duration = (Number(iMinutes.substr(0, 2)) * 60) + Number(iMinutes.substr(3, 2))
+        duration = (Number(iMinutes.substring(0, 2)) * 60) + Number(iMinutes.substring(3, 5))
     } else {
         throw new Error(`Invalid duration was passed ${iMinutes}`)
     }
@@ -42,11 +49,11 @@ export function durationMinutesToSeconds(iMinutes) {
     return duration
 }
 
-export function randomIndex(maxIndex) {
+export function randomIndex(maxIndex: number): number {
     return (Math.floor(Math.random() * maxIndex) + 1) - 1
 }
 
-export function pageEntry(page) {
+export function pageEntry(page: HTMLElement) {
     page.classList.toggle("switching", true)
     // page.classList.toggle("hidden",false)
     page.dataset.exit = "false"
@@ -62,7 +69,7 @@ export function pageEntry(page) {
     }, 800) // Transition length + a bit
 }
 
-export function pageExit(page, remove=false) {
+export function pageExit(page: HTMLElement, remove: boolean = false) {
     page.dataset.exit = "true"
     page.classList.toggle("switching", true)
     page.classList.toggle("hidden", true)
@@ -76,8 +83,8 @@ export function pageExit(page, remove=false) {
 }
 
 // Checks if one element is a descendant of another.
-export function isDescended(child, parent) {
-    let element = child;
+export function isDescended(child: HTMLElement, parent: HTMLElement) {
+    let element: HTMLElement | null = child;
     while ((element = element.parentElement)) {
         if (element === parent) {
             return true
@@ -91,7 +98,7 @@ export function isDescended(child, parent) {
  * @param dragger {HTMLElement|Node}
  * @param container {HTMLElement|Node}
  */
-export function makeDraggable(dragger, container) {
+export function makeDraggable(dragger: HTMLElement, container: HTMLElement) {
 
     let rect = container.getBoundingClientRect()
 
@@ -106,7 +113,7 @@ export function makeDraggable(dragger, container) {
         container.style.top = `${constrainedTop}px`
     }
 
-    function constrain(left, top) {
+    function constrain(left: number, top: number) {
         let maxLeft = window.innerWidth - container.clientWidth;
         let maxTop = window.innerHeight - container.clientHeight
 
@@ -123,7 +130,7 @@ export function makeDraggable(dragger, container) {
     updateContainerPosition()
 
     dragger.addEventListener('mousedown', e => {
-        function moved(e) {
+        function moved(e: MouseEvent) {
             left += e.movementX
             top += e.movementY
 
@@ -143,7 +150,7 @@ export function makeDraggable(dragger, container) {
  * @param url {string}
  * @return {string} Empty if no id, otherwise id
  */
-export function extractId(url) {
+export function extractId(url: string) {
     let regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
     let match = url.match(regExp);
     return (match&&match[7].length===11)? match[7] : false;
