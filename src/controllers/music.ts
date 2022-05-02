@@ -2,7 +2,7 @@ console.log("musicController.js running")
 import initVisualiser from './visualiser.js'
 import {dispatch} from "./event.js";
 import {getRandomSong} from "./object.js";
-import {playlistSong, songBase} from "./types";
+import {songBase} from "./types";
 import {PlaylistInterface} from "./objects/playlist.js";
 import * as api from './api.js'
 
@@ -227,7 +227,7 @@ export function getInfo(): PlayerInfo {
     }
 }
 
-export function forceSetSong(song: playlistSong) {
+export function forceSetSong(song: songBase) {
     currentPlaylist = undefined
     queue = []
     queue.unshift(song)
@@ -296,6 +296,6 @@ export function toggleMute(force?: boolean) {
     dispatch('playing')
 }
 
-export function removeFromQueue(song: playlistSong) {
+export function removeFromQueue(song: songBase) {
     // todo: implement removeFromQueue
 }

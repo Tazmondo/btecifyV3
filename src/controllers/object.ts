@@ -44,6 +44,7 @@ import {apiPlaylistShallow, songBase, songIn} from "./types.js";
 //     return Playlist("Songs")
 // })()
 
+// todo: show error message and close if can't connect to server
 let allSongs: songBase[]
 try {
     allSongs = await serverApi.getSongs()
