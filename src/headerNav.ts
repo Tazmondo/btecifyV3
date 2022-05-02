@@ -1,13 +1,15 @@
-import  * as EventController from './controllers/event.js'
-import  * as RouteController from './controllers/route.js'
+import * as EventController from './controllers/event.js'
+import * as RouteController from './controllers/route.js'
 
 function initNav() {
     const {routePageWithNavElement} = RouteController
     const {subscribe} = EventController
 
-    let navButtons = Array.from(document.getElementById("nav-bar").childNodes).filter(v => {return v.nodeName === "BUTTON"})
+    let navButtons = Array.from(document.getElementById("nav-bar")!.childNodes).filter(v => {
+        return v.nodeName === "BUTTON"
+    }) as HTMLElement[]
 
-    function getNavFromName(name) {
+    function getNavFromName(name: string) {
         return navButtons.find(v => v.id === name + "-nav")
     }
 
@@ -17,12 +19,13 @@ function initNav() {
         })
     })
 
-    let closeButton = document.querySelector('header .app-close')
+    let closeButton = document.querySelector('header .app-close')!
     closeButton.addEventListener('click', e => {
+        // @ts-ignore
         api.close()
     })
 
-    subscribe('currentpage', (routeName) => {
+    subscribe('currentpage', (routeName: string) => {
         let navFromName = getNavFromName(routeName);
         navButtons.forEach(button => button.classList.toggle('active', false))
         if (navFromName) {
