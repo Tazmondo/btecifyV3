@@ -1,59 +1,78 @@
 TODO
 
 features:
-add local keybinds (hotkey.js?)
-view back button is a 100% height div that takes up the left side
-add keybind to immediately focus the window
-add more valid extractors (soundcloud, etc)
-mass get song metadata (getJson > track, artist etc)
-confirmation menu and dialog box
-add multiple song selection to song page
-action history with undo option
-add wait for next frame to all draw pages?
-peer-to-peer listen along
-    maybe use browser protocols to share links
-    see P2P technologies
 
-add button to queue to remove a song from the upcoming queue
-    remember to clear the source buffer
+for long api requests (fullsync and fulldownload), turn off song visualiser and use the titlebar as a progress bar to show the websocket progress.
+    or use the seekerbar
+
+when adding a new song, start playing the added song immediately
+
+
+add local keybinds (hotkey.js?)
+
+add more valid extractors (soundcloud, etc)
+
+confirmation menu and dialog box
+    only really need to add me when needed
+
+add multiple song selection to song page
+
+action history with undo option
+
 make search only apply after finish typing for large playlists due to lag
-rewrite the routing model? do i need to reinit pages every time??
+
 get lyrics of song (muzicbrainz / genius maybe?)
+
 add a cursor to visible search bars
     add highlights to the song lists to indicate that a search is enabled
+
 add sound effects to buttons (e.g. mechanical click for the slider checkboxes)
     enable/disable in options
+
 song source should always be file and not stream
     not really feasible since they take time to download
+
 show currently fetching song while it's being fetched
+
 allow spam skipping
+
 queue editing
+
 store more efficiently
     currently songs appear multiple times for each playlist
     so instead each playlist should just reference a UUID
     electron-store?
+
 extract video chapters
     for albums that are all in one video
+
 in playlist comparison add opposite arrow to remove this song from the opposing playlist
+
 click on images/thumbnails to play song
+
 add a progress bar
     display song being downloaded, and use the seeker bar as a loading bar to show progress.
     add feedback notifications (e.g. a toast when you add a new song)
+
 hold shift in playlist comparison adds all
     or add a merge/copy right click to playlists
 
-use youtube-dlp for faster downloads?
-    https://github.com/wololo-aeyoyo/youtube-dl-exec
-
-
-for long api requests (fullsync and fulldownload), turn off song visualiser and use the titlebar as a progress bar to show the websocket progress.
-when adding a new song, start playing the added song immediately
 
 
 BACKLOG:  put here features that dont make any sense right now or arent important at all
 
+    add keybind to immediately focus the window
+    mass get song metadata (getJson > track, artist etc)
+    add wait for next frame to all draw pages?
+    peer-to-peer listen along
+        maybe use browser protocols to share links
+        see P2P technologies
 
+            made redundant with the pi server - should be able to handle listen along pretty easily
+                websocket sending pauses and stuff?
 
+    use youtube-dlp for faster downloads?
+        https://github.com/wololo-aeyoyo/youtube-dl-exec
 
 DONE (sort of):
 scan clipboard for youtube links and prompt for adding song
