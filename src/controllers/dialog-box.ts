@@ -1,20 +1,14 @@
 import {makeDraggable} from "../util.js";
 
-/**
- * Generates an input dialog box and fades out the rest of the screen.
- * @async
- * @param title {string}
- * @param mainText {string}
- * @param options {{
- *     [inputs]: [{
- *         type: "text",
- *         label: string
- *     }],
- *     [type]: "input"|"confirm"|"hotkey"
- * }}
- * @return {Promise<Array|boolean>} Returns an array of the user inputs, or false if they cancelled.
- */
-async function generateInputDialog(title, mainText, options) {
+type DialogBoxOptions = {
+    inputs: {
+        type: "text"
+        label: string
+    }[]
+    type?: "input" | "confirm" | "hotkey"
+}
+
+async function generateInputDialog(title: string, mainText: string, options: DialogBoxOptions): Promise<string[] | true> {
     return new Promise((resolve, reject) => {
         title = title ?? ""
         mainText = mainText ?? ""
@@ -22,20 +16,21 @@ async function generateInputDialog(title, mainText, options) {
         let inputs = options?.inputs ?? []
         let type = options?.type ?? "input"
 
-        let backDiv = document.getElementById('dialog-box-template')
-            .content.firstElementChild.cloneNode(true)
+        let backDiv = (document.getElementById('dialog-box-template') as HTMLTemplateElement)
+            .content.firstElementChild!.cloneNode(true) as HTMLElement
+
         document.body.insertAdjacentElement('beforeend', backDiv)
 
-        let foreDiv = backDiv.firstElementChild
+        let foreDiv = backDiv.firstElementChild! as HTMLElement
 
-        let titleElement = backDiv.querySelector('em')
+        let titleElement = backDiv.querySelector('em')!
         titleElement.textContent = title
 
-        let mainTextElement = backDiv.querySelector('h3')
+        let mainTextElement = backDiv.querySelector('h3')!
         mainTextElement.textContent = mainText
 
-        let form = backDiv.querySelector('form')
-        let submitButton = form.querySelector('input[type=submit]')
+        let form = backDiv.querySelector('form')!
+        let submitButton = form.querySelector('input[type=submit]')! as HTMLElement
 
         switch (type) {
             case "input":
@@ -57,22 +52,23 @@ async function generateInputDialog(title, mainText, options) {
                 break
             case "hotkey":
                 submitButton.style.display = "none"
-                function keyEvent(e) {
-                    let key = e.key
-                    if (!["Escape", "Shift", "Control", "Alt", "AltGraph"].includes(key)) {
-                        let modifier = e.altKey ? "Alt+" : e.ctrlKey ? "Ctrl+" : e.shiftKey ? "Shift+" : ""
-                        let hotkeyString = modifier + key
-                        submit([hotkeyString])
-                        document.removeEventListener('keydown', keyEvent)
-                    }
+
+            function keyEvent(e: KeyboardEvent) {
+                let key = e.key
+                if (!["Escape", "Shift", "Control", "Alt", "AltGraph"].includes(key)) {
+                    let modifier = e.altKey ? "Alt+" : e.ctrlKey ? "Ctrl+" : e.shiftKey ? "Shift+" : ""
+                    let hotkeyString = modifier + key
+                    submit([hotkeyString])
+                    document.removeEventListener('keydown', keyEvent)
                 }
+            }
                 document.addEventListener('keydown', keyEvent)
         }
 
-        function submit(userInputs) {
+        function submit(userInputs?: string[]) {
             let inputs = userInputs ?? Array.from(form.elements)
-                .filter(v => v.type !== 'submit')
-                .map(v => v.value);
+                .filter(v => (v as HTMLInputElement).type !== 'submit')
+                .map(v => (v as HTMLInputElement).value);
             backDiv.remove()
             if (inputs.length > 0) {
                 resolve(inputs)
@@ -91,20 +87,23 @@ async function generateInputDialog(title, mainText, options) {
             reject("User exited dialog.")
         }
 
-        let closeButton = backDiv.querySelector('.dialog-box-close')
+        let closeButton = backDiv.querySelector('.dialog-box-close')!
 
         closeButton.addEventListener('click', cancel)
+
         backDiv.addEventListener('mousedown', e => {
-            if (e.target === backDiv){
+            if (e.target === backDiv) {
                 cancel()
             }
         }, {once: true})
-        function checkEsc(e) {
+
+        function checkEsc(e: KeyboardEvent) {
             if (e.key === "Escape") {
                 document.removeEventListener('keydown', checkEsc)
                 cancel()
             }
         }
+
         document.addEventListener('keydown', checkEsc)
         makeDraggable(titleElement, foreDiv)
     })
