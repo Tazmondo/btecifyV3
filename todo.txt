@@ -1,7 +1,6 @@
 TODO
 
 features:
-add a better placeholder image
 add local keybinds (hotkey.js?)
 view back button is a 100% height div that takes up the left side
 add keybind to immediately focus the window
@@ -48,6 +47,12 @@ use youtube-dlp for faster downloads?
 
 
 for long api requests (fullsync and fulldownload), turn off song visualiser and use the titlebar as a progress bar to show the websocket progress.
+when adding a new song, start playing the added song immediately
+
+
+BACKLOG:  put here features that dont make any sense right now or arent important at all
+
+
 
 
 DONE (sort of):
