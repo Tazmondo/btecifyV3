@@ -183,7 +183,7 @@ function initPage() {
         }, {once: true})
     }
 
-    volumeSeeker.addEventListener("mouseup", volumeClick)
+    volumeSeeker.addEventListener("mousedown", volumeClick)
 
     function drawPage(info: PlayerInfo) {
         let song = info?.playingSong
