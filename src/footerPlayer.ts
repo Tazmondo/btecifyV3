@@ -205,6 +205,7 @@ function initPage() {
                 let thumb = api.getThumbUrl(song.id)
                 thumbImg.src = thumb ?? ""
                 thumbImg.classList.toggle('hidden', false)
+                thumbImg.style.visibility = 'visible'
             }
 
             currentSong = song
