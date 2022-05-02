@@ -42,6 +42,10 @@ function dispatch(eventName: string) {
     }
 
     events[eventName].willExecute = true
+
+    if (!requested) {
+        requestAnimationFrame(frame)
+    }
     return true
 }
 
@@ -56,7 +60,10 @@ function subscribe(eventName: string, callback: Function) {
     return true
 }
 
+let requested: boolean = false
+
 function frame() {
+    requested = false
     for (let event of Object.values(events)) {
         if (event.willExecute) {
             event.willExecute = false
@@ -69,9 +76,6 @@ function frame() {
             })
         }
     }
-    requestAnimationFrame(frame)
 }
-
-requestAnimationFrame(frame)
 
 export {setupEvent, dispatch, subscribe, unSubscribe}
