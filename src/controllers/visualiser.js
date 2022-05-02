@@ -20,6 +20,7 @@ function init(audioElement) {
     let width;
     let height;
     let barWidth;
+    let offsetWidth;
 
     function refreshDetail() {
         let newDetail = getOptionValue('visualiserDetail')
@@ -31,11 +32,13 @@ function init(audioElement) {
             bufferLength = analyser.frequencyBinCount
             dataArray = new Uint8Array(bufferLength)
 
+            offsetWidth = canvas.parentElement.firstElementChild.clientWidth // Get width of the element before the canvas.
+
             canvas.width = canvas.clientWidth
             canvas.height = 256
 
-            width = canvas.width
-            height = canvas.height
+            width = canvas.clientWidth
+            height = 256
 
             if (mode === "symmetrical") {
                 barWidth = (width / bufferLength) * 0.5
@@ -60,7 +63,7 @@ function init(audioElement) {
         curBarPos = 0;
         analyser.getByteFrequencyData(dataArray)
 
-        let centre = width/2 - barWidth/2
+        let centre = (width - barWidth - offsetWidth) / 2
 
         for (let i = 0; i < bufferLength; i++) {
             let preBarHeight = dataArray[i];

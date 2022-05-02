@@ -723,7 +723,7 @@ main > *.hidden {
     height: 64px;
     align-self: center;
     background-size: cover;
-    background-color: #2b2b2b;
+    /*background-color: #2b2b2b;  Commented to make placeholder image look better */
     background-position: center;
 }
 

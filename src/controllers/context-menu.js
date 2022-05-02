@@ -176,7 +176,7 @@ document.addEventListener('contextmenu', e => {
     e.preventDefault() // Probably not needed, but just in case
 })
 
-document.addEventListener('click', e => {
+document.addEventListener('mousedown', e => {
     if (currentMenu) {
         if (!isDescended(e.target, popperDiv)) {
             clearContextMenu()
