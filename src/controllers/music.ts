@@ -256,7 +256,8 @@ export function getTime(): number {
 }
 
 export function setTime(seconds: number) {
-    player.play() // In case the song has ended and playback has stopped.
+    // 02/05/22
+    // If make this play, then fix bug where the footerplayer does not update the play/pause symbol
     player.currentTime = seconds
     return player.currentTime
 }
