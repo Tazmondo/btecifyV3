@@ -16,9 +16,9 @@ let currentSong: songBase | undefined;
 let currentPlaylist: PlaylistInterface | undefined;
 let playingSong: songBase | undefined;
 
-let repeat = false;
-let muted = localStorage.muted === "true" || false
-let settingSong = false;
+let repeat: boolean = false;
+let muted: boolean = localStorage.muted === "true" || false
+let settingSong: boolean = false;
 
 let player = new Audio()
 player.autoplay = true
@@ -201,7 +201,19 @@ export function togglePlaying() {
     dispatch('playing')
 }
 
-export function getInfo() {
+export type PlayerInfo = {
+    playingSong: typeof playingSong,
+    currentPlaylist: typeof currentPlaylist,
+    history: typeof history,
+    queue: typeof queue,
+    repeat: boolean,
+    muted: boolean,
+    volume: number,
+    paused: boolean,
+    time: number,
+}
+
+export function getInfo(): PlayerInfo {
     return {
         playingSong,
         currentPlaylist,
@@ -277,7 +289,7 @@ export function setRepeat(bool: boolean) {
     dispatch('playing')
 }
 
-export function toggleMute(force: boolean) {
+export function toggleMute(force?: boolean) {
     muted = force ?? !muted
     localStorage.muted = muted
     muted ? player.volume = 0 : player.volume = unModdedVol ** volMod

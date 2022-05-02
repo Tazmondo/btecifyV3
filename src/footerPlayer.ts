@@ -1,78 +1,93 @@
 console.log("footerPlayer.js running")
 import {durationSecondsToMinutes} from "./util.js";
-import  * as EventController from './controllers/event.js'
-import  * as MusicController from './controllers/music.js'
-import  * as RouteController from './controllers/route.js'
+import * as EventController from './controllers/event.js'
+import * as RouteController from './controllers/route.js'
+import * as api from './controllers/api.js'
+import {
+    back,
+    forward,
+    getInfo,
+    pause as playerPause,
+    play as playerPlay,
+    PlayerInfo,
+    setRepeat,
+    setTime,
+    setVolume,
+    toggleMute
+} from './controllers/music.js'
+import {songBase} from "./controllers/types";
+
 
 function initPage() {
     const {subscribe} = EventController
-    const {setTime, setVolume, forward, back, setRepeat, getInfo, toggleMute} = MusicController
     const {baseRoute} = RouteController
 
-    let songLength = undefined;
-    let currentSong;
+    let songLength: number | undefined = undefined;
+    let currentSong: songBase;
 
-    document.getElementById("shuffle").addEventListener("click", ev => {
-        ev.currentTarget.classList.toggle("active")
+    document.getElementById("shuffle")!.addEventListener("click", (ev: MouseEvent) => {
+        let target = ev.currentTarget as HTMLElement
+        target.classList.toggle("active");
     })
 
-    document.getElementById("repeat").addEventListener("click", ev => {
-        ev.currentTarget.classList.toggle("active")
-        setRepeat(ev.currentTarget.classList.contains('active'))
+    document.getElementById("repeat")!.addEventListener("click", ev => {
+        let currentTarget = ev.currentTarget as HTMLElement
+        currentTarget.classList.toggle("active")
+        setRepeat(currentTarget.classList.contains('active'))
     })
 
-    document.getElementById('skip-back').addEventListener('click', e=>{
+    document.getElementById('skip-back')!.addEventListener('click', e => {
         back()
     })
 
-    document.getElementById('view-history-queue').addEventListener('click', e=>{
+    document.getElementById('view-history-queue')!.addEventListener('click', e => {
         baseRoute('queue')
     })
 
-    document.getElementById('add-new-song-button').addEventListener('click', e=> {
+    document.getElementById('add-new-song-button')!.addEventListener('click', e => {
         baseRoute('newSong')
     })
 
-    function toggleMuteEvent(e) {
+    function toggleMuteEvent() {
         toggleMute()
     }
 
-    document.getElementById('footer-volume-control').addEventListener('click', toggleMuteEvent)
-    document.getElementById('footer-volume-control-muted').addEventListener('click', toggleMuteEvent)
+    document.getElementById('footer-volume-control')!.addEventListener('click', toggleMuteEvent)
+    document.getElementById('footer-volume-control-muted')!.addEventListener('click', toggleMuteEvent)
 
 
-    let thumbImg = document.querySelector('footer .song-thumb');
-    let title = document.querySelector('footer .songname > strong');
-    let artist = document.querySelector('footer .artist');
-    let album = document.querySelector('footer .album');
+    let thumbImg = document.querySelector('footer .song-thumb')! as HTMLImageElement
+    let title = document.querySelector('footer .songname > strong')! as HTMLElement
+    let artist = document.querySelector('footer .artist')! as HTMLElement
+    let album = document.querySelector('footer .album')! as HTMLElement
 
-    let playlistTitle = document.querySelector('#player-playlist-header')
-    let playButton = document.getElementById("play")
-    let pauseButton = document.getElementById("pause")
-    let skipForward = document.getElementById('skip-forward');
-    let playRandom = document.getElementById('play-random');
+    let playlistTitle = document.querySelector('#player-playlist-header')! as HTMLElement
+    let playButton = document.getElementById("play")!
+    let pauseButton = document.getElementById("pause")!
+    let skipForward = document.getElementById('skip-forward')!
+    let playRandom = document.getElementById('play-random')!
 
-    let seekerDiv = document.querySelector(".player .seeker")
-    let seekerBackBar = seekerDiv.querySelector('.seeker-background')
-    let seekerFrontBar = seekerDiv.querySelector('.seeker-foreground')
-    let currentTime = document.getElementById("current-time")
-    let endTime = document.getElementById('end-time')
+    let seekerDiv = document.querySelector(".player .seeker")! as HTMLElement
+    let seekerBackBar = seekerDiv.querySelector('.seeker-background')! as HTMLElement
+    let seekerFrontBar = seekerDiv.querySelector('.seeker-foreground')! as HTMLElement
+    let currentTime = document.getElementById("current-time")!
+    let endTime = document.getElementById('end-time')!
 
-    let volumeSeeker = document.querySelector('.volume-seeker')
-    let volumeBack = volumeSeeker.querySelector('.seeker-background')
-    let volumeFront = volumeSeeker.querySelector('.seeker-foreground')
-    let volumeButton = document.querySelector('#footer-volume-control')
-    let volumeButtonMuted = document.querySelector('#footer-volume-control-muted')
+    let volumeSeeker = document.querySelector('.volume-seeker')! as HTMLElement
+    let volumeBack = volumeSeeker.querySelector('.seeker-background')! as HTMLElement
+    let volumeFront = volumeSeeker.querySelector('.seeker-foreground')! as HTMLElement
+    let volumeButton = document.querySelector('#footer-volume-control')! as HTMLElement
+    let volumeButtonMuted = document.querySelector('#footer-volume-control-muted')! as HTMLElement
 
 
     function play() {
-        MusicController.play()
+        playerPlay()
         playButton.classList.toggle("inactive")
         pauseButton.classList.toggle("inactive")
     }
 
     function pause() {
-        MusicController.pause()
+        playerPause()
         playButton.classList.toggle("inactive")
         pauseButton.classList.toggle("inactive")
     }
@@ -84,7 +99,7 @@ function initPage() {
     skipForward.addEventListener('click', e => forward())
 
 
-    function getMousePosition(e, target) {
+    function getMousePosition(e: MouseEvent, target: HTMLElement) {
         // e = Mouse click event.
         let rect = target.getBoundingClientRect();
         let x = e.clientX - rect.left; //x position within the element.
@@ -92,7 +107,7 @@ function initPage() {
         return [x, y]
     }
 
-    function getSongTimeFromPercentage(percentage) {
+    function getSongTimeFromPercentage(percentage: number) {
         if (songLength) {
             let crudeTime = (percentage / 100) * songLength
             let wholeTime = Math.round(crudeTime)
@@ -101,7 +116,7 @@ function initPage() {
         return '0:00'
     }
 
-    function updateSeeker(seconds) {
+    function updateSeeker(seconds: number) {
         if (songLength) {
             let percentage = seconds / songLength * 100
 
@@ -110,18 +125,20 @@ function initPage() {
             } else if (percentage > 100) {
                 percentage = 100
             }
-            seekerFrontBar.style = `width: ${percentage}%`
+            seekerFrontBar.style.width = `${percentage}%`
             currentTime.innerText = getSongTimeFromPercentage(percentage)
         }
     }
 
-    function seekerClick(e) {
+    function seekerClick(e: MouseEvent) {
+        if (songLength == undefined) return
+
         let oldX = 0;
         let currentEvent = e
 
-        function moveFunc(e) {
+        function moveFunc(e: MouseEvent) {
             let relativeX = getMousePosition(e, seekerBackBar)[0]
-            let time = relativeX / seekerBackBar.clientWidth * songLength
+            let time = relativeX / seekerBackBar.clientWidth * songLength!
             updateSeeker(time)
             setTime(time)
         }
@@ -132,7 +149,8 @@ function initPage() {
                 oldX = currentEvent.clientX
             }
         }, 50)
-        function mouseMove(e) {
+
+        function mouseMove(e: MouseEvent) {
             currentEvent = e
         }
         document.addEventListener("mousemove", mouseMove)
@@ -142,13 +160,17 @@ function initPage() {
         }, {once: true})
     }
 
-    function volumeClick(e) {
+    function volumeClick(e: MouseEvent) {
 
-        function moveFunc(e) {
+        function moveFunc(e: MouseEvent) {
             let relativeX = getMousePosition(e, volumeBack)[0]
             let volume = relativeX / volumeBack.clientWidth
-            if (volume < 0) {volume = 0}
-            if  (volume > 1) {volume = 1}
+            if (volume < 0) {
+                volume = 0
+            }
+            if (volume > 1) {
+                volume = 1
+            }
 
             toggleMute(false)
             setVolume(volume)
@@ -160,9 +182,10 @@ function initPage() {
             document.removeEventListener("mousemove", moveFunc)
         }, {once: true})
     }
-    volumeSeeker.addEventListener('mousedown', volumeClick)
 
-    function drawPage(info) {
+    volumeSeeker.addEventListener("mouseup", volumeClick)
+
+    function drawPage(info: PlayerInfo) {
         let song = info?.playingSong
         let playlist = info?.currentPlaylist
         let paused = info?.paused
@@ -176,25 +199,20 @@ function initPage() {
         playlistTitle.innerText = playlist?.getTitle() || " \n " // Take up same amount of height as if it had text.
 
         if (song) {
-            songLength = song.getDurationSeconds()
+            songLength = song.duration ?? undefined
 
             if (song !== currentSong) {
-                thumbImg.style.visibility = 'hidden'
-                song.getThumb().then(thumb => {
-                    if (song === currentSong) { // Make sure you dont overwrite thumbnail of another song.
-                        thumbImg.src = thumb ?? ""
-                        thumbImg.style.visibility = 'visible'
-                        thumbImg.classList.toggle('hidden', false)
-                    }
-                })
+                let thumb = api.getThumbUrl(song.id)
+                thumbImg.src = thumb ?? ""
+                thumbImg.classList.toggle('hidden', false)
             }
 
             currentSong = song
 
-            title.innerText = song.getTitle()
-            artist.innerText = song.getArtist()
-            album.innerText = song.getAlbum()
-            endTime.innerText = durationSecondsToMinutes(song.getDurationSeconds())
+            title.innerText = song.title
+            artist.innerText = song.artist?.title ?? ""
+            album.innerText = song.album?.title ?? ""
+            endTime.innerText = song.duration !== null ? durationSecondsToMinutes(song.duration) : ""
 
             seekerDiv.addEventListener("mousedown", seekerClick)
 
@@ -231,14 +249,14 @@ function initPage() {
 
     }
 
-    function updateSongTime(time) {
+    function updateSongTime(time: number) {
         currentTime.innerText = durationSecondsToMinutes(Math.floor(time))
         updateSeeker(time)
     }
 
-    function updateAddButton(data) {
-        let addButton = document.querySelector('#add-new-song-button');
-        let title = addButton.querySelector('title')
+    function updateAddButton(data: any) {
+        let addButton = document.querySelector('#add-new-song-button')!
+        let title = addButton.querySelector('title')!
         if (data) {
             addButton.classList.toggle('active', true)
             title.textContent = `Add ${data.title}`
