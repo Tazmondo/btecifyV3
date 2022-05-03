@@ -1,8 +1,9 @@
 import * as MusicController from './music.js'
 import * as ObjectController from './object.js'
+import {deleteSong, deleteUnusedSongs, getSongFromUUID} from './object.js'
 import * as RouteController from './route.js'
 import {generateInputDialog} from "./dialog-box.js";
-import {deleteSong, deleteUnusedSongs, getSongFromUUID} from "./object.js";
+import {fullSync} from './fullsync.js'
 
 function getOtherPlaylists(context, callback) {
     let newItems = []
@@ -164,6 +165,13 @@ const contexts = {
             type: 'button',
             action: context => {
                 deleteUnusedSongs()
+            }
+        },
+        {
+            name: "Full sync",
+            type: 'button',
+            action: context => {
+                fullSync(ObjectController.getPlaylistArray())
             }
         }
     ],

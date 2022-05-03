@@ -1,4 +1,4 @@
-import {placeholderURL, extractId} from '../../util.js'
+import {placeholderURL} from '../../util.js'
 import {saveData} from "../../controller.js";
 import {dispatch} from "../event.js";
 
@@ -41,6 +41,10 @@ export default function Song(title, vidId, extractor, duration, artist = "", alb
         // Returns string album
         getAlbum() {
             return album
+        },
+
+        getExtractor() {
+            return extractor
         },
 
         // Returns localurl or the remoteurl if local does not exist.
