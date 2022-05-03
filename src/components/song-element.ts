@@ -135,7 +135,9 @@ function SongElement(song: songBase,
             })
         }
 
-        thumb.style.backgroundImage = `url(${api.getThumbUrl(song.id)})`
+        api.getThumbUrl(song.id).then(url => {
+            thumb.style.backgroundImage = `url(${url})`
+        })
 
         if (!song.disabled) {
             newSongItem.addEventListener('dblclick', e => {

@@ -45,31 +45,27 @@ import {apiPlaylistShallow, songBase, songIn} from "./types.js";
 // })()
 
 // todo: show error message and close if can't connect to server
-let allSongs: songBase[]
-try {
-    allSongs = await serverApi.getSongs()
-} catch (e) {
-    allSongs = []
-}
+let allSongs: songBase[] = []
+let shallowPlaylistArray: apiPlaylistShallow[] = []
+let deepPlaylists: { [key: number]: PlaylistInterface } = {}
 
-let shallowPlaylistArray: apiPlaylistShallow[];
+Promise.all([serverApi.getSongs(), serverApi.getShallowPlaylists(), serverApi.getDeepPlaylists()]).then(res => {
+    allSongs = res[0]
+    shallowPlaylistArray = res[1]
 
-try {
-    shallowPlaylistArray = await serverApi.getShallowPlaylists()
-} catch (e) {
-    shallowPlaylistArray = []
-}
+    // Basically convert array of deep playlists to object, index is the id and value is the deep playlist
+    deepPlaylists = res[2].reduce(
+        (obj: { [key: number]: PlaylistInterface }, val) => (
+            {...obj, [val.id]: Playlist(val)}
+        ),
+        {}
+    )
 
-if (shallowPlaylistArray === []) {
-    console.error("SHALLOW PLAYLISTS RETURNED NULL!!!")
-}
-let fetchedDeepPlaylists = await serverApi.getDeepPlaylists()
-let deepPlaylists: { [key: number]: PlaylistInterface } = fetchedDeepPlaylists.reduce(
-    (obj: { [key: number]: PlaylistInterface }, val) => (
-        {...obj, [val.id]: Playlist(val)}
-    ),
-    {}
-)
+    dispatch('playlist')
+    dispatch('song')
+
+})
+
 
 // let playlistArray = (() => {
 //     if (localStorage['playlist'] !== undefined) {

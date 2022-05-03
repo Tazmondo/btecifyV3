@@ -19,7 +19,7 @@ function initPage() {
 
     let page = document.getElementById('home-nav-page')!
 
-    function generatePlaylistCard(playlistName: string, thumb: string, numSongs: number, selected: boolean) {
+    function generatePlaylistCard(playlistName: string, thumb: Promise<string>, numSongs: number, selected: boolean) {
         let playlistObject = getPlaylistFromTitle(playlistName) as PlaylistInterface;
         if (playlistObject == undefined) {
             return false
@@ -41,7 +41,10 @@ function initPage() {
 
         let card = container.lastElementChild!
         let img: HTMLImageElement = card.querySelector('.img-div')!
-        img.style.backgroundImage = `url(${thumb})`
+
+        thumb.then(res => {
+            img.style.backgroundImage = `url(${res})`
+        })
 
         // card.addEventListener('dblclick', e => {
         //     baseRoute('playlistView', [playlistObject])

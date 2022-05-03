@@ -7,6 +7,23 @@ for long api requests (fullsync and fulldownload), turn off song visualiser and 
 
 when adding a new song, start playing the added song immediately
 
+local thumbnail cache
+    might not be necessary with disk cache
+    should not be that bad
+    dont need a music cache since rate of music requests is significantly lower than rate of thumb requests
+        therefore music cache is not space efficient at all, while thumb cache is quite space efficient
+
+
+find a way to speed up initial playlist data fetching
+    maybe removing the shallow fetch and generating the shallow version from the deep version just on the client?
+
+    dont fetch the deep, just fetch shallow, and then fetch deep when necessary
+        homepage just requires shallow, everything else will make a deep request
+
+    simplify schema on the server to reduce time spent constructing it
+        or write sql using lots of joins to create the necessary table and construct schema from that
+
+
 
 add local keybinds (hotkey.js?)
 

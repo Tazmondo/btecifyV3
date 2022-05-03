@@ -1,8 +1,9 @@
+import {placeholderURL} from "../util.js";
+import {apiPlaylistDeep, apiPlaylistShallow, fullsyncPlaylist, songBase, songIn} from './types.js'
+
 const url = "localhost:8000"
 const serverAddress = "http://" + url
 const webSocketAddress = "ws://" + url
-
-import {apiPlaylistDeep, apiPlaylistShallow, fullsyncPlaylist, songBase, songIn} from './types.js'
 
 
 function getUrl(endpoint: string) {
@@ -36,7 +37,7 @@ async function put(endpoint: String, data?: any) {
 }
 
 async function del(endpoint: String) {
-        return await fetch(serverAddress + endpoint, {
+    return await fetch(serverAddress + endpoint, {
         method: "delete",
         mode: "cors",
     })
@@ -203,8 +204,19 @@ export async function postSong(song: songIn, playlists: number[] = []): Promise<
     }
 }
 
-export function getThumbUrl(songId: number): string {
-    return serverAddress + "/song/" + songId + "/thumb"
+export async function getThumbUrl(songId: number): Promise<string> {
+    try {
+        let response = await get('/song/' + songId + '/thumb?cachebust');
+        if (response.status == 200) {
+            let thumbId = await response.json()  // cachebust prevents previously cached results from returning wrong thing and breaking
+            return serverAddress + "/thumb/" + thumbId
+        } else {
+            return placeholderURL
+        }
+    } catch (e) {
+        console.warn(e);
+        return placeholderURL
+    }
 }
 
 export function getSrcUrl(songId: number): string {

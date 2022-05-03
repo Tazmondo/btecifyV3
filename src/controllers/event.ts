@@ -49,6 +49,12 @@ function dispatch(eventName: string) {
     return true
 }
 
+export function dispatchAll() {
+    for (let anEvent in events) {
+        dispatch(anEvent)
+    }
+}
+
 Object.assign(window, {dispatch})  // For testing
 
 function subscribe(eventName: string, callback: Function) {

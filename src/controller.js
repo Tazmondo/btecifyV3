@@ -2,8 +2,6 @@ console.log("controller.js running...")
 
 // IMPORTING AND SETTING UP
 
-import Playlist from "./controllers/objects/playlist.ts";
-import {copyArray, durationMinutesToSeconds, extractId} from "./util.js";
 import * as EventController from './controllers/event.js'
 import * as ObjectController from './controllers/object.js'
 import * as MusicController from './controllers/music.js'
@@ -15,9 +13,7 @@ import * as ClipboardController from './controllers/clipboard.js'
 //     localStorage["song"] = JSON.stringify(ObjectController.getSongPlaylist())
 //     localStorage['flag'] = CURFLAG
 // }
-
 // CONTROLLER IMPORTS
-
 import './controllers/context-menu.js'
 import './controllers/hotkey.js'
 import './controllers/search.js'
@@ -25,14 +21,9 @@ import './controllers/api.js'
 
 
 // PAGE IMPORTS
-
 import navInit from './headerNav.js'
 
 import footerPlayerInit from './footerPlayer.js'
-
-import homePageInit from './pages/home.js'
-import playlistPageInit from './pages/playlist.js'
-
 
 
 const events = {
@@ -75,3 +66,4 @@ RouteController.baseRoute('home')
 navInit()
 footerPlayerInit()
 
+// EventController.dispatchAll()

@@ -26,7 +26,7 @@ export interface PlaylistInterface {
 
     getRandomFilteredSong(filter: number[]): playlistSong | false;
 
-    getThumb(): string;
+    getThumb(): Promise<string>;
 
     refreshThumb(): void;
 
@@ -123,12 +123,12 @@ export default function Playlist(info: apiPlaylistDeep): PlaylistInterface {
 
         // returns a thumbnail randomly chosen from songs in the playlist, and on subsequent calls, the one
         // returned from the first call.
-        getThumb(): string {
+        async getThumb(): Promise<string> {
             if (cachedThumb !== undefined) {
-                return api.getThumbUrl(cachedThumb)
+                return await api.getThumbUrl(cachedThumb)
             } else {
                 cachedThumb = getEnabledSongs()[randomIndex(this.getLength())]?.id || undefined
-                return cachedThumb === undefined ? placeholderURL : api.getThumbUrl(cachedThumb)
+                return cachedThumb === undefined ? placeholderURL : await api.getThumbUrl(cachedThumb)
             }
         },
 
