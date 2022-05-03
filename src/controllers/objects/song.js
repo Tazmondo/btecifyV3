@@ -51,7 +51,7 @@ export default function Song(title, vidId, extractor, duration, artist = "", alb
         getURL() {
             switch (extractor) {
                 case "youtube":
-                    return `youtube.com/watch?v=${vidId}`
+                    return webpageUrl
                 case "Bandcamp":
                     return webpageUrl
                 default:

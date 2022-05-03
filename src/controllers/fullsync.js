@@ -38,7 +38,6 @@ export async function fullSync(playlists, progressCallback) {
                 })
             })
             let jsoned = JSON.stringify(data)
-            console.log(jsoned);
 
             let res = await fetch(serverAddress + "/fullsync", {
                 method: "post",
