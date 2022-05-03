@@ -3,17 +3,22 @@ let address = "localhost:8000"
 let serverAddress = "http://" + address
 let wsAddress = "ws://" + address
 
+let job = {
+    progress: 0,
+    size: 0,
+    status: true
+}
+
+export function getJob() {
+    return job
+}
+
 /**
  * Takes a list of playlists, converts them to correct json format, and sends them to the server
  * @param playlists {Playlist[]}
- * @param progressCallback {Function?}
  * @returns {Promise<void>}
  */
-export async function fullSync(playlists, progressCallback) {
-    progressCallback = progressCallback ?? function (a, b, c) {
-        console.log(a, b, c)
-    }
-
+export async function fullSync(playlists) {
     return new Promise(async (resolve, reject) => {
         try {
             let data = {
@@ -61,7 +66,10 @@ export async function fullSync(playlists, progressCallback) {
                 }
                 webSocket.onmessage = (event) => {
                     let data = JSON.parse(event.data)
-                    progressCallback(data.progress, data.size, data.status)
+                    job.progress = data.progress
+                    job.size = data.size
+                    job.status = data.status
+                    dispatch('jobprogress')
                     webSocket.send("Send me more!")
                 }
                 webSocket.onclose = (event) => {
@@ -82,6 +90,9 @@ export async function fullSync(playlists, progressCallback) {
             }
         } catch (e) {
             reject(e)
+        } finally {
+            job.status = true
+            dispatch('jobprogress')
         }
     })
 

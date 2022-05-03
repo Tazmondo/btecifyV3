@@ -2,14 +2,20 @@ console.log("controller.js running...")
 
 // IMPORTING AND SETTING UP
 
-import Playlist from "./controllers/objects/playlist.js";
-import Song from './controllers/objects/song.js'
-import {copyArray, durationMinutesToSeconds, extractId} from "./util.js";
 import * as EventController from './controllers/event.js'
 import * as ObjectController from './controllers/object.js'
 import * as MusicController from './controllers/music.js'
 import * as RouteController from './controllers/route.js'
 import * as ClipboardController from './controllers/clipboard.js'
+import {getJob} from "./controllers/fullsync.js";
+import './controllers/context-menu.js'
+import './controllers/hotkey.js'
+import './controllers/search.js'
+
+// PAGE IMPORTS
+import navInit from './headerNav.js'
+
+import footerPlayerInit from './footerPlayer.js'
 
 export const CURFLAG = 1 // Update when parsing requires change, so old data can be updated with new parser.
 
@@ -20,21 +26,6 @@ export function saveData() {
 }
 
 // CONTROLLER IMPORTS
-
-
-import './controllers/context-menu.js'
-import './controllers/hotkey.js'
-import './controllers/search.js'
-
-// PAGE IMPORTS
-
-import navInit from './headerNav.js'
-
-import footerPlayerInit from './footerPlayer.js'
-
-import homePageInit from './pages/home.js'
-import playlistPageInit from './pages/playlist.js'
-
 
 
 const events = {
@@ -65,6 +56,10 @@ const events = {
     'clipboard': {
         callbacks: [],
         e: () => ClipboardController.getClipboardData()
+    },
+    'jobprogress': { // todo: actually do a loading bar, either seeker, titlebar, or a loading dialog box
+        callbacks: [(e) => console.log(`${100 * (e.progress + 1) / (e.size + 1)}%`)], // add the +1 in case size is 0
+        e: () => getJob()
     }
 }
 
