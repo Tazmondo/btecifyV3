@@ -2,6 +2,17 @@ const ytdl = require("youtube-dl-exec");
 
 const extractionWrappers = {
     'youtube:tab': async (response) => {
+        response.entries = await Promise.all(response.entries.map(async (v) => {
+            try {
+                return await ytdl(v.url, {
+                    dumpSingleJson: true,
+                    noPlaylist: true
+                });
+            } catch (e) {
+                console.log(e.message);
+                return false
+            }
+        }))
         response.entries.forEach(v => v.extractor = "youtube")
         return response
     },
