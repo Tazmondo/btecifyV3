@@ -1,4 +1,4 @@
-let address = "raspberrypi.local:8000" // todo: use an environment variable or a config option or smth
+let address = "192.168.1.175" // todo: use an environment variable or a config option or smth
 
 let serverAddress = "http://" + address
 let wsAddress = "ws://" + address
