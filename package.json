@@ -28,7 +28,7 @@
     "electron-squirrel-startup": "^1.0.0",
     "spotify-web-api-js": "^1.5.2",
     "uuid": "^8.3.2",
-    "youtube-dl-exec": "^1.2.4"
+    "youtube-dl-exec": "^2.2.3"
   },
   "config": {
     "forge": {
